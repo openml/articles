@@ -1,0 +1,34 @@
+---
+title: "Title of your submission"
+author: |
+   | Author A^1^ and Author B^1,2^
+   |
+   | 1. Affiliation of author A and author B
+   | 2. Second affiliation of author B
+institute: 
+   - $^1$Juans Casa
+   - $^2$Tus Place
+output: html_document
+bibliography: biblioExample.bib
+nocite: | 
+  @ref2, @ref3
+---
+
+**Keywords**: First, Second, ..., up to 5 keywords
+
+This tutorial proposal template can be rendered as *HTML* using the **rmarkdown** package, see the abstract template for general information on rendering and style.
+
+Tutorial proposals should be a maximum of two sides of A4 when printed and should not contain images. The proposal may be structured as you see fit, but useful content includes
+
+ - Goals/Aims/Learning objectives
+ - Justification for running the tutorial at useR! 2017
+ - Description of the tutorial
+ - Outline of the tutorial content
+ - Pre-requisites
+ - Potential attendees
+ - Instructor biograph(y/ies) or link to online profile(s)
+ - References
+ 
+Given the longer form, the use of sections and lists is encouraged to structure the content.
+
+# References
