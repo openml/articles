@@ -1,32 +1,36 @@
 ---
 title: "OpenML"
 author: |
-   | Joaquin Vanschoren^1^ and Heidi Seibold^2^
-   |
-   | 1. Eindhoven University of Technology
-   | 2. University of Zurich
-institute: 
-   - $^1$Department of Mathematics and Computer Science
-   - $^2$Epidemiology, Biostatistics and Prevention Institute
+  | Joaquin Vanschoren^1^ and Heidi Seibold^2^
+  |
+  | 1. Eindhoven University of Technology
+  | 2. University of Zurich
+institute:
+- $^1$Department of Mathematics and Computer Science
+- $^2$Epidemiology, Biostatistics and Prevention Institute
 output: html_document
-bibliography: ../../openml_citations.bib
-nocite: | 
-  @ref2, @ref3
+bibliography: openml_citations.bib
 ---
 
 **Keywords**: Machine Learning, Online Platform, Collaboration, Open Science, Reproducible Research
 
-# Aim
-*OpenML* [@Vanschoren2014openml] is an online platform for collaborative
-machine learning. Users can upload, organize, search and download data sets,
-machine learning tasks and algorithms. In this tutorial we want to introduce
-*R* users to the **OpenML** *R* package [@Casalicchio2017openml] and show how
-everyone can easily contribute and make use of *OpenML*. At the end of the
-tutorial we want every attendee to be able to interact with the platform.
+[*OpenML*](http://www.openml.org/) [@Vanschoren2014openml] is an online
+platform for collaborative machine learning. Users can upload, organize, search
+and download data sets and corresponding machine learning tasks; they can run
+algorithms (flows) on the tasks and upload these runs for everyone to see and
+compare to other solutions.  By connecting data, tasks, flows and runs,
+*OpenML* allows for online collaboration to solve prediction challenges.
+
+
+# Aim of the tutorial
+In this tutorial we want to introduce *R* users to the **OpenML** *R* package
+[@Casalicchio2017openml] and show how everyone can easily contribute and make
+use of *OpenML*. At the end of the tutorial we want every attendee to be able
+to interact with the platform.
 
 # Tutorial content
-In this tutorial we want to give an introduction to the OpenML platform and the *R*
-package. We want to work hands-on. The outline is as follows:
+In this tutorial we want to give an introduction to the OpenML platform and the
+*R* package. We want to work hands-on. The outline is as follows:
 
 - Overview 
 - Data, tasks, flows and runs
@@ -44,9 +48,9 @@ package. We want to work hands-on. The outline is as follows:
 
 
 # Target audience and pre-requesites
-The only pre-requesite you should have is a very basic understanding of *R*.  We
-aim to address a broad audience, since OpenML is interesting for all kinds of
-people. OpenML is interesting for people who 
+The only pre-requesite you should have is a very basic understanding of *R*.
+We aim to address a broad audience, since OpenML is interesting for all kinds
+of people. OpenML is interesting for people who 
 
 - have data (possibly with a prediction task they can't solve on their own), 
 - analyse data, 
@@ -60,7 +64,8 @@ people. OpenML is interesting for people who
 [Joaquin Vanschoren](http://www.win.tue.nl/~jvanscho/) is the founder of OpenML
 and professor of machine learing at the Eindhoven University of Technology.
 
-[Heidi Seibold](http://www.ebpi.uzh.ch/en/aboutus/departments/biostatistics/teambiostats/seibold.html)
+[Heidi
+Seibold](http://www.ebpi.uzh.ch/en/aboutus/departments/biostatistics/teambiostats/seibold.html)
 is a PhD candidate in biostatistics at the University of Zurich.
 
 *OpenML* is an open source community project. We gladly represent the amazing
@@ -68,8 +73,8 @@ is a PhD candidate in biostatistics at the University of Zurich.
 
 
 # OpenML at useR!
-We believe that many useR! attendees will be interested in *OpenML* for their
-work, research and studies. The Open Source philosophy of *R* aligns with 
+We believe that many useR! attendees will be interested in using *OpenML* for
+their work, research and studies. The Open Source philosophy of *R* aligns with
 OpenML. The form of a hands-on tutorial to introduce OpenML is perfect, since
 the platform is only useful for people if they can actively participate. The
 **OpenML** *R* package makes participation easy for *R* users and three hours
