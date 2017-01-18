@@ -1,24 +1,32 @@
 ---
-title: "Title of your submission"
+title: "OpenML"
 author: |
-   | Author A^1^ and Author B^1,2^
+   | Heidi Seibold^1^ and Author B^1,2^
    |
-   | 1. Affiliation of author A and author B
+   | 1. University of Zurich
    | 2. Second affiliation of author B
 institute: 
-   - $^1$Juans Casa
+   - $^1$Epidemiology, Biostatistics and Prevention Institute
    - $^2$Tus Place
 output: html_document
-bibliography: biblioExample.bib
+bibliography: ../../openml_citations.bib
 nocite: | 
   @ref2, @ref3
 ---
 
-**Keywords**: First, Second, ..., up to 5 keywords
+**Keywords**: OpenML, Machine Learning, Online Platform, Collaboration
 
-This tutorial proposal template can be rendered as *HTML* using the **rmarkdown** package, see the abstract template for general information on rendering and style.
+# Aim
+*OpenML* is an online platform for collaborative machine learning. Users can 
+upload, organize, search and download data sets, machine learning tasks and
+algorithms. In this tutorial we want to introduce *R* users to the **OpenML**
+*R* package and show how everyone can easily contribute and make use of *OpenML*. 
 
-Tutorial proposals should be a maximum of two sides of A4 when printed and should not contain images. The proposal may be structured as you see fit, but useful content includes
+# Tutorial content
+
+- Overview
+- Becoming a member
+- The *R* package
 
  - Goals/Aims/Learning objectives
  - Justification for running the tutorial at useR! 2017
@@ -29,6 +37,11 @@ Tutorial proposals should be a maximum of two sides of A4 when printed and shoul
  - Instructor biograph(y/ies) or link to online profile(s)
  - References
  
-Given the longer form, the use of sections and lists is encouraged to structure the content.
+@Casalicchio2017openml
+@Vanschoren2014openml
+
+
+
+
 
 # References
