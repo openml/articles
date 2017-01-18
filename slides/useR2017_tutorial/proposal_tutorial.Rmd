@@ -1,13 +1,16 @@
 ---
 title: "OpenML"
 author: |
-  | Joaquin Vanschoren^1^ and Heidi Seibold^2^
+  | Joaquin Vanschoren^1^ and Heidi Seibold^2^ and Bernd Bischl^3^
   |
   | 1. Eindhoven University of Technology
   | 2. University of Zurich
+  | 3. LMU Munich
+  
 institute:
 - $^1$Department of Mathematics and Computer Science
 - $^2$Epidemiology, Biostatistics and Prevention Institute
+- $^3$Statistics Institute 
 output: html_document
 bibliography: openml_citations.bib
 ---
@@ -22,7 +25,7 @@ prediction tasks; they can run algorithms (flows) on the tasks and upload these
 runs for everyone to see and compare to other solutions.  By connecting data,
 tasks, flows and runs online, *OpenML* allows for easy and fast collaboration
 to solve prediction challenges. 
-
+<!-- Bernd: "prediction challenges" ist nicht so gut -->
 
 # Aim of the tutorial
 In this tutorial we want to introduce *R* users to the **OpenML** *R* package
@@ -33,7 +36,9 @@ hands-on.
 
 # Tutorial content
 
-- Overview of the online platform
+<!-- TODO: Tutorial description -->
+
+- Overview of the online platform (web interface)
 - Data, tasks, flows and runs
 - Becoming a member
 - The social aspects of *OpenML*
@@ -58,7 +63,8 @@ different people, such as people who
 - want to learn about machine learning, or 
 - teach machine learning.
 
-The only pre-requesite required is a very basic understanding of *R*.
+The only pre-requesite required is a very basic understanding of machine
+learning and of *R*.
 
 
 # The instructors
@@ -69,6 +75,9 @@ and professor of machine learing at the Eindhoven University of Technology.
 [Heidi
 Seibold](http://www.ebpi.uzh.ch/en/aboutus/departments/biostatistics/teambiostats/seibold.html)
 is a PhD candidate in biostatistics at the University of Zurich.
+
+[Bernd Bischl](http://www.compstat.statistik.uni-muenchen.de/people/bischl/)
+<!-- TODO: Description of Bernd -->
 
 *OpenML* is an open source community project. We gladly represent the amazing
 [*OpenML* team](http://www.openml.org/guide#!team).
