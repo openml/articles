@@ -1,0 +1,187 @@
+---
+title: "OpenML"
+author: "Heidi Seibold"
+date: "Hittisau Retreat January 16/17, 2017"
+output: 
+  ioslides_presentation:
+    widescreen: true
+  # smaller: true
+---
+```{r setup, include=FALSE}
+library("knitr")
+opts_chunk$set(message = FALSE, cache = TRUE)
+library("OpenML")
+source("https://raw.githubusercontent.com/HeidiSeibold/sandbox/master/rstuff/openml_newctree/new_ctree_mlr.R")
+```
+
+
+---
+
+[openml.org](http://www.openml.org/)
+![](screenshot.png)
+
+---
+
+![](overview.png)
+
+## For whom is OpenML?
+
+- Domain scientists
+- Data analysts
+- Algorithm developers
+- Students
+- Teachers
+- ...
+
+
+# A use case: check the new ctree
+
+
+## Study the behaviour of an algorithm on many different data sets
+
+- New implementation of ``ctree()``.
+- Check performance with respect to **predictive accurancy**
+  (percentage of instances that are classified correctly)
+
+
+## Steps
+- Create the flow
+- Download the tasks
+- Create runs (run flows on tasks)
+- Upload runs
+- Collect all information
+- Visualise
+
+## Create the flow
+- [Implement algorithm](https://github.com/HeidiSeibold/sandbox/blob/master/rstuff/openml_newctree/new_ctree_mlr.R) 
+  in ``mlr`` (see [mlr tutorial](http://mlr-org.github.io/mlr-tutorial/devel/html/create_learner/index.html)).
+- create learners
+```{r}
+lrn.list <- list(makeLearner("classif.develpartykit.ctree", splittest = TRUE),
+                 makeLearner("classif.develpartykit.ctree", splittest = FALSE))
+```
+- create OMLFlow and [upload](http://www.openml.org/f/5439)
+```{r, eval=FALSE}
+flow <- convertMlrLearnerToOMLFlow(lrn.list[[1]])
+flow$description <- "Please use the mlr add-on code <link> and 
+    devel partykit package revision 1034: <link>"
+uploadOMLFlow(flow)
+```
+
+
+## Download the relevant tasks
+- Select relevant tasks
+```{r}
+taskinfo0 <- listOMLTasks(task.type = "Supervised Classification",
+                          number.of.instances = c(80, 10^6),
+                          number.of.classes = c(2, 10), 
+                          number.of.features = c(3, 50),
+                          estimation.procedure = "10-fold Crossvalidation")
+
+taskinfo <- subset(taskinfo0,
+                   task.id %in% c(3627, 9900, 3705, 9948, 10089))
+```
+- Download tasks
+```{r}
+tid <- taskinfo$task.id
+tasks <- lapply(tid, getOMLTask)
+names(tasks) <- tid
+```
+
+----
+```{r, echo=FALSE}
+kable(taskinfo[, c("name", "number.of.instances", "number.of.classes",
+                   "number.of.features", "number.of.missing.values")],
+      row.names = FALSE)
+```
+
+
+
+## Create runs (run flows on tasks)
+- Set up grid to run each learner on each task
+```{r}
+grid <- expand.grid(task.id = taskinfo$task.id, lrn.ind = seq_along(lrn.list))
+grid$splittest <- sapply(lrn.list[grid$lrn.ind], function(x) x$par.vals$splittest)
+```
+- Run learners on tasks
+```{r, eval=FALSE}
+run_lt <- function(i) {
+  runTaskMlr(task = tasks[[as.character(grid$task.id[i])]],
+             learner = lrn.list[[grid$lrn.ind[i]]])
+}
+
+library("parallel")
+ncores <- detectCores() - 1
+runs <- mclapply(seq_row(grid), run_lt, mc.cores = ncores)
+save(runs, file = "runs_splittest.rda")
+```
+
+
+```{r, echo=FALSE}
+load(file = "runs_splittest.rda")
+```
+
+
+
+## Upload runs
+```{r, eval=FALSE}
+run.id <- lapply(runs, uploadOMLRun, tags = "study_38", confirm.upload = FALSE)
+grid$run.id <- unlist(run.id)
+save(grid, file = "grid_splittest.rda") 
+```
+```{r, echo=FALSE}
+load(file = "grid_splittest.rda")
+```
+```{r}
+grid
+```
+
+## Collect all information
+```{r}
+runeval <- cbind(grid,
+                 listOMLRunEvaluations(run.id = grid$run.id))
+names(runeval)
+```
+
+## Visualise
+```{r, fig.height=3, fig.width=7, out.width='900px'}
+ggplot(runeval, aes(x = splittest, y = predictive.accuracy, 
+                    color = data.name, group = data.name)) +
+  geom_point() + geom_line()
+```
+Similar visualisation can be found on 
+[openml.org/f/5434](http://www.openml.org/f/5434)
+
+---
+Why does the heart-switzerland data behave the way it does?
+```{r}
+tasks[["9948"]]
+```
+Let's take a closer look at the data set:
+[openml.org/d/1513](http://www.openml.org/d/1513)
+
+
+
+## OpenML is...
+- Online
+- Open
+- Collaborative
+- Rewarding
+- Easy (to use and to contribute)
+
+
+## Papers
+
+Casalicchio, G., Bossek, J., Lang, M., Kirchhoff, D., Kerschke, P., Hofner, B., Seibold, H., Vanschoren, J., Bischl, B. (2017).   
+**OpenML: An R Package to Connect to the Networked Machine Learning Platform OpenML.**   
+*ArXiv e-prints*, [arxiv.org/abs/1701.01293](https://arxiv.org/abs/1701.01293).
+ 
+Vanschoren, J., Van Rijn, J. N., Bischl, B., Torgo, L. (2014).    
+**OpenML: networked science in machine learning.**   
+*ACM SIGKDD Explorations Newsletter*, 15(2), 49-60, 
+[doi:10.1145/2641190.2641198](https://doi.org/10.1145/2641190.2641198).
+
+
+
+
+
