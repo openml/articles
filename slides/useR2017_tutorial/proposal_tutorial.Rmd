@@ -15,11 +15,13 @@ bibliography: openml_citations.bib
 **Keywords**: Machine Learning, Online Platform, Collaboration, Open Science, Reproducible Research
 
 [*OpenML*](http://www.openml.org/) [@Vanschoren2014openml] is an online
-platform for collaborative machine learning. Users can upload, organize, search
-and download data sets and corresponding machine learning tasks; they can run
-algorithms (flows) on the tasks and upload these runs for everyone to see and
-compare to other solutions.  By connecting data, tasks, flows and runs,
-*OpenML* allows for online collaboration to solve prediction challenges.
+platform for collaborative and - as the name says - open machine learning.
+Users can upload, organize, search and download data sets and corresponding
+prediction tasks; they can run algorithms (flows) on the tasks and upload these
+runs for everyone to see and compare to other solutions.  By connecting data,
+tasks, flows and runs online, *OpenML* allows for easy and fast collaboration
+to solve prediction challenges. 
+
 
 
 # Aim of the tutorial
