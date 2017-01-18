@@ -14,6 +14,7 @@ bibliography: openml_citations.bib
 
 **Keywords**: Machine Learning, Online Platform, Collaboration, Open Science, Reproducible Research
 
+
 [*OpenML*](http://www.openml.org/) [@Vanschoren2014openml] is an online
 platform for collaborative and - as the name says - open machine learning.
 Users can upload, organize, search and download data sets and corresponding
@@ -23,21 +24,19 @@ tasks, flows and runs online, *OpenML* allows for easy and fast collaboration
 to solve prediction challenges. 
 
 
-
 # Aim of the tutorial
 In this tutorial we want to introduce *R* users to the **OpenML** *R* package
-[@Casalicchio2017openml] and show how everyone can easily contribute and make
-use of *OpenML*. At the end of the tutorial we want every attendee to be able
-to interact with the platform.
+[@Casalicchio2017openml] and show how everyone can easily contribute to and
+make use of *OpenML*. At the end of the tutorial we want every attendee to be
+able to interact with the platform. We want to accomplish this by working
+hands-on.
 
 # Tutorial content
-In this tutorial we want to give an introduction to the OpenML platform and the
-*R* package. We want to work hands-on. The outline is as follows:
 
-- Overview 
+- Overview of the online platform
 - Data, tasks, flows and runs
 - Becoming a member
-- *OpenML* as a social online platform
+- The social aspects of *OpenML*
 - **OpenML** and **mlr**
 - The *R* package
     + Installation and configuration
@@ -50,15 +49,16 @@ In this tutorial we want to give an introduction to the OpenML platform and the
 
 
 # Target audience and pre-requesites
-The only pre-requesite you should have is a very basic understanding of *R*.
-We aim to address a broad audience, since OpenML is interesting for all kinds
-of people. OpenML is interesting for people who 
+We aim to address a broad audience, since OpenML is interesting for many
+different people, such as people who 
 
 - have data (possibly with a prediction task they can't solve on their own), 
 - analyse data, 
 - develop algorithms, 
 - want to learn about machine learning, or 
 - teach machine learning.
+
+The only pre-requesite required is a very basic understanding of *R*.
 
 
 # The instructors
