@@ -116,7 +116,7 @@ $(document).ready(function () {
 
 
 <h1 class="title toc-ignore">OpenML</h1>
-<h4 class="author"><em><p>Joaquin Vanschoren<sup>1</sup> and Heidi Seibold<sup>2</sup> and Bernd Bischl<sup>3</sup></p>
+<h4 class="author"><em><p>Joaquin Vanschoren<sup>1</sup>, Heidi Seibold<sup>2</sup> and Bernd Bischl<sup>3</sup></p>
 <p>1. Eindhoven University of Technology<br />
 2. University of Zurich<br />
 3. LMU Munich</p></em></h4>
@@ -125,14 +125,14 @@ $(document).ready(function () {
 
 
 <p><strong>Keywords</strong>: Machine Learning, Online Platform, Collaboration, Open Science, Reproducible Research</p>
-<p><a href="http://www.openml.org/"><em>OpenML</em></a> <span class="citation">(Vanschoren et al. 2014)</span> is an online platform for collaborative and - as the name says - open machine learning. Users can upload, organize, search and download data sets and corresponding prediction tasks; they can run algorithms (flows) on the tasks and upload these runs for everyone to see and compare to other solutions. By connecting data, tasks, flows and runs online, <em>OpenML</em> allows for easy and fast collaboration to solve prediction challenges. <!-- Bernd: "prediction challenges" ist nicht so gut --></p>
+<p><a href="http://www.openml.org/"><em>OpenML</em></a> <span class="citation">(Vanschoren et al. 2014)</span> is an online platform for collaborative and - as the name says - open machine learning. Users can upload, organize, search and download data sets and corresponding prediction tasks; they can run algorithms (flows) on the tasks and upload these runs for everyone to see and compare to other solutions. By connecting data, tasks, flows and runs online, <em>OpenML</em> allows for easy and fast collaboration to solve prediction tasks.</p>
 <div id="aim-of-the-tutorial" class="section level1">
 <h1>Aim of the tutorial</h1>
-<p>In this tutorial we want to introduce <em>R</em> users to the <strong>OpenML</strong> <em>R</em> package <span class="citation">(Casalicchio et al. 2017)</span> and show how everyone can easily contribute to and make use of <em>OpenML</em>. At the end of the tutorial we want every attendee to be able to interact with the platform. We want to accomplish this by working hands-on.</p>
+<p>In this tutorial we want to introduce <em>R</em> users to the <a href="https://github.com/openml"><strong>OpenML</strong> <em>R</em> package</a> <span class="citation">(Casalicchio et al. 2017)</span> and show how everyone can easily make use of <em>OpenML</em> in their work, and share it with others online. At the end of the tutorial we want every attendee to be able to interact with the platform. We want to accomplish this by working hands-on.</p>
 </div>
 <div id="tutorial-content" class="section level1">
 <h1>Tutorial content</h1>
-<!-- TODO: Tutorial description -->
+<p>The tutorial will introduce the <strong>OpenML</strong> concept, the web interface of the server and how to interact with it from <em>R</em> scripts. A large part of the tutorial will demonstrate the different objects and features of the <strong>OpenML</strong> <em>R</em> package. Participants will learn how to run dozens of different machine learning algorithms from the <a href="http://github.com/mlr-org/mlr"><strong>mlr</strong> <em>R</em> package</a> on many <strong>OpenML</strong> datasets and tasks with very few lines of code, and upload their experiments automatically to the server to share them with others. The last hour of the tutorial will be devoted to construct a demo project together with the participants to answer a realistic question from machine learning together with <strong>OpenML</strong> and <em>R</em>.</p>
 <ul>
 <li>Overview of the online platform (web interface)</li>
 <li>Data, tasks, flows and runs</li>
@@ -143,7 +143,7 @@ $(document).ready(function () {
 <ul>
 <li>Installation and configuration</li>
 <li>Listing information</li>
-<li>Downloading <strong>OpenML</strong> objects</li>
+<li>Downloading <strong>OpenML</strong> datasets, tasks and runs</li>
 <li>Creating runs</li>
 <li>Uploading and Tagging</li>
 <li>Further features</li>
@@ -151,27 +151,28 @@ $(document).ready(function () {
 <li>Your first <em>OpenML</em> project</li>
 </ul>
 </div>
-<div id="target-audience-and-pre-requesites" class="section level1">
-<h1>Target audience and pre-requesites</h1>
+<div id="target-audience-and-prerequisites" class="section level1">
+<h1>Target audience and prerequisites</h1>
 <p>We aim to address a broad audience, since OpenML is interesting for many different people, such as people who</p>
 <ul>
-<li>have data (possibly with a prediction task they can’t solve on their own),</li>
-<li>analyse data,</li>
-<li>develop algorithms,</li>
+<li>have data (possibly with a prediction task they want to solve collaboratively),</li>
+<li>analyze data,</li>
+<li>develop and compare algorithms,</li>
 <li>want to learn about machine learning, or</li>
 <li>teach machine learning.</li>
 </ul>
-<p>The only pre-requesite required is a very basic understanding of machine learning and of <em>R</em>.</p>
+<p>The only prerequisite required is a very basic understanding of machine learning and of <em>R</em>.</p>
 </div>
 <div id="the-instructors" class="section level1">
 <h1>The instructors</h1>
-<p><a href="http://www.win.tue.nl/~jvanscho/">Joaquin Vanschoren</a> is the founder of OpenML and professor of machine learing at the Eindhoven University of Technology.</p>
+<p><a href="http://www.win.tue.nl/~jvanscho/">Joaquin Vanschoren</a> is the founder of <em>OpenML</em> and professor of machine learing at the Eindhoven University of Technology.</p>
 <p><a href="http://www.ebpi.uzh.ch/en/aboutus/departments/biostatistics/teambiostats/seibold.html">Heidi Seibold</a> is a PhD candidate in biostatistics at the University of Zurich.</p>
+<p><a href="http://www.compstat.statistik.uni-muenchen.de/people/bischl/">Bernd Bischl</a> is a professor for computational statistics at the LMU Munich, a long-term member of the OpenML project and the creator of the <a href="http://github.com/mlr-org/mlr"><strong>mlr</strong> package for machine learning</a>.</p>
 <p><em>OpenML</em> is an open source community project. We gladly represent the amazing <a href="http://www.openml.org/guide#!team"><em>OpenML</em> team</a>.</p>
 </div>
 <div id="openml-at-user" class="section level1">
 <h1>OpenML at useR!</h1>
-<p>We believe that many useR! attendees will be interested in using <em>OpenML</em> for their work, research and studies. The Open Source philosophy of <em>R</em> aligns with OpenML. The form of a hands-on tutorial to introduce OpenML is perfect, since the platform is only useful for people if they can actively participate. The <strong>OpenML</strong> <em>R</em> package makes participation easy for <em>R</em> users and three hours should get everyone into a state where they can use the package.</p>
+<p>We believe that many useR! attendees will be interested in using <em>OpenML</em> for their work, research and studies. The open source philosophy of <em>R</em> aligns with <a href="https://github.com/openml"><em>OpenML</em></a>. The form of a hands-on tutorial to introduce <em>OpenML</em> is perfect, since the platform is especially useful for people if they can actively participate. The <strong>OpenML</strong> <em>R</em> package makes participation easy for <em>R</em> users and three hours should get everyone into a state where they can use and benefit from the package.</p>
 <p><!-- - Goals/Aims/Learning objectives --> <!-- - Justification for running the tutorial at useR! 2017 --> <!-- - Description of the tutorial --> <!-- - Outline of the tutorial content --> <!-- - Pre-requisites --> <!-- - Potential attendees --> <!-- - Instructor biograph(y/ies) or link to online profile(s) --> <!-- - References --></p>
 </div>
 <div id="references" class="section level1 unnumbered">
