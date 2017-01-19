@@ -28,22 +28,17 @@ to solve prediction tasks.
 
 # Aim of the tutorial
 In this tutorial we want to introduce *R* users to the **OpenML** *R* package
-[@Casalicchio2017openml] and show how everyone can easily contribute to and
-make use of *OpenML*. At the end of the tutorial we want every attendee to be
-able to interact with the platform. We want to accomplish this by working
+[@Casalicchio2017openml] and show how everyone can easily make use of *OpenML* in their
+work, and share it with others online. At the end of the tutorial we want every attendee to be able to interact with the platform. We want to accomplish this by working
 hands-on.
 
 # Tutorial content
 
-The tutorial will introduce the **OpenML** concept, the web interface of the server and how software
-clients communicate with the server. A large part of the tutorial with demonstrate the different
+The tutorial will introduce the **OpenML** concept, the web interface of the server and how to interact with it from R scripts. A large part of the tutorial with demonstrate the different
 objects and features of the **OpenML** R package. 
 Participants will learn how to runs dozens of different machine learning algorithms from the [mlr
-R package](http://github.com/mlr-org/mlr) on **OpenML** tasks with very few lines of code, 
-and that meta-information for these algorithms is automatically uploaded to the server
-database. The last hour of the tutorial will be devoted to construct a demo project together with
-the participants to answer a realistic question from machine learning together with **OpenML** and
-*R*.
+R package](http://github.com/mlr-org/mlr) on many **OpenML** datasets and tasks with very few lines of code, and upload their experiments automatically to the server to share it with others. The last hour of the tutorial will be devoted to construct a demo project together with
+the participants to answer a realistic question from machine learning together with **OpenML** and *R*.
 
 - Overview of the online platform (web interface)
 - Data, tasks, flows and runs
@@ -53,7 +48,7 @@ the participants to answer a realistic question from machine learning together w
 - The *R* package
     + Installation and configuration
     + Listing information
-    + Downloading **OpenML** objects
+    + Downloading **OpenML** data, tasks, runs 
     + Creating runs 
     + Uploading and Tagging
     + Further features
@@ -64,7 +59,7 @@ the participants to answer a realistic question from machine learning together w
 We aim to address a broad audience, since OpenML is interesting for many
 different people, such as people who 
 
-- have data (possibly with a prediction task they can't solve on their own), 
+- have data (possibly with a prediction task they want to solve collaboratively), 
 - analyze data, 
 - develop and compare algorithms, 
 - want to learn about machine learning, or 
@@ -95,9 +90,9 @@ project and the creator of the [mlr package for machine learning](http://github.
 We believe that many useR! attendees will be interested in using *OpenML* for
 their work, research and studies. The Open Source philosophy of *R* aligns with
 OpenML. The form of a hands-on tutorial to introduce OpenML is perfect, since
-the platform is only useful for people if they can actively participate. The
+the platform is especially useful for people if they can actively participate. The
 **OpenML** *R* package makes participation easy for *R* users and three hours
-should get everyone into a state where they can use the package.
+should get everyone into a state where they can use and benefit from the package.
 
  <!-- - Goals/Aims/Learning objectives -->
  <!-- - Justification for running the tutorial at useR! 2017 -->
