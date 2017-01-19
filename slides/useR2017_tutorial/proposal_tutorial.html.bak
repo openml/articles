@@ -165,7 +165,7 @@ $(document).ready(function () {
 </div>
 <div id="the-instructors" class="section level1">
 <h1>The instructors</h1>
-<p><a href="http://www.win.tue.nl/~jvanscho/">Joaquin Vanschoren</a> is the founder of <em>OpenML</em> and professor of machine learning at the Eindhoven University of Technology.</p>
+<p><a href="http://www.win.tue.nl/~jvanscho/">Joaquin Vanschoren</a> is the founder of <em>OpenML</em> and professor of machine learing at the Eindhoven University of Technology.</p>
 <p><a href="http://www.ebpi.uzh.ch/en/aboutus/departments/biostatistics/teambiostats/seibold.html">Heidi Seibold</a> is a PhD candidate in biostatistics at the University of Zurich.</p>
 <p><a href="http://www.compstat.statistik.uni-muenchen.de/people/bischl/">Bernd Bischl</a> is a professor for computational statistics at the LMU Munich, a long-term member of the OpenML project and the creator of the <a href="http://github.com/mlr-org/mlr"><strong>mlr</strong> package for machine learning</a>.</p>
 <p><em>OpenML</em> is an open source community project. We gladly represent the amazing <a href="http://www.openml.org/guide#!team"><em>OpenML</em> team</a>.</p>
