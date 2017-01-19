@@ -28,8 +28,8 @@ to solve prediction tasks.
 
 # Aim of the tutorial
 In this tutorial we want to introduce *R* users to the [**OpenML** *R*
-package](https://github.com/openml) [@Casalicchio2017openml] and show how
-everyone can easily make use of *OpenML* in their work, and share it with
+package](https://github.com/openml/openml-r) [@Casalicchio2017openml] and show
+how everyone can easily make use of *OpenML* in their work, and share it with
 others online. At the end of the tutorial we want every attendee to be able to
 interact with the platform. We want to accomplish this by working hands-on.
 
