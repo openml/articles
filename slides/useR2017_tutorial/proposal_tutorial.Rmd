@@ -34,9 +34,9 @@ hands-on.
 
 # Tutorial content
 
-The tutorial will introduce the **OpenML** concept, the web interface of the server and how to interact with it from R scripts. A large part of the tutorial with demonstrate the different
+The tutorial will introduce the **OpenML** concept, the web interface of the server and how to interact with it from R scripts. A large part of the tutorial will demonstrate the different
 objects and features of the **OpenML** R package. 
-Participants will learn how to runs dozens of different machine learning algorithms from the [mlr
+Participants will learn how to run dozens of different machine learning algorithms from the [mlr
 R package](http://github.com/mlr-org/mlr) on many **OpenML** datasets and tasks with very few lines of code, and upload their experiments automatically to the server to share it with others. The last hour of the tutorial will be devoted to construct a demo project together with
 the participants to answer a realistic question from machine learning together with **OpenML** and *R*.
 
@@ -48,7 +48,7 @@ the participants to answer a realistic question from machine learning together w
 - The *R* package
     + Installation and configuration
     + Listing information
-    + Downloading **OpenML** data, tasks, runs 
+    + Downloading **OpenML** datasets, tasks and runs 
     + Creating runs 
     + Uploading and Tagging
     + Further features
