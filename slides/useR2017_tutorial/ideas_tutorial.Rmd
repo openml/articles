@@ -16,6 +16,7 @@ output: html_document
 # Structure
 
 ## Intro to openml.org 
+> Resources:  
 > [NIPS slides](https://github.com/openml/articles/blob/master/OpenML%20NIPS.pdf)
 
 - Why, what, how, who, for whom
@@ -31,6 +32,7 @@ output: html_document
 - You received a data set ID. Create a sensible task for this data set. ([not yet possible](https://github.com/openml/website/issues/96)) 
 
 ## Intro to the OpenML R package
+> Resources:  
 > [Paper](https://bitbucket.org/giuseppec/openml-r-paper/src)  
 > [Tutorial](http://openml.github.io/openml-r/vignettes/OpenML.html)  
 > [Reisensburg talk](https://bitbucket.org/giuseppec/openml-r-paper/src)  
