@@ -1,0 +1,93 @@
+---
+title: "useR! 2017 tutorial ideas"
+output: html_document
+---
+
+
+# Info
+
+- 3 hours
+- audience: R users
+- 8 morning tutorials, 8 afternoon tutorial
+- People who are fast in the practicals can check out https://www.openml.org/guide
+
+
+
+# Structure
+
+## Intro to openml.org 
+> [NIPS slides](https://github.com/openml/articles/blob/master/OpenML%20NIPS.pdf)
+
+- Why, what, how, who, for whom
+- Data sets, tasks, flows, runs
+
+
+----
+
+*Practical*
+
+- Get an openml account (if you don't have one yet)    
+- What is the best algorithm on the supervised regression task with the most runs? 
+- You received a data set ID. Create a sensible task for this data set. ([not yet possible](https://github.com/openml/website/issues/96)) 
+
+## Intro to the OpenML R package
+> [Paper](https://bitbucket.org/giuseppec/openml-r-paper/src)  
+> [Tutorial](http://openml.github.io/openml-r/vignettes/OpenML.html)  
+> [Reisensburg talk](https://bitbucket.org/giuseppec/openml-r-paper/src)  
+> [Heidi's departement presentation](https://github.com/openml/articles/tree/master/slides/heidi_hittisau)  
+> [mlr loves OpenML blogpost](http://mlr-org.github.io/mlr-loves-OpenML/)
+
+### Installation and configuration
+
+----
+
+*Practical*
+
+- Install the OpenML R package (if you haven't done so yet)
+- Add your API-key to your config file
+
+
+
+### Listing
+
+----
+
+*Practical*
+
+- List all regresssion tasks corresponding to data sets with between 
+  50 and 55 observations.
+
+### Downloading
+
+----
+
+*Practical*
+
+- Download task with task ID XXX
+- Download the task you created earlier.
+
+### Running (short intro to mlr)
+
+----
+
+*Practical*
+
+- Run your favorite learner/algorithm (from mlr) on task XXX that you already downloaded.
+Hint: use `listLearners()` to find learners.
+
+
+
+
+### Uploading
+
+----
+
+*Practical*
+
+- Upload your run to OpenML. Add the tag "useR17". 
+- Check if the upload worked by going to the website. Also check if the tag was
+  added (you can also still add it on the website). 
+  
+
+## Benchmarking study demo
+
