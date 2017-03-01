@@ -1,6 +1,7 @@
 ---
 title: "useR! 2017 tutorial ideas"
 output: html_document
+# output: beamer_presentation
 ---
 
 
@@ -10,6 +11,18 @@ output: html_document
 - audience: R users
 - 8 morning tutorials, 8 afternoon tutorial
 - People who are fast in the practicals can check out https://www.openml.org/guide
+- As preparation create a list of data sets not connected to a task
+```{r, message=FALSE}
+library("OpenML")
+
+dat_info <- listOMLDataSets(limit = 99999)
+tsk_info <- listOMLTasks(limit = 99999)
+
+dat_has_task <- dat_info$data.id %in% tsk_info$data.id
+dat_no_task <- which(!dat_has_task)
+dat_info[dat_no_task, 1:6]
+```
+
 
 
 
