@@ -11,6 +11,7 @@ output: html_document
 - audience: R users
 - 8 morning tutorials, 8 afternoon tutorial
 - People who are fast in the practicals can check out https://www.openml.org/guide
+- Bring post-its so people can show that they have a problem
 - Create a little cheat sheet
 - As preparation create a list of data sets not connected to a task
 ```{r, message=FALSE, eval=FALSE}

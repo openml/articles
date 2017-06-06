@@ -72,8 +72,9 @@ check out https://www.openml.org/guide or help others.
 <!-- [3 minutes, Bernd] -->
 
 ---
+class:inverse
 
-*Practical* 
+### *Practical*  
 <!-- [5 minutes, Bernd] -->
 
 - Install the OpenML R package (if you haven't done so yet)
@@ -86,8 +87,9 @@ check out https://www.openml.org/guide or help others.
 <!-- [7 minutes, Bernd] -->
 
 ---
+class:inverse
 
-*Practical* 
+### *Practical*  
 <!-- [5 minutes, Bernd] -->
 
 - List all regresssion tasks corresponding to data sets with between 
@@ -102,17 +104,23 @@ check out https://www.openml.org/guide or help others.
 
 
 ---
-*Practical* 
+class:inverse
+
+### *Practical*  
 <!-- [5 minutes, Bernd] -->
 
 - Download task with task ID XXX.
 
 
 ---
-class: inverse, center, middle
+class: inverse
+background-image: url(https://c1.staticflickr.com/5/4049/4468213356_8b48e33d33_o.jpg)
+background-size: cover
 
-# BREAK
+# BREAK TIME
 
+???
+Image credit: [Dave Dugdale](https://flic.kr/p/7NQLaj)
 
 ---
 
@@ -124,8 +132,8 @@ class: inverse, center, middle
 <!-- [10 minutes, Bernd] -->
 
 ---
-
-*Practical* 
+class:inverse
+### *Practical*  
 <!-- [25 minutes, Bernd] -->
 
 - Run your favorite learner/algorithm (from mlr) on task XXX that you already downloaded.
@@ -141,8 +149,9 @@ Hint: use `listLearners()` to find learners.
 <!-- [10 minutes, Heidi] -->
 
 ---
+class:inverse
 
-*Practical* 
+### *Practical*  
 <!-- [10 minutes, Heidi] -->
 
 - List the names of data sets in study_14 
