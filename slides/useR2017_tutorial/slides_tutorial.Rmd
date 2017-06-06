@@ -1,0 +1,130 @@
+---
+title: "OpenML: Connecting R to the Machine Learning Platform OpenML"
+subtitle: "useR! 2017 tutorial"
+author: "Joaquin Vanschoren, Bernd Bischl, Heidi Seibold"
+date: "- *If you haven't done so yet, create an account on OpenML.org.* \n
+- *If you haven't done so yet, install the OpenML R package and one of the packages farff or RWeka*"
+output:
+  xaringan::moon_reader:
+    lib_dir: libs
+    nature:
+      highlightStyle: github
+      highlightLines: true
+      countIncrementalSlides: false
+---
+<!-- For this to work, install xaringan (devtools::install_github('yihui/xaringan')) -->
+
+```{r setup, include=FALSE}
+options(htmltools.dir.version = FALSE)
+```
+
+## Intro to openml.org [15 minutes, Joaquin]
+> Resources:  
+> [NIPS slides](https://github.com/openml/articles/blob/master/OpenML%20NIPS.pdf)
+
+- Why, what, how, who, for whom
+- Data sets, tasks, flows, runs (all have their own website)
+- vocabulary: features = covariates, number of observations = number of instances, ML = Machine Learing (not maximum likelihood)
+
+
+
+---
+## Intro to the OpenML R package
+> Resources:  
+> [Paper](https://bitbucket.org/giuseppec/openml-r-paper/src)  
+> [Tutorial](http://openml.github.io/openml-r/vignettes/OpenML.html)  
+> [Reisensburg talk](https://bitbucket.org/giuseppec/openml-r-paper/src)  
+> [Heidi's departement presentation](https://github.com/openml/articles/tree/master/slides/heidi_hittisau)  
+> [mlr loves OpenML blogpost](http://mlr-org.github.io/mlr-loves-OpenML/)
+
+
+
+---
+### Motivating example: A small benchmarking study demo [15 minutes, Bernd]
+
+- How to run a simple benchmark study
+- Link to batchmark blogpost
+
+
+
+---
+### Installation and configuration [3 minutes, Bernd]
+
+---
+
+*Practical* [5 minutes, Bernd]
+
+- Install the OpenML R package (if you haven't done so yet)
+- Add your API-key to your config file
+
+
+
+---
+### Listing [7 minutes, Bernd]
+
+---
+
+*Practical* [5 minutes, Bernd]
+
+- List all regresssion tasks corresponding to data sets with between 
+  50 and 55 observations.
+
+
+
+---
+
+### Downloading [10 minutes, Bernd]
+
+.
+---
+*Practical* [5 minutes, Bernd]
+
+- Download task with task ID XXX.
+
+
+---
+class: inverse, center, middle
+
+# BREAK
+
+
+---
+
+### Intro to mlr [15 minutes, Bernd]
+
+---
+### Running and uploading [10 minutes, Bernd]
+
+---
+
+*Practical* [25 minutes, Bernd]
+
+- Run your favorite learner/algorithm (from mlr) on task XXX that you already downloaded.
+Hint: use `listLearners()` to find learners.
+- Upload your run to OpenML. Add the tag "useR17". 
+- Check if the upload worked by going to the website. Also check if the tag was
+  added (you can also still add it on the website). 
+- Check the website on how well you did
+  
+
+---
+## Tagging and studies [10 minutes, Heidi]
+
+---
+
+*Practical* [10 minutes, Heidi]
+
+- List the names of data sets in study_14 
+- Summarize performance results 
+
+
+---
+## Short summary of the cool stuff we are already doing [15 minutes, Heidi]
+
+---
+## How to contribute [10 minutes, Heidi]
+
+---
+class: inverse, center, middle
+
+## Open Science is awesome, let's make it happen
