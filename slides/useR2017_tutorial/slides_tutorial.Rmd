@@ -18,7 +18,9 @@ output:
 options(htmltools.dir.version = FALSE)
 ```
 
-## Intro to openml.org [15 minutes, Joaquin]
+## Intro to openml.org 
+<!-- [15 minutes, Joaquin] -->
+
 > Resources:  
 > [NIPS slides](https://github.com/openml/articles/blob/master/OpenML%20NIPS.pdf)
 
@@ -40,7 +42,8 @@ options(htmltools.dir.version = FALSE)
 
 
 ---
-### Motivating example: A small benchmarking study demo [15 minutes, Bernd]
+### Motivating example: A small benchmarking study demo 
+<!-- [15 minutes, Bernd] -->
 
 - How to run a simple benchmark study
 - Link to batchmark blogpost
@@ -48,11 +51,13 @@ options(htmltools.dir.version = FALSE)
 
 
 ---
-### Installation and configuration [3 minutes, Bernd]
+### Installation and configuration 
+<!-- [3 minutes, Bernd] -->
 
 ---
 
-*Practical* [5 minutes, Bernd]
+*Practical* 
+<!-- [5 minutes, Bernd] -->
 
 - Install the OpenML R package (if you haven't done so yet)
 - Add your API-key to your config file
@@ -60,11 +65,13 @@ options(htmltools.dir.version = FALSE)
 
 
 ---
-### Listing [7 minutes, Bernd]
+### Listing 
+<!-- [7 minutes, Bernd] -->
 
 ---
 
-*Practical* [5 minutes, Bernd]
+*Practical* 
+<!-- [5 minutes, Bernd] -->
 
 - List all regresssion tasks corresponding to data sets with between 
   50 and 55 observations.
@@ -73,11 +80,13 @@ options(htmltools.dir.version = FALSE)
 
 ---
 
-### Downloading [10 minutes, Bernd]
+### Downloading 
+<!-- [10 minutes, Bernd] -->
 
-.
+
 ---
-*Practical* [5 minutes, Bernd]
+*Practical* 
+<!-- [5 minutes, Bernd] -->
 
 - Download task with task ID XXX.
 
@@ -90,14 +99,17 @@ class: inverse, center, middle
 
 ---
 
-### Intro to mlr [15 minutes, Bernd]
+### Intro to mlr 
+<!-- [15 minutes, Bernd] -->
 
 ---
-### Running and uploading [10 minutes, Bernd]
+### Running and uploading 
+<!-- [10 minutes, Bernd] -->
 
 ---
 
-*Practical* [25 minutes, Bernd]
+*Practical* 
+<!-- [25 minutes, Bernd] -->
 
 - Run your favorite learner/algorithm (from mlr) on task XXX that you already downloaded.
 Hint: use `listLearners()` to find learners.
@@ -108,21 +120,34 @@ Hint: use `listLearners()` to find learners.
   
 
 ---
-## Tagging and studies [10 minutes, Heidi]
+## Tagging and studies 
+<!-- [10 minutes, Heidi] -->
 
 ---
 
-*Practical* [10 minutes, Heidi]
+*Practical* 
+<!-- [10 minutes, Heidi] -->
 
 - List the names of data sets in study_14 
 - Summarize performance results 
 
 
 ---
-## Short summary of the cool stuff we are already doing [15 minutes, Heidi]
+## Short summary of the cool stuff we are already doing 
+<!-- [15 minutes, Heidi] -->
 
 ---
-## How to contribute [10 minutes, Heidi]
+class: inverse
+background-image: url(https://c1.staticflickr.com/8/7361/13937729989_a50129f7f7_o.jpg)
+background-size: cover
+
+## Contributors needed!
+<!-- [10 minutes, Heidi] -->
+
+https://github.com/openml/OpenML/wiki/How-to-contribute
+
+???
+Image credit: [Papahānaumokuākea Marine National Monument](https://flic.kr/p/neCvxt)
 
 ---
 class: inverse, center, middle
