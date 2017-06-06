@@ -18,6 +18,23 @@ output:
 options(htmltools.dir.version = FALSE)
 ```
 
+- If you haven't done so yet, create an account on [OpenML.org](www.openml.org).
+
+- If you haven't done so yet, install the OpenML R package and one of the packages farff or RWeka:
+```{r, eval=FALSE}
+install.packages("OpenML")
+install.packages("farff")  # or install.packages("RWeka")
+```
+
+
+
+- If something is not clear / you have a question / you have a problem, please **let us know**!
+
+- We will have lots of practicals, if you are faster than others, you can 
+check out https://www.openml.org/guide or help others.
+
+
+---
 ## Intro to openml.org 
 <!-- [15 minutes, Joaquin] -->
 
