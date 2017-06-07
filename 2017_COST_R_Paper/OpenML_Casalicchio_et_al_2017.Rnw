@@ -1,0 +1,210 @@
+% http://www.springer.com/statistics/journal/180?detailsPage=pltci_1060154
+%%%%%%%%%%%%%%%%%%%%%%% file template.tex %%%%%%%%%%%%%%%%%%%%%%%%%
+%
+% This is a general template file for the LaTeX package SVJour3
+% for Springer journals.          Springer Heidelberg 2010/09/16
+%
+% Copy it to a new file with a new name and use it as the basis
+% for your article. Delete % signs as needed.
+%
+% This template includes a few options for different layouts and
+% content for various journals. Please consult a previous issue of
+% your journal as needed.
+%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%
+% First comes an example EPS file -- just ignore it and
+% proceed on the \documentclass line
+% your LaTeX will extract the file if required
+\begin{filecontents*}{example.eps}
+%!PS-Adobe-3.0 EPSF-3.0
+%%BoundingBox: 19 19 221 221
+%%CreationDate: Mon Sep 29 1997
+%%Creator: programmed by hand (JK)
+%%EndComments
+gsave
+newpath
+  20 20 moveto
+  20 220 lineto
+  220 220 lineto
+  220 20 lineto
+closepath
+2 setlinewidth
+gsave
+  .4 setgray fill
+grestore
+stroke
+grestore
+\end{filecontents*}
+%
+\RequirePackage{fix-cm}
+%
+%\documentclass{svjour3}                     % onecolumn (standard format)
+%\documentclass[smallcondensed]{svjour3}     % onecolumn (ditto)
+\documentclass[smallextended]{svjour3}       % onecolumn (second format)
+%\documentclass[twocolumn]{svjour3}          % twocolumn
+%
+\smartqed  % flush right qed marks, e.g. at end of proof
+%
+\usepackage{graphicx}
+%\usepackage[utf8]{inputenc}
+%\usepackage[T1]{fontenc}
+\usepackage{amsmath,amssymb,array}
+\usepackage{booktabs}
+\usepackage{todonotes}
+\usepackage[sectionbib,round]{natbib}
+\usepackage[hyphens]{url}
+\usepackage{hyperref}
+
+%\usepackage[none]{hyphenat}
+
+%
+% \usepackage{mathptmx}      % use Times fonts if available on your TeX system
+%
+% insert here the call for the packages your document requires
+%\usepackage{latexsym}
+% etc.
+%
+% please place your own definitions here and don't use \def but
+% \newcommand{}{}
+\newcommand{\new}[1]{#1}
+\newcommand{\code}[1]{\texttt{#1}}
+
+\newcounter{mycomment}
+\newcommand{\mycomment}[2][]{%
+    % initials of the author (optional) + note in the margin
+    \refstepcounter{mycomment}%
+    {%
+    \todo[color={red!100!green!33},size=\small]{%
+        \textbf{Comment [\uppercase{#1}\themycomment]:}~#2}%
+    }}
+\newcommand{\todoBH}[1]{\mycomment[BH]{#1}}
+%
+% Insert the name of "your journal" with
+% \journalname{myjournal}
+%
+\begin{document}
+
+%\begin{article}
+
+\title{\new{\code{OpenML}: An R Package to Connect to the Machine Learning Platform OpenML}}
+\titlerunning{An R Package to Connect to the OpenML Platform}
+%\thanks{Grants or other notes
+%about the article that should go on the front page should be
+%placed here. General acknowledgments should be placed at the end of the article.}
+
+%\subtitle{Do you have a subtitle?\\ If so, write it here}
+
+%\titlerunning{Short form of title}        % if too long for running head
+
+% FIXME: we need some kind on order here
+\author{Giuseppe~Casalicchio~\and~Jakob~Bossek~\and~Michel~Lang~\and~
+Dominik~Kirchhoff~\and~Pascal~Kerschke~\and~Benjamin~Hofner~\and
+Heidi~Seibold~\and~Joaquin~Vanschoren~\and~Bernd~Bischl}
+
+%\authorrunning{G.~Casalicchio,~J.~Bossek,~M.~Lang,~D.~Kirchhoff,~P.~Kerschke,~B.~Hofner,~H.~Seibold,~J.~Vanschoren,~B.~Bischl} % if too long for running head
+
+\institute{Giuseppe Casalicchio, Bernd Bischl \at
+  Department of Statistics, Ludwig-Maximilians-University Munich, \\
+  %Ludwigstra{\ss}e 33,
+  80539 Munich, Germany \\
+  \email{giuseppe.casalicchio@stat.uni-muenchen.de}%\\
+\and
+  Jakob Bossek, Pascal Kerschke \at
+  Information Systems and Statistics, University of M{\"u}nster, \\
+  %Leonardo-Campus 3,
+  48149 M{\"u}nster, Germany%\\
+\and
+  Michel Lang \at
+  Department of Statistics, TU Dortmund University, %\\
+  %Vogelpothsweg 87,
+  44227 Dortmund, Germany%\\
+\and
+  Dominik Kirchhoff \at
+  Dortmund University of Applied Sciences and Arts, %\\
+  %Emil-Figge-Stra{\ss}e 42,
+  44227 Dortmund, Germany%\\
+\and
+  Benjamin Hofner \at
+  Section of Biostatistics, Paul-Ehrlich-Institut, %\\
+  %Paul-Ehrlich-Stra{\ss}e 51-59,
+  63225 Langen, Germany%\\
+\and
+  Heidi Seibold \at
+  Epidemiology, Biostatistics and Prevention Institute, University of Zurich, \\
+  %Hirschengraben 84,
+  8001 Zurich, Switzerland%\\
+\and
+  Joaquin Vanschoren \at
+  Eindhoven University of Technology, %\\
+  %P.O. Box 513,
+  5600 MB Eindhoven, Netherlands%\\
+}
+
+\date{Received: date / Accepted: date}
+% The correct dates will be entered by the editor
+\maketitle
+
+\abstract{
+OpenML is an online machine learning platform where researchers can
+easily share data, machine learning tasks and experiments as well as organize them
+online to work and collaborate more efficiently. In this paper, we present an
+\code{R} package to interface with the OpenML platform and illustrate its usage in
+combination with the machine learning \code{R} package \code{mlr}~\citep{JMLR:v17:15-066}.
+We show how the \code{OpenML} package allows \code{R} users to easily search,
+download and upload data sets and machine learning tasks. Furthermore, we also
+show how to upload results of experiments, share them with others and
+download results from other users. %to build on them and extend them.
+Beyond ensuring
+reproducibility of results, the OpenML platform automates much of the drudge work, speeds up
+research, facilitates collaboration and increases the users' visibility online.
+\keywords{Databases \and Machine Learning \and R \and Reproducible Research}
+}
+
+<<load-pkgs, cache=FALSE, include=FALSE>>=
+#library(mlr)
+library(OpenML)
+library(knitr)
+library(xtable)
+library(knitr)
+setOMLConfig(apikey = "c1994bdb7ecb3c6f3c8f3b35f4b47f1f",
+  server = "http://www.openml.org/api/v1", verbosity = 0)
+
+## knitr highlighting black and white
+# opts_knit$set( out.format="latex" )
+# knit_theme$set("print")
+opts_chunk$set(size = "small", highlight = FALSE, fig.path = "")
+
+## ggplot black and white
+ggplot2::theme_set(ggplot2::theme_bw() +
+    ggplot2::theme(strip.text = ggplot2::element_text(face = "bold"),
+      strip.background = ggplot2::element_rect(fill = "white",
+        colour = "white")))
+@
+
+<<01-intro, child="01-intro.Rnw",cache=FALSE>>=
+@
+
+<<02-server, child="02-server.Rnw",cache=FALSE>>=
+@
+
+<<03-mlr, child="03-mlr.Rnw",cache=FALSE>>=
+@
+
+<<04-package, child="04-package.Rnw",cache=FALSE>>=
+@
+
+<<05-case-study, child="05-case-study.Rnw",cache=FALSE>>=
+@
+
+<<06-outlook, child="06-outlook.Rnw",cache=FALSE>>=
+@
+
+
+% BibTeX users please use one of
+\bibliographystyle{spbasic}      % basic style, author-year citations
+%\bibliographystyle{spmpsci}      % mathematics and physical sciences
+%\bibliographystyle{spphys}       % APS-like style for physics
+\bibliography{Bib}
+
+\end{document}

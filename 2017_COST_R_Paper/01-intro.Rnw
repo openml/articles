@@ -1,0 +1,115 @@
+\Sexpr{set_parent('Makepaper.Rnw')}
+\section{Introduction}
+\label{sec:introduction}
+
+%In \citet{van2013openml} and \citet{vanschoren2014openml} you will find a cool
+%motivation and illustration of OpenML.
+OpenML is an online machine learning platform for sharing and organizing data,
+machine learning algorithms and experiments \citep{openml2013}. It is designed to
+create a frictionless, networked ecosystem~\citep{nielsen2012reinventing}, allowing people all over the world to collaborate and build directly on each
+other's latest ideas, data and results. Key elements of OpenML are data sets,
+tasks, flows and runs:
+
+\begin{itemize}
+\item \textbf{Data sets} can be shared (under a licence) by uploading them or simply linking to existing data repositories (e.g., \href{http://mldata.org}{mldata.org}, \href{https://figshare.com}{figshare.com}).
+For known data formats (e.g., ARFF for tabular data), OpenML will automatically
+analyze and annotate the data sets with measurable characteristics to support detailed search and further analysis.
+Data sets can be repeatedly updated or changed and are then automatically versioned.
+
+\item \textbf{Tasks} can be viewed as containers including a data set and additional information defining what is to be learned. They define which input data
+are given and which output data should be obtained. For instance, classification
+tasks will provide the target feature, the evaluation measure (e.g., the area under the curve) and the estimation procedure (e.g., cross-validation splits) as inputs. As output they expect a
+description of the machine learning algorithm or workflow that was used and, if available, its predictions.
+%Optionally, trained models can also be returned.
+
+\item \textbf{Flows} are implementations of single machine learning algorithms
+or whole workflows that solve a specific task, e.g., a random forest 
+implementation is a flow that can be used
+to solve a classification or regression task. 
+%They can be single algorithm implementations, scripts (e.g.,\ in R) or workflows (e.g.,\ in tools
+%such as RapidMiner~\citep{RCOMM2013} and KNIME~\citep{Berthold:2008p28224}).
+Ideally, flows are already implemented (or custom) algorithms in existing software that 
+take OpenML tasks as inputs and can automatically read and solve them.
+They also contain a list (and description) of possible hyperparameters that are available for the algorithm.
+%Ideally, flows are wrappers around existing software that take OpenML tasks as
+%inputs and can automatically read and solve them. %, since this allows automatic execution of flows on new data sets.
+
+\item \textbf{Runs} are the result of executing flows, optionally with preset
+hyperparameter values, on tasks and contain all expected outputs and evaluations
+of these outputs (e.g., the accuracy of predictions).
+Runs are fully reproducible because they are automatically linked to specific 
+data sets, tasks, flows and hyperparameter settings.
+They also include the authors of the run and any additional information provided 
+by them, such as runtimes. 
+Similar to data mining challenge platforms~\citep[e.g., Kaggle;][]{Carpenter:2011p34283}, OpenML evaluates all submitted results (using a range of evaluation measures) and
+compares them online. The difference, however, is that
+OpenML is designed for collaboration rather than competition: anyone can browse,
+immediately build on and extend all shared results.
+\end{itemize}
+
+\noindent As an open science platform, OpenML provides important benefits for the science community and beyond.
+
+\paragraph{Benefits for Science:}
+Many sciences have made significant breakthroughs by adopting online tools that
+help organizing, structuring and analyzing scientific data online~\citep{nielsen2012reinventing}.
+Indeed, any shared idea, question, observation
+or tool may be noticed by someone who has just the right expertise to
+spark new ideas, answer open questions, reinterpret observations or reuse data
+and tools in unexpected new ways. Therefore, sharing research results and 
+collaborating online as a (possibly cross-disciplinary) team enables scientists
+to quickly build on and extend the results of others, fostering new discoveries. 
+%By sharing research and collaborating online, such ``happy accidents'' become even more likely.
+
+Moreover, ever larger studies
+become feasible as a lot of data are already available. %This data can also be easily mined. 
+Questions such as ``Which hyperparameter is important to tune?'', ``Which
+is the best known workflow for analyzing this data set?'' or ``Which data sets are
+similar in structure to my own?'' can be answered in minutes by
+reusing prior experiments, instead of spending days setting up and running new
+experiments~\citep{Vanschoren12}.
+
+% Large-scale studies can also be undertaken as a (possibly cross-disciplinary)
+% team, with many scientists contributing according to their specific skills,
+% time or resources. Domain scientists can draw attention to an important
+% scientific problem by uploading data and formulating a machine learning task.
+% They can then easily collaborate with machine learning researchers
+% to explore different techniques together, design workflows and share large-scale machine
+% learning experiments in real time. Constant online interaction allows direct feedback
+% on the practical utility of all generated models and facilitates guiding the collaboration
+% to the desired outcome.
+
+\paragraph{Benefits for Scientists:}
+Scientists can also benefit personally from using Open\-ML. For example, they can 
+\textit{save time}, because OpenML assists in many routine and tedious duties:
+finding data sets, tasks, flows and prior results, setting up experiments
+and organizing all experiments for further analysis. Moreover, new experiments
+are immediately compared to the state of the art without always having to rerun
+other people's experiments.
+
+Another benefit is that linking one's results to those of others has a large potential for
+\textit{new discoveries}~\new{\citep{feurer2015initializing, post2016does, Au2016}}, leading to more publications and more collaboration with
+other scientists all over the world.
+Finally, OpenML can help scientists to \textit{reinforce their reputation} by making their
+work (published or not) visible to a wide group of people and by showing
+how often one's data, code and experiments are downloaded or reused in the
+experiments of others.
+
+\paragraph{Benefits for Society:}
+OpenML also provides a useful learning and working environment for students, citizen
+scientists and practitioners. Students and citizen scientist can easily
+explore the state of the art and work together with top minds by contributing
+their own algorithms and experiments. Teachers can challenge their students by
+letting them compete on OpenML tasks or by reusing OpenML data in
+assignments. Finally, machine learning practitioners can explore and reuse the
+best solutions for specific analysis problems, interact with the scientific
+community or efficiently try out many possible approaches. \\
+
+\noindent The remainder of this paper is structured as follows. First, we discuss the web
+services offered by the OpenML server and the website on \href{http://openml.org}{OpenML.org} that allows
+web access to all shared data and several tools for data organization and
+sharing. Second, we briefly introduce the \code{mlr} package \citep{JMLR:v17:15-066, schiffner2016mlr}, which is a machine 
+learning toolbox for \code{R} \citep{r2016} and offers a unified interface to many machine learning algorithms.
+Third, we discuss and illustrate some important functions of the \code{OpenML R}
+package. After that, we illustrate its usage in combination with
+the \code{mlr R} package by conducting a short case study. Finally, we conclude
+with a discussion and an outlook to future developments.

@@ -1,0 +1,339 @@
+\Sexpr{set_parent('Makepaper.Rnw')}
+\section{The OpenML R Package}
+\label{sec:package}
+
+The \code{OpenML} \code{R} package \citet{casalicchio17} is an interface to interact with
+the OpenML server directly from within \code{R}. Users can retrieve
+data sets, tasks, flows and runs from the server and also create and upload
+their own. This section details how to install and configure the package
+and demonstrates its most important functionalities.
+
+
+\subsection{Installation and Configuration}
+\label{sec:config}
+To interact with the OpenML server, users need to authenticate using an \emph{API key},
+a secret string of characters that uniquely identifies the user. It is generated and shown
+on users' profile page after they register on the website \code{\url{http://www.openml.org}}. For demonstration
+purposes, we will use a public read-only API key that only allows to retrieve
+information from the server and should be replaced with the user's personal API key to be able to use all features.
+The \code{R} package can be easily installed and configured as follows:
+
+<<setupOML, eval = FALSE, warning = FALSE, message = FALSE>>=
+install.packages("OpenML")
+library("OpenML")
+saveOMLConfig(apikey = "c1994bdb7ecb3c6f3c8f3b35f4b47f1f")
+@
+
+
+
+The \code{saveOMLConfig} function creates a \code{config} file,
+which is always located in a folder called \code{.openml} within the user's home
+directory. This file stores the user's API key and other configuration settings, which
+can always be changed manually or through the \code{saveOMLConfig} function.
+%Every time the package is loaded, the entries from the \code{config} file are set as default configuration.
+Alternatively, the \code{setOMLConfig} function allows to set the API key and
+the other entries \emph{temporarily}, i.e., only for the current \code{R} session.
+%To set the API key and the other entries temporarily, i.e., only for the current \code{R}
+%session and without changing the \code{config} file itself, the \code{setOMLConfig}
+%function can be used. %Therefore, the configuration file is not mandatory but highly recommended.
+
+
+\subsection{Listing Information}
+
+In this section, we show how to list the available OpenML data sets, tasks, flows
+and runs using listing functions that %. For each of these exists a function beginning with \code{listOML} that
+always return a \code{data.frame} containing the queried information.
+Each data set, task, flow and run has a unique ID, which can be used to access it directly.
+
+\paragraph{Listing Data Sets and Tasks:}
+A list of all data sets and tasks that are available on the OpenML server
+can be obtained using the \code{listOMLDataSets} and \code{listOMLTasks} function,
+respectively.
+Each entry provides information such as the ID, the name and basic
+characteristics (e.g.,\ number of features, number of observations, classes, missing values) of the corresponding data set.
+In addition, the list of tasks contains information about the task type (e.g., \code{"Supervised Classification"}), the evaluation measure
+(e.g., \code{"Predictive Accuracy"}) and the estimation procedure (e.g., \code{"10-fold Crossvalidation"}) used to estimate model performance.
+Note that multiple tasks can be defined for a specific data set, for example, the same data set can be used for multiple task types
+(e.g. classification and regression tasks) as well as for tasks differing in their estimation procedure,
+evaluation measure or target value. 
+
+To find data sets or tasks that meet specific
+requirements, one can supply arguments to the listing functions.
+In the example below, we list all supervised classification tasks based on data sets having two classes for the target feature,
+between 500 and 999 instances, at most 100 features and no missing values:
+
+% A list of all data sets that are available at the OpenML server
+% can be obtained using the \code{listOMLDataSets} function. The list shows the
+% ID and basic data characteristics (number of features, instances, classes,
+% missing values etc.) of each data set.
+% %The ID and basic data characteristics (number of features, instances, classes,
+% %missing values etc.) of each data set which is available at the OpenML server
+% %can be obtained using the \code{listOMLDataSets} function.
+% Furthermore, it is also interesting to see if someone else has already created
+% scientific tasks based on data sets that a user is interested in.
+% %Each task is specified for a specific data set.
+% Since many different tasks can be defined for a specific data set, there might
+% be more than one task available that uses the same data set but uses, e.g, a
+% different estimation procedure, evaluation measure or target value.
+% A list of all available tasks can be retrieved via the \code{listOMLTasks} function.
+% Both functions provide information such as the data set ID, the name, and basic
+% characteristics of the corresponding data set. In addition to this, the list of tasks
+% provides also information such as the task ID, the task type (e.g., \code{"Supervised
+% Classification"}), the evaluation measure and the estimation procedure (such as
+% \code{"10-fold Crossvalidation"}) that will be used to estimate the model
+% performance of the task.  %For more details, see the \code{R} output below.
+% Both functions provide function arguments to do user-defined requests and can therefore
+% be used to browse the OpenML data base for appropriate data sets
+% or tasks that meet the requirements of a user. For example, one can list all
+% tasks that base on data sets having between 500 and 999 instances, at most
+% 100 features, two classes for the target feature, and no missing values:
+
+<<2, message=FALSE, warning=FALSE, eval = TRUE>>=
+tasks = listOMLTasks(task.type = "Supervised Classification",
+  number.of.classes = 2, number.of.instances = c(500, 999),
+  number.of.features = c(1, 100), number.of.missing.values = 0)
+tasks[1:2, c("task.id", "name", "number.of.instances", "number.of.features")]
+@
+
+\paragraph{Listing Flows and Runs:}
+
+When using the \code{mlr} package, flows are basically learners from 
+\code{mlr}, which, as stated previously, 
+can also be a more complex workflow when different \code{mlr} wrappers are nested.
+Custom flows can be created by integrating custom machine learning algorithms and wrappers 
+into \code{mlr}. %\textsuperscript{\ref{lrn}}.
+%The \code{OpenML} \code{R} package offers support to create, upload and download
+%OpenML flows. %When using the \code{mlr} package, flows are \code{mlr} learners, which, as
+%stated in the previous section, can also be a more complex workflow when different
+%\code{mlr} wrappers are nested. It is also possible to integrate custom machine
+%learning algorithms and wrappers into \code{mlr}\textsuperscript{\ref{lrn}}, which can then be converted to an
+%OpenML flow (an \code{OMLFlow} object) using the \code{convertMlrLearnerToOMLFlow} function.
+%Alternatively, \code{R} developers can develop custom wrappings of their algorithms as \code{OMLFlow} objects.
+The list of all available flows on OpenML can be downloaded using the \code{listOMLFlows} function.
+Each entry contains information such as its ID, its name, its version and the user who
+first uploaded the flow to the server.
+%A new version of a flow is automatically assigned by the server when an already existing flow that has been created with a different \code{R} or package version is uploaded.
+Note that the list of flows will not only contain flows created with \code{R},
+but also flows from other machine learning toolkits, such as WEKA \citep{Hall:2009p14495},
+MOA~\citep{Bifet:2010p28524} and scikit-learn~\citep{scikit-learn}, 
+which can be recognized by the name of the flow.
+%When an already existing flow with the same name has been created with a
+%different version of the toolkit, e.g., with a different \code{R} version, the
+%internal flow version will be different.
+%\todoBH{Can we better explain the differences between flow and run evaluation? Both are based on the flow, aren't they?}
+
+When a flow, along with a specific setup (e.g., specific hyperparameter values),
+is applied to a task, it creates a run. The \code{listOMLRuns} function lists all runs
+that, for example, refer to a specific \code{task.id} or \code{flow.id}. %and constraints such as the \code{task.id} can be specified as attributes. Moreover, the OpenML server will also automatically compute all available evaluation measures for each run.
+To list these evaluations as well, the \code{listOMLRunEvaluations} function can be used.
+%In the following example, we list all results of runs that are related to the task with ID \code{37} and visualize
+In Figure~\ref{fig:evalplot}, we used \code{ggplot2} \citep{ggplot2} to visualize 
+the predictive accuracy of runs, for which only flows created with \code{mlr} 
+were applied to the task with ID \code{37}:
+
+<<evalplot, message=FALSE, warning=FALSE, eval = TRUE, results = 'hide', fig.height=3, out.width = ".95\\textwidth", fig.cap="The predictive accuracy of some \\code{mlr} flows on task 37. The numbers in brackets refer to the version of the flow. Multiple dots for the same flow refer to runs with different hyperparameter values for that flow.", fig.pos = "!h">>=
+res = listOMLRunEvaluations(task.id = 37, tag = "openml_r_paper")
+res$flow.name = reorder(res$flow.name, res$predictive.accuracy)
+
+library("ggplot2")
+ggplot(res, aes(x = predictive.accuracy, y = flow.name)) + 
+  geom_point() + xlab("Predictive Accuracy") + ylab("Flow Name")
+@
+
+<<message=FALSE, warning=FALSE, eval = FALSE, echo = FALSE, results = 'hide', fig.height=3, out.width = ".95\\textwidth", fig.cap="The predictive accuracy of some \\code{mlr} flows on task 37. The numbers in brackets refer to the version of the flow. Multiple dots for the same flow refer to runs with different hyperparameter values for that flow.", fig.pos = "!h">>=
+# res = listOMLRunEvaluations(task.id = 37)
+# res$upload.time = as.Date(res$upload.time)
+# res = subset(res, flow.source == "mlr" & upload.time %in% as.Date("2016-09-01"):as.Date("2017-04-01"))
+# res = res[!grepl("preproc", res$flow.name),]
+# #res = res[!res$flow.name %in% names(sort(table(res$flow.name), decreasing = TRUE)[1]),]
+# res = res[!duplicated(paste0(res$flow.name, res$predictive.accuracy)),]
+# res = split(res, as.factor(res$learner.name))
+# res = res[!names(res) %in% c("classif.rpart", "classif.randomForest")]
+# res = as.data.frame(data.table::rbindlist(lapply(res, function(x) {
+#   x = x[x$flow.version == max(x$flow.version),]
+#   if (nrow(x) > 3)
+#     x = x[order(x$predictive.accuracy, decreasing = TRUE)[1:3], ]
+#   return(x)
+#   })))
+# res2 = listOMLRunEvaluations(task.id = 37, tag = "study_30")
+# res.cols = intersect(colnames(res), colnames(res2))
+# res = rbind(res[,res.cols], res2[!res2$run.id %in% res$run.id, res.cols])
+# # lapply(res$run.id, function(x) try(tagOMLObject(x, object = "run", tags = "openml_r_paper")))
+# 
+# library("ggplot2")
+# ggplot(res, aes(x = predictive.accuracy, y = reorder(flow.name, predictive.accuracy))) +
+#   geom_point() + xlab("Predictive Accuracy") + ylab("Flow Name")
+@
+
+%\todo{task id 3736 name nennen oder andere ID aus dem letzten task list nehmen}
+%The result of the code above is displayed in Figure~\ref{fig:evalplot}.
+%Note that users are allowed to upload the same run multiple times.
+%, so that several evaluation measures, except for the runtime measures, could be equal.
+
+\subsection{Downloading OpenML Objects}
+
+Most of the listing functions described in the previous section will list entities by
+their OpenML IDs, e.g., the \code{task.id} for tasks, the \code{flow.id} for flows and the
+\code{run.id} for runs. In this section, we show how these IDs can be used to
+download a certain data set, task, flow or run from the OpenML server.
+All downloaded data sets, tasks, flows and runs will be stored in the
+\code{cachedir} directory, which will be in the \code{.openml} folder by default
+but can also be specified in the configuration file (see Section~\ref{sec:config}).
+Before downloading an OpenML object, the cache directory will be checked if that object
+is already available in the cache. If so, no internet connection is necessary and the
+requested object is retrieved from the cache.
+
+
+\paragraph{Downloading Data Sets and Tasks:}
+The \code{getOMLDataSet} function returns an \code{S3}-object of class
+\code{OMLDataSet} that contains the data set as a \code{data.frame} in a
+\code{\$data} slot, in addition to some pieces of meta-information:
+
+<<message=FALSE, warning=FALSE, eval = TRUE>>=
+ds = getOMLDataSet(data.id = 15)
+ds
+@
+
+To retrieve tasks, the \code{getOMLTask} function can be used with their corresponding task ID.
+Note that the ID of a downloaded task is not equal to the ID of the data set.
+Each task is returned as an \code{S3}-object of class \code{OMLTask} and
+contains the \code{OMLDataSet} object as well as the predefined
+estimation procedure, evaluation measure and the target feature in an additional
+\code{\$input} slot. Further technical information can be found in the package's
+help page. %\todoBH{Do we show why one needs this and who one uses this? Isn't that otherwise a little too much detail?}
+
+
+\paragraph{Downloading Flows and Runs:}
+The \code{getOMLFlow} function downloads all information of the flow, such as
+the name, all necessary dependencies and all available hyperparameters that can be set.
+If the flow was created in \code{R}, it can be converted into an \code{mlr} 
+learner using the \code{convertOMLFlowToMlr} function:
+
+<<message=FALSE, eval=TRUE, echo = -2>>=
+mlr.lrn = convertOMLFlowToMlr(getOMLFlow(4782))
+mlr.lrn$properties = mlr.lrn$properties[!mlr.lrn$properties %in% "featimp"]
+mlr.lrn
+@
+
+This allows users to apply the downloaded learner to other tasks or to modify 
+the learner using functions from \code{mlr} and produce new runs.
+
+The \code{getOMLRun} function downloads a single run and returns an \code{OMLRun} object
+containing all information that are connected to this run, such as 
+the ID of the task and the ID of the flow: %as well as the parameters that were used to produce this run.
+
+<<8, message=FALSE, warning=FALSE>>=
+run = getOMLRun(run.id = 1816245)
+run
+@
+
+The most important information for reproducibility, next to the exact data set and flow version,
+are the hyperparameter and seed settings that were used to create this run.
+This information is contained in the \code{OMLRun} object and can be extracted via
+\code{getOMLRunParList(run)} and \code{getOMLSeedParList(run)}, respectively.
+
+If the run solves a supervised regression or classification %\textit{Supervised Regression} or \textit{Supervised Classification}
+task, the corresponding predictions can be accessed via \code{run\$predictions} and
+the evaluation measures computed by the server via \code{run\$output.data\$evaluations}. %\todoBH{Define getter?}
+
+
+\subsection{Creating Runs}
+\label{sec:runs}
+The easiest way to create a run is to define a learner, optionally with a preset 
+hyperparameter value, using the \code{mlr} package. Each
+\code{mlr} learner can then be applied to a specific \code{OMLTask} object
+using the function \code{runTaskMlr}. This will create an \code{OMLMlrRun}
+object, for which the results can be uploaded to the OpenML server as described
+in the next section.
+For example, a random forest from the \code{randomForest}
+\code{R} package~\citep{randomForest} can be instantiated using the \code{makeLearner} 
+function from \code{mlr} and can be applied to a classification task via:
+
+<<13, message=FALSE, warning=FALSE>>=
+lrn = makeLearner("classif.randomForest", mtry = 2)
+task = getOMLTask(task.id = 37)
+run.mlr = runTaskMlr(task, lrn)
+@
+
+%Note that the hyperparameters can be set in the definition of the learner object using the \code{makeLearner} function.
+
+To run a previously downloaded OpenML flow, one can use the 
+\code{runTaskFlow} function, optionally with a list of hyperparameters:
+<<message=FALSE, warning=FALSE>>=
+flow = getOMLFlow(4782)
+run.flow = runTaskFlow(task, flow, par.list = list(mtry = 2))
+@
+
+To display benchmarking results, one can use the \code{convertOMLMlrRunToBMR} function to convert
+one or more \code{OMLMlrRun} objects to a single \code{BenchmarkResult} object from the
+\code{mlr} package so that several powerful plotting functions 
+\new{
+(see \resizebox{\textwidth}{!}{\mbox{\url{http://mlr-org.github.io/mlr-tutorial/release/html/benchmark_experiments}}} for examples) 
+}
+from \code{mlr} can be applied to that object (see, e.g., Figure \ref{fig:bmrplot}).
+
+
+\subsection{Uploading and Tagging}
+
+\paragraph{Uploading OpenML Objects:}
+It is also possible to upload data sets, flows and runs
+to the OpenML server to share and organize experiments and results
+online. Data sets, for example, are uploaded with the \code{uploadOMLDataSet} function.
+OpenML will \emph{activate} the data set if it passes all checks, meaning that it will be
+returned in listing calls.
+Creating tasks from data sets is currently only possible through
+the website, see \url{http://www.openml.org/new/task}.
+
+
+\code{OMLFlow} objects can be uploaded to the server with the \code{uploadOMLFlow} 
+function and are automatically versioned by the server: when a learner is uploaded carrying
+a different \code{R} or package version, a new version number and \code{flow.id} is assigned.
+If the same flow has already been uploaded to the server, a message that the flow already exists is
+displayed and the associated \code{flow.id} is returned. Otherwise, the flow is uploaded 
+and a new \code{flow.id} is assigned to it:
+
+<<18, message=FALSE, warning=FALSE, eval=FALSE>>=
+lrn = makeLearner("classif.randomForest")
+flow.id = uploadOMLFlow(lrn)
+@
+
+A run created with the \code{runTaskMlr} or the \code{runTaskFlow} function can
+be uploaded to the OpenML server using the \code{uploadOMLRun} function. The server
+will then automatically compute several evaluation measures for this run, which
+can be retrieved using the \code{listOMLRunEvaluations} function as described previously.
+
+\paragraph{Tagging and Untagging OpenML Objects:}
+
+The \code{tagOMLObject} function is able to tag data sets, tasks, flows and
+runs with a user-defined string, so that finding OpenML objects with a
+specific tag becomes easier. For example, the task with ID 1 can be tagged as follows:
+
+<<message=FALSE, warning=FALSE, eval = FALSE>>=
+tagOMLObject(id = 1, object = "task", tags = "test-tagging")
+@
+
+To retrieve a list of objects with a given tag, the
+\code{tag} argument of the listing functions can be used 
+(e.g., \code{listOMLTasks(tag = "test-tagging")}). 
+The listing functions for data sets, tasks, flows and runs also show the tags 
+that were already assigned, for example, we already tagged data sets from 
+UCI~\citep{Asuncion:2007p519} with the string \code{"uci"} so that they can be 
+queried using \code{listOMLDataSets(tag = "uci")}.
+In order to remove one or more tags from an \code{OpenML} object, the
+\code{untagOMLObject} function can be used, however, only self-created tags can be removed, e.g.:
+
+<<message=FALSE, warning=FALSE, eval = FALSE>>=
+untagOMLObject(id = 1, object = "task", tags = "test-tagging")
+@
+
+\subsection{Further Features}
+Besides the aforementioned functionalities, the \code{OpenML} package allows
+to fill up the cache directory by downloading multiple objects at once (using the
+\code{populateOMLCache} function), to remove all files from the cache directory 
+(using \code{clearOMLCache}), to get the current status 
+of cached data sets (using \code{getCachedOMLDataSetStatus}), to delete OpenML 
+objects created by the uploader (using \code{deleteOMLObject}), to list all 
+estimation procedures (using \code{listOMLEstimationProcedures}) as well as all 
+available evaluation measures (using \code{listOMLEvaluationMeasures}) and to get 
+more detailed information on data sets (using \code{getOMLDataSetQualities}). 
+%to create and upload data sets and tasks (\code{...})\todoBH{Add commands!}.%\todo{HS: I wrote this quickly. Please feel free to rewrite this. Also I am not sure if we need the function names.}

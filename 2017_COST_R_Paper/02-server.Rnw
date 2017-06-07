@@ -1,0 +1,78 @@
+\Sexpr{set_parent('Makepaper.Rnw')}
+\section{The OpenML Platform}
+\label{sec:server}
+
+The OpenML platform consists of several layers of software:
+
+\paragraph{Web API:}
+Any application (or web application), can communicate with the OpenML server 
+through the extensive Web API, 
+\new{
+an application programming 
+interface (API) that offers a set of calls (e.g., to download/upload data) 
+using representational state transfer (REST) which is a simple, lightweight 
+communication mechanism based on standard HTTP requests. 
+}
+Data sets, tasks, 
+flows and runs can be created, read, updated, deleted, searched and tagged 
+through simple HTTP calls. An overview of calls is available on 
+\url{http://www.openml.org/api_docs}.
+
+\paragraph{Website:}
+\href{http://openml.org}{OpenML.org} is a website offering easy browsing, 
+organization and sharing of all data, code and experiments. It allows users to 
+easily search and browse all shared data sets, tasks, flows and runs, as well 
+as to compare and visualize all combined results. It provides an easy way to 
+check and manage your experiments anywhere, anytime and discuss them with 
+others online. See Figure \ref{screenshot} for a few screenshots of the OpenML 
+website.
+\begin{figure}[p]
+\begin{center}
+\noindent \includegraphics[width=.98\linewidth]{data.png}
+\includegraphics[width=.98\linewidth]{task.png}
+\caption{Screenshots of the OpenML website. The top part shows the data set 
+'autos', with wiki description and descriptive overview of the data features. 
+The bottom part shows a classification task, with an overview of the best 
+submitted flows with respect to the predictive accuracy as performance measure. 
+Every dot here is a single run (further to the right is better).}
+\label{screenshot}
+\end{center}
+\end{figure}
+
+\paragraph{
+\new{
+Programming Interfaces:
+}
+}
+OpenML also offers interfaces in multiple programming languages, such as the 
+\code{R} interface presented here, which hides the API calls and allow 
+scientists to interact with the server using language-specific functions. As we 
+demonstrate below, the \code{OpenML R} package allows \code{R} users to search 
+and download data sets and upload the results of machine learning experiments in 
+just a few lines of code. Other interfaces exist for \code{Python}, \code{Java} 
+and \code{C\# (.NET)}. For tools that usually operate through a graphical 
+interface, such as  WEKA~\citep{Hall:2009p14495}, MOA~\citep{Bifet:2010p28524} 
+and RapidMiner~\citep{RCOMM2013}, plug-ins exist that integrate OpenML sharing 
+facilities.\\
+
+\noindent OpenML is organized as an open source project, hosted on 
+GitHub 
+\new{
+(\url{https://github.com/openml}) 
+}
+and is free to use under the 
+CC-BY licence. When uploading new data sets and code, users can select under 
+which licence they wish to share the data, OpenML will then state licences and 
+citation requests online and in descriptions downloaded from the Web API. 
+
+OpenML has an active developer community and everyone is welcome to 
+help extend it or post new suggestions through the website or through GitHub.
+Currently, there are close to $1\,700\,000$ runs on about $20\,000$ data 
+sets and $3\,500$ unique flows available on the OpenML platform. While still 
+in beta development, it has over 
+$1\,400$~registered users, over $1\,800$ frequent visitors and the website is 
+visited by around 200 unique visitors every day, from all over the world. It 
+currently has server-side support for classification, regression, clustering, 
+data stream classification, learning curve analysis, survival analysis and 
+machine learning challenges for classroom use.
+
