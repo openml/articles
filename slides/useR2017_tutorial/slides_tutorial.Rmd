@@ -60,7 +60,7 @@ check out https://www.openml.org/guide or help others.
 
 ---
 ### Motivating example: A small benchmarking study demo 
-<!-- [15 minutes, Bernd] -->
+<!-- [15 minutes, Joaquin] -->
 
 - How to run a simple benchmark study
 - Link to batchmark blogpost
@@ -69,13 +69,13 @@ check out https://www.openml.org/guide or help others.
 
 ---
 ### Installation and configuration 
-<!-- [3 minutes, Bernd] -->
+<!-- [3 minutes, Jouaqin] -->
 
 ---
 class:inverse
 
 ### *Practical*  
-<!-- [5 minutes, Bernd] -->
+<!-- [5 minutes, Jouaqin] -->
 
 - Install the OpenML R package (if you haven't done so yet)
 - Add your API-key to your config file
@@ -84,13 +84,13 @@ class:inverse
 
 ---
 ### Listing 
-<!-- [7 minutes, Bernd] -->
+<!-- [7 minutes, Jouaqin] -->
 
 ---
 class:inverse
 
 ### *Practical*  
-<!-- [5 minutes, Bernd] -->
+<!-- [5 minutes, Jouaqin] -->
 
 - List all regresssion tasks corresponding to data sets with between 
   50 and 55 observations.
