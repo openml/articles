@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>OpenML: Connecting R to the Machine Learning Platform OpenML</title>
+    <meta charset="utf-8">
+    <meta name="author" content="Joaquin Vanschoren, Bernd Bischl, Heidi Seibold" />
+    <link href="libs/remark-css/example.css" rel="stylesheet" />
+  </head>
+  <body>
+    <textarea id="source">
+class: center, middle, inverse, title-slide
+
+# OpenML: Connecting R to the Machine Learning Platform OpenML
+## useR! 2017 tutorial
+### Joaquin Vanschoren, Bernd Bischl, Heidi Seibold
+### <ul>
+<li><em>If you haven’t done so yet, create an account on OpenML.org.</em></li>
+<li><em>If you haven’t done so yet, install the OpenML R package and one of the packages farff or RWeka</em></li>
+</ul>
+
+---
+
+&lt;!-- For this to work, install xaringan (devtools::install_github('yihui/xaringan')) --&gt;
+
+
+
+- If you haven't done so yet, create an account on [OpenML.org](www.openml.org).
+
+- If you haven't done so yet, install the OpenML R package and one of the packages farff or RWeka:
+
+```r
+install.packages("OpenML")
+install.packages("farff")  # or install.packages("RWeka")
+```
+
+
+
+- If something is not clear / you have a question / you have a problem, please **let us know**!
+
+- We will have lots of practicals, if you are faster than others, you can 
+check out https://www.openml.org/guide or help others.
+
+
+---
+## Intro to openml.org 
+&lt;!-- [15 minutes, Joaquin] --&gt;
+
+&gt; Resources:  
+&gt; [NIPS slides](https://github.com/openml/articles/blob/master/OpenML%20NIPS.pdf)
+
+- Why, what, how, who, for whom
+- Data sets, tasks, flows, runs (all have their own website)
+- vocabulary: features = covariates, number of observations = number of instances, ML = Machine Learing (not maximum likelihood)
+
+
+
+---
+## Intro to the OpenML R package
+&gt; Resources:  
+&gt; [Paper](https://bitbucket.org/giuseppec/openml-r-paper/src)  
+&gt; [Tutorial](http://openml.github.io/openml-r/vignettes/OpenML.html)  
+&gt; [Reisensburg talk](https://bitbucket.org/giuseppec/openml-r-paper/src)  
+&gt; [Heidi's departement presentation](https://github.com/openml/articles/tree/master/slides/heidi_hittisau)  
+&gt; [mlr loves OpenML blogpost](http://mlr-org.github.io/mlr-loves-OpenML/)
+
+
+
+---
+### Motivating example: A small benchmarking study demo 
+&lt;!-- [15 minutes, Bernd] --&gt;
+
+- How to run a simple benchmark study
+- Link to batchmark blogpost
+
+
+
+---
+### Installation and configuration 
+&lt;!-- [3 minutes, Bernd] --&gt;
+
+---
+class:inverse
+
+### *Practical*  
+&lt;!-- [5 minutes, Bernd] --&gt;
+
+- Install the OpenML R package (if you haven't done so yet)
+- Add your API-key to your config file
+
+
+
+---
+### Listing 
+&lt;!-- [7 minutes, Bernd] --&gt;
+
+---
+class:inverse
+
+### *Practical*  
+&lt;!-- [5 minutes, Bernd] --&gt;
+
+- List all regresssion tasks corresponding to data sets with between 
+  50 and 55 observations.
+
+
+
+---
+
+### Downloading 
+&lt;!-- [10 minutes, Bernd] --&gt;
+
+
+---
+class:inverse
+
+### *Practical*  
+&lt;!-- [5 minutes, Bernd] --&gt;
+
+- Download task with task ID XXX.
+
+
+---
+class: inverse
+background-image: url(https://c1.staticflickr.com/5/4049/4468213356_8b48e33d33_o.jpg)
+background-size: cover
+
+# BREAK TIME
+
+???
+Image credit: [Dave Dugdale](https://flic.kr/p/7NQLaj)
+
+---
+
+### Intro to mlr 
+&lt;!-- [15 minutes, Bernd] --&gt;
+
+---
+### Running and uploading 
+&lt;!-- [10 minutes, Bernd] --&gt;
+
+---
+class:inverse
+### *Practical*  
+&lt;!-- [25 minutes, Bernd] --&gt;
+
+- Run your favorite learner/algorithm (from mlr) on task XXX that you already downloaded.
+Hint: use `listLearners()` to find learners.
+- Upload your run to OpenML. Add the tag "useR17". 
+- Check if the upload worked by going to the website. Also check if the tag was
+  added (you can also still add it on the website). 
+- Check the website on how well you did
+  
+
+---
+## Tagging and studies 
+&lt;!-- [10 minutes, Heidi] --&gt;
+
+---
+class:inverse
+
+### *Practical*  
+&lt;!-- [10 minutes, Heidi] --&gt;
+
+- List the names of data sets in study_14 
+- Summarize performance results 
+
+
+---
+## Short summary of the cool stuff we are already doing 
+&lt;!-- [15 minutes, Heidi] --&gt;
+
+---
+class: inverse
+background-image: url(https://c1.staticflickr.com/8/7361/13937729989_a50129f7f7_o.jpg)
+background-size: cover
+
+## Contributors needed!
+&lt;!-- [10 minutes, Heidi] --&gt;
+
+https://github.com/openml/OpenML/wiki/How-to-contribute
+
+???
+Image credit: [Papahānaumokuākea Marine National Monument](https://flic.kr/p/neCvxt)
+
+---
+class: inverse, center, middle
+
+## Open Science is awesome, let's make it happen
+    </textarea>
+<script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
+<script>var slideshow = remark.create({
+"highlightStyle": "github",
+"highlightLines": true,
+"countIncrementalSlides": false
+});
+if (window.HTMLWidgets) slideshow.on('afterShowSlide', function (slide) {window.dispatchEvent(new Event('resize'));});</script>
+
+<script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+  tex2jax: {
+    skipTags: ['script', 'noscript', 'style', 'textarea', 'pre']
+  }
+});
+</script>
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+(function () {
+  var script = document.createElement('script');
+  script.type = 'text/javascript';
+  script.src  = 'https://cdn.bootcss.com/mathjax/2.7.1/MathJax.js?config=TeX-MML-AM_CHTML';
+  if (location.protocol !== 'file:' && /^https?:/.test(script.src))
+    script.src  = script.src.replace(/^https?:/, '');
+  document.getElementsByTagName('head')[0].appendChild(script);
+})();
+</script>
+  </body>
+</html>
