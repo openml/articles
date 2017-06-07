@@ -60,9 +60,9 @@ check out https://www.openml.org/guide or help others.
 
 ---
 ### Motivating example: A small benchmarking study demo 
-<!-- [15 minutes, Joaquin] -->
+<!-- [5 minutes, Joaquin] -->
 
-- How to run a simple benchmark study
+- What we want to do today: How to run a simple benchmark study
 - Link to batchmark blogpost
 
 
@@ -100,14 +100,14 @@ class:inverse
 ---
 
 ### Downloading 
-<!-- [10 minutes, Bernd] -->
+<!-- [10 minutes, Joaquin] -->
 
 
 ---
 class:inverse
 
 ### *Practical*  
-<!-- [5 minutes, Bernd] -->
+<!-- [5 minutes, Joaquin] -->
 
 - Download task with task ID XXX.
 
@@ -161,6 +161,11 @@ class:inverse
 ---
 ## Short summary of the cool stuff we are already doing 
 <!-- [15 minutes, Heidi] -->
+
+
+
+
+
 
 ---
 class: inverse
