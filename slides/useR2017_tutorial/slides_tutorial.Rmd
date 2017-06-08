@@ -208,7 +208,7 @@ class:inverse
 - Summarize the performance results of study_27
 
 ```{r, message=FALSE, fig.height=2}
-evals = listOMLRunEvaluations(tag = "study_27")
+{{evals = listOMLRunEvaluations(tag = "study_27")}}
 evals$setup.id = as.factor(evals$setup.id)
 
 library("ggplot2")

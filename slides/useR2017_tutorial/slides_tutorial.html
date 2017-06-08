@@ -186,7 +186,7 @@ uploadOMLRun(myrun, tags = c("tag1", "tag2"))
 evals = listOMLRunEvaluations(tag = "study_30")
 ```
 
-![](slides_tutorial_files/figure-html/unnamed-chunk-5-1.png)&lt;!-- --&gt;
+![](slides_tutorial_files/figure-html/unnamed-chunk-23-1.png)&lt;!-- --&gt;
 
 
 ---
@@ -209,7 +209,7 @@ class:inverse
 
 
 ```r
-evals = listOMLRunEvaluations(tag = "study_27")
+*evals = listOMLRunEvaluations(tag = "study_27")
 evals$setup.id = as.factor(evals$setup.id)
 
 library("ggplot2")
@@ -219,7 +219,7 @@ ggplot(evals, aes(x = setup.id, y = predictive.accuracy,
   facet_grid(~ flow.name, scales = "free")
 ```
 
-![](slides_tutorial_files/figure-html/unnamed-chunk-6-1.png)&lt;!-- --&gt;
+![](slides_tutorial_files/figure-html/unnamed-chunk-24-1.png)&lt;!-- --&gt;
 
 
 ---
