@@ -175,6 +175,11 @@ uploadOMLRun(myrun, tags = c("tag1", "tag2"))
 ## Studies
 ```{r, message=FALSE}
 evals = listOMLRunEvaluations(tag = "study_30")
+head(evals[, c("data.name", "learner.name", "predictive.accuracy")])
+
+fids <- unique(evals$flow.id)
+flws <- lapply(fids, getOMLFlow)
+flws[1:2]
 ```
 
 ```{r, echo=FALSE, fig.height=4}

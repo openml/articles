@@ -184,9 +184,44 @@ uploadOMLRun(myrun, tags = c("tag1", "tag2"))
 
 ```r
 evals = listOMLRunEvaluations(tag = "study_30")
+head(evals[, c("data.name", "learner.name", "predictive.accuracy")])
 ```
 
-![](slides_tutorial_files/figure-html/unnamed-chunk-23-1.png)&lt;!-- --&gt;
+```
+##       data.name         learner.name predictive.accuracy
+## 1      diabetes classif.randomForest            0.772135
+## 2         sonar classif.randomForest            0.817308
+## 3      haberman classif.randomForest            0.748366
+## 4   tic-tac-toe classif.randomForest            0.986430
+## 5 heart-statlog classif.randomForest            0.825926
+## 6    ionosphere classif.randomForest            0.934473
+```
+
+```r
+fids &lt;- unique(evals$flow.id)
+flws &lt;- lapply(fids, getOMLFlow)
+flws[1:2]
+```
+
+```
+## [[1]]
+## 
+## Flow "mlr.classif.randomForest" :: (Version = 17, Flow ID = 4782)
+## 	External Version         : R_3.3.0-v2.b80d1ffc
+## 	Dependencies             : R_3.3.0, OpenML_1.0, mlr_2.10, randomForest_4.6.12
+## 	Number of Flow Parameters: 20
+## 	Number of Flow Components: 0
+## 
+## [[2]]
+## 
+## Flow "mlr.classif.rpart.bagged" :: (Version = 9, Flow ID = 4783)
+## 	External Version         : R_3.3.0-v2.dff90e83
+## 	Dependencies             : R_3.3.0, OpenML_1.0, mlr_2.10, rpart_4.1.10
+## 	Number of Flow Parameters: 17
+## 	Number of Flow Components: 0
+```
+
+![](slides_tutorial_files/figure-html/unnamed-chunk-5-1.png)&lt;!-- --&gt;
 
 
 ---
@@ -219,7 +254,7 @@ ggplot(evals, aes(x = setup.id, y = predictive.accuracy,
   facet_grid(~ flow.name, scales = "free")
 ```
 
-![](slides_tutorial_files/figure-html/unnamed-chunk-24-1.png)&lt;!-- --&gt;
+![](slides_tutorial_files/figure-html/unnamed-chunk-6-1.png)&lt;!-- --&gt;
 
 
 ---
