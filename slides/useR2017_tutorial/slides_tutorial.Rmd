@@ -16,6 +16,7 @@ output:
 
 ```{r setup, include=FALSE}
 options(htmltools.dir.version = FALSE)
+knitr::opts_chunk$set(dpi = 300, cache = TRUE)
 ```
 
 - If you haven't done so yet, create an account on [OpenML.org](www.openml.org).
@@ -25,6 +26,10 @@ options(htmltools.dir.version = FALSE)
 install.packages("OpenML")
 install.packages("farff")  # or install.packages("RWeka")
 ```
+```{r}
+library("OpenML")
+```
+
 
 
 
@@ -96,7 +101,6 @@ class:inverse
   50 and 55 observations.
 
 
-
 ---
 
 ### Downloading 
@@ -112,9 +116,11 @@ class:inverse
 - Download task with task ID XXX.
 
 
+
+
 ---
 class: inverse
-background-image: url(https://c1.staticflickr.com/5/4049/4468213356_8b48e33d33_o.jpg)
+background-image: url(https://c1.staticflickr.com/5/4049/4468213356_07ffffd287_z.jpg)
 background-size: cover
 
 # BREAK TIME
@@ -143,10 +149,45 @@ Hint: use `listLearners()` to find learners.
   added (you can also still add it on the website). 
 - Check the website on how well you did
   
+---
+## Tags
+<!-- [10 minutes, Heidi] -->
+
+![](slides_tutorial_files/Screenshot_tags.png)
+
+
+```{r, eval=FALSE}
+uploadOMLRun(myrun, tags = c("tag1", "tag2"))
+```
 
 ---
-## Tagging and studies 
-<!-- [10 minutes, Heidi] -->
+## Studies
+
+![](slides_tutorial_files/Screenshot_study.png)
+
+
+---
+## Studies
+
+![](slides_tutorial_files/Screenshot_study2.png)
+
+---
+## Studies
+```{r, message=FALSE}
+evals = listOMLRunEvaluations(tag = "study_30")
+```
+
+```{r, echo=FALSE, fig.height=4}
+evals$learner.name = as.factor(evals$learner.name)
+evals$task.id = as.factor(evals$task.id)
+
+library("ggplot2")
+ggplot(evals, aes(x = data.name, y = predictive.accuracy, colour = learner.name,
+                  group = learner.name, linetype = learner.name, shape = learner.name)) +
+  geom_point() + geom_line() + ylab("Predictive Accuracy") + xlab("Data Set") +
+  theme(axis.text.x = element_text(angle = -45, hjust = 0))
+```
+
 
 ---
 class:inverse
@@ -154,14 +195,35 @@ class:inverse
 ### *Practical*  
 <!-- [10 minutes, Heidi] -->
 
-- List the names of data sets in study_14 
-- Summarize performance results 
+- List the names of all data sets in study_27 
+- Summarize the performance results of study_27
+
+---
+class:inverse
+
+### *Practical*  
+<!-- [10 minutes, Heidi] -->
+
+- List the names of all data sets in study_27
+- Summarize the performance results of study_27
+
+```{r, message=FALSE, fig.height=2}
+evals = listOMLRunEvaluations(tag = "study_27")
+evals$setup.id = as.factor(evals$setup.id)
+
+library("ggplot2")
+ggplot(evals, aes(x = setup.id, y = predictive.accuracy, 
+                  color = data.name, group = data.name)) + 
+  geom_point() + geom_line() + 
+  facet_grid(~ flow.name, scales = "free")
+```
 
 
 ---
-## Short summary of the cool stuff we are already doing 
+background-image: url(slides_tutorial_files/cool_stuff_text.png)
+background-size: 70% auto
+## Cool stuff people are already doing with OpenML
 <!-- [15 minutes, Heidi] -->
-
 
 
 
@@ -169,18 +231,20 @@ class:inverse
 
 ---
 class: inverse
-background-image: url(https://c1.staticflickr.com/8/7361/13937729989_a50129f7f7_o.jpg)
+background-image: url(https://c1.staticflickr.com/6/5477/14101220086_a633ec9674_c.jpg)
 background-size: cover
 
-## Contributors needed!
+# Contributors needed! https://github.com/openml/OpenML/wiki/How-to-contribute
 <!-- [10 minutes, Heidi] -->
 
-https://github.com/openml/OpenML/wiki/How-to-contribute
 
 ???
 Image credit: [Papahānaumokuākea Marine National Monument](https://flic.kr/p/neCvxt)
 
 ---
 class: inverse, center, middle
+background-image: url(https://upload.wikimedia.org/wikipedia/commons/c/c8/Love_Heart_symbol.svg)
 
-## Open Science is awesome, let's make it happen
+# OpenML&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;  &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; 
+
+# &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;  &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; Open Science
