@@ -16,7 +16,7 @@ output:
 
 ```{r setup, include=FALSE}
 options(htmltools.dir.version = FALSE)
-knitr::opts_chunk$set(dpi = 300, cache = TRUE)
+knitr::opts_chunk$set(dpi = 300, cache = TRUE, message = FALSE)
 ```
 
 - If you haven't done so yet, create an account on [OpenML.org](www.openml.org).
