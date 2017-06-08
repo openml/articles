@@ -1,0 +1,159 @@
+\section{OpenML R-Package}
+\begin{vframe}{OpenML R-Package}
+\oneliner{\url{https://github.com/openml/r}}
+\begin{blocki}{Current API in R}
+\item Explore data and tasks
+\item Download data and tasks
+\item Register learners
+\item Upload runs
+\item Explore your own and other people's results
+\end{blocki}
+
+\begin{center}
+Already nicely connected to \pkg{mlr}!
+\end{center}
+\end{vframe}
+
+\begin{vbframe}{OpenML: Configuration}
+<<openml1, eval=OPENML_EVAL>>=
+library(OpenML)
+getOMLConfig()
+@
+
+You can set your apikey using
+
+\begin{itemize}
+\item \texttt{setOMLConfig} for the current R session only
+\item \texttt{saveOMLConfig} to set it globally (it writes a \texttt{config} file in your home directory)
+\end{itemize}
+
+<<eval = FALSE>>=
+setOMLConfig(apikey = "***************************31fea")
+saveOMLConfig(apikey = "***************************31fea")
+@
+
+<<echo = FALSE>>=
+setOMLConfig(apikey = "f06ab3da57d0134cd842db68b2f31fea", verbosity = 0)
+@
+\end{vbframe}
+
+\begin{vbframe}{OpenML: Explore and Select Data}
+<<eval=OPENML_EVAL, size = 'tiny'>>=
+ds = listOMLDataSets()
+str(ds, vec.len = 2)
+@
+\framebreak
+<<eval=OPENML_EVAL, size = 'tiny'>>=
+tasks = listOMLTasks()
+str(tasks, vec.len = 2)
+@
+\end{vbframe}
+
+\begin{vframe}{OpenML: Download a Data Set}
+<<openml2a, eval=OPENML_EVAL, message = FALSE>>=
+# uses built in caching from disk
+d = getOMLDataSet(1)
+@
+
+Is a list with of class \texttt{OMLDataSet}. Important slots:
+\begin{itemize}
+\item \texttt{desc} contains all infos from the \texttt{.xml}
+\item \texttt{data} contains the \texttt{data.frame} with the data from the \texttt{.arff} file.
+\end{itemize}
+\end{vframe}
+
+\begin{vbframe}{OpenML: Download a Task}
+<<openml3, eval=OPENML_EVAL, message = FALSE>>=
+# uses built in caching from disk
+oml.task = getOMLTask(task.id = 1)
+oml.task
+@
+\framebreak
+<<openml3b, eval=OPENML_EVAL, message = FALSE>>=
+oml.task$input$data.set
+oml.task$input$estimation.procedure
+oml.task$input$evaluation.measures
+oml.task$input$target.features
+@
+\end{vbframe}
+
+\begin{vframe}{OpenML: Run a Task}
+<<openml4, eval=OPENML_EVAL>>=
+res1 = runTaskMlr(oml.task, makeLearner("classif.rpart"))
+res2 = runTaskMlr(oml.task, makeLearner("classif.randomForest"))
+bench = mergeBenchmarkResultLearner(
+  res1$mlr.benchmark.result, 
+  res2$mlr.benchmark.result
+)
+@
+
+\end{vframe}
+%\framebreak
+
+\begin{vframe}{OpenML: Run a Task}
+
+<<>>=
+plotBMRBoxplots(bench)
+@
+
+\end{vframe}
+
+%' 
+%' \begin{vframe}{OpenML: Run several Learners on one Task}
+%' <<openml4b, eval=OPENML_EVAL, message = FALSE, warning = FALSE>>=
+%' lrn1 = makeLearner("classif.rpart")
+%' lrn2 = makeLearner("classif.randomForest")
+%' res = runMultipleLearnersOnTask(oml.task, list(lrn1, lrn2))
+%' res$benchmark
+%' @
+%' \end{vframe}
+
+% 
+% \begin{vframe}{OpenML R-Package}
+% \oneliner{Let's have a look at the R-Package}
+% %\framebreak
+% \end{vframe}
+
+% \begin{vframe}{OpenML R-Package}
+% \oneliner{\url{https://github.com/openml/r}}
+%   \begin{blocki}{Tutorial}
+%     \item Stage 0: Explore and Select Data
+%     \item Stage 1: Download a Data Set
+%     \item Stage 2: Run a Task
+%     \item Stage 3: Upload Learners
+%     \item Explore your own and other people's results
+%   \end{blocki}
+% \end{vframe}
+
+% \begin{frame}
+%   \includegraphics[page=41,width=0.95\textwidth]{figure/oml-talk.pdf}
+% \end{frame}
+% 
+% \section{The End}
+% \begin{vframe}{There is more \ldots}
+%   \begin{blocki*}
+%   \item Regular cost-sensitive learning (class-specific costs)
+%   \item Cost-sensitive learning (example-dependent costs)
+%   \item Model-based optimization
+%   \item Multi-criteria optimization
+%   \item OpenML
+%   \item \ldots
+%   \end{blocki*}
+% \end{vframe}
+% 
+% \begin{vframe}{Outlook}
+%   \begin{blocki}{We are working on}
+%   \item Even better tuning system
+%   \item More interactive plots
+%   \item Large-Scale SVM ensembles
+%   \item Time-Series tasks
+%   \item Better benchmark analysis
+%   \item Multi-Label classification
+%   \item \ldots
+%   \end{blocki}
+% \end{vframe}
+% 
+% \begin{vframe}
+% \oneliner{Thanks!}
+% \color{white}\cite{van2013openml} and \cite{vanschoren2014openml} 
+% \end{vframe}

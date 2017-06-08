@@ -1,0 +1,324 @@
+\documentclass[xcolor=dvipsnames,11pt]{beamer}
+
+\usepackage[english]{babel}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{amsmath}
+\usepackage{array}
+\usepackage{adjustbox}
+\usepackage{xspace}
+\usepackage{tikz}
+\usepackage{color}
+\usetikzlibrary{shapes,arrows,backgrounds,fit,positioning,chains,shadows,decorations.pathmorphing,decorations.pathreplacing,matrix}
+\usepackage{csquotes}
+\usepackage{booktabs}
+\usepackage{wasysym}
+\usepackage[binary-units=true]{siunitx}
+\usepackage{xcolor}
+\usepackage{pifont}
+\usepackage{dsfont}
+
+\definecolor{tugreen}{cmyk}{0.57, 0, 1.00, 0}
+\definecolor{tugreen1}{cmyk}{0.57, 0, 1.00, 0}
+\definecolor{tugreen2}{HTML}{667E4D}
+\definecolor{tugreen3}{HTML}{72A544}
+\definecolor{tugreen4}{HTML}{3A472E}
+
+\usecolortheme{dove}
+\usetheme{boxes}
+\usefonttheme{structuresmallcapsserif}
+\newenvironment{whiteframe}
+{
+ \usebackgroundtemplate{}
+ \begin{frame}
+}
+{
+ \end{frame}
+}
+
+\usetikzlibrary{shapes,matrix,positioning,chains,arrows,shadows,decorations.pathmorphing,fit,backgrounds}
+\setbeamercolor{itemize item}{fg=tugreen1}
+\setbeamercolor{itemize subitem}{fg=tugreen1}
+\setbeamertemplate{itemize item}[square]
+\setbeamertemplate{footline}[frame number]
+\beamertemplatenavigationsymbolsempty
+
+\title{Offene und Reproduzierbare Datenanalyse mit \texttt{OpenML}}
+\author{Bernd~Bischl and Giuseppe~Casalicchio}
+\date{Sommerklausur 2015, Holzhausen}
+
+\newcommand{\norm}[2][\relax]{\ifx#1\relax\ensuremath{\left\Vert#2\right\Vert}\else\ensuremath{\left\Vert#2\right\Vert_{#1}}\fi}
+\newcommand{\ind}{\mathds{1}}
+\newcommand{\pred}[1]{\ind\left(#1\right)}
+\newcommand{\abs}[1]{\ensuremath{\left| #1 \right|}}
+\newcommand{\code}[1]{\texttt{#1}}
+\newcommand{\pkg}[1]{\texttt{#1}}
+\newcommand{\tarrow}{\textcolor{tugreen1}{{\ding{212}}}\xspace}
+
+% suppress frame numbering, so noframenumbering works
+% \setbeamertemplate{frametitle continuation}
+%   \begin{frame}[containsverbatim,allowframebreaks,noframenumbering]
+
+\newenvironment{vframe}
+{
+  \begin{frame}[containsverbatim]
+}
+{
+ \end{frame}
+}
+
+\newenvironment{vbframe}
+{
+  \begin{frame}[containsverbatim,allowframebreaks]
+}
+{
+ \end{frame}
+}
+
+\newenvironment{blocki*}
+{
+  \begin{block}{}\begin{itemize}
+}
+{
+\end{itemize}\end{block}
+}
+
+\newenvironment{blocki}[1]
+{
+  \begin{block}{#1}\begin{itemize}
+}
+{
+\end{itemize}\end{block}
+}
+
+\newcommand{\oneliner}[1]{\begin{block}{}\begin{center}\begin{Large}#1\end{Large}\end{center}\end{block}}
+
+
+\renewcommand<>{\sout}[1]{
+  \only#2{\beameroriginal{\sout}{#1}}
+  \invisible#2{#1}
+}
+
+
+\AtBeginSection{\frame{\sectionpage}}
+
+\begin{document}
+% \usebackgroundtemplate{
+%   \begin{tikzpicture}
+%     \shade [inner color = white, outer color = gray!30, opacity = 0.8] (\paperwidth,\paperheight) rectangle (0,0);
+%     \shade [inner color = white, outer color = gray!10, opacity=.05] (\paperwidth/2,\paperheight/2) circle (3);
+%   \end{tikzpicture}
+% }
+
+<<opts,include=FALSE,cache=FALSE>>=
+library(knitr)
+library(BBmisc)
+library(mlr)
+library(ggplot2)
+library(parallelMap)
+library(tikzDevice)
+library(data.table)
+library(gridExtra)
+library(survMisc)
+options(width = 70)
+configureMlr(show.info = FALSE)
+configureMlr(show.learner.output = FALSE)
+OPENML_EVAL = TRUE
+
+knit_hooks$set(document = function(x) {
+  # silence xcolor
+  x = sub('\\usepackage[]{color}', '\\usepackage{xcolor}', x, fixed = TRUE)
+  # add an noindent after hooks -> remove blank line
+  x = gsub('(\\\\end\\{knitrout\\}[\n]+)', '\\1\\\\noindent ', x)
+  x
+})
+
+opts_chunk$set(
+   fig.path = "knitr/figures/",
+   cache.path = "knitr/cache/",
+   cache = TRUE,
+   tidy = FALSE,
+   dev = 'tikz',
+   external = TRUE,
+   fig.align = "center",
+   size = "scriptsize",
+   stop = TRUE,
+   fig.width = 9 * 0.8,
+   fig.height = 6 * 0.8,
+   small.mar = TRUE,
+   prompt = TRUE
+)
+@
+
+%% PART I
+\begin{frame}
+  \titlepage
+\end{frame}
+
+%\begin{vframe}{Overview}
+%  \tableofcontents
+%\end{vframe}
+
+\section{What is OpenML?}
+
+\begin{vframe}{What is OpenML?}
+%  \oneliner{Caution: Work in progress}
+
+  \begin{blocki}{}%{What is OpenML?}
+  \item Main idea: Make ML experiments reproducible and most parts computer-readable
+  \item Share everything
+  \item Enrich with meta-information
+  \item Later: Mine the results, meta-learn on it
+  \end{blocki}
+\end{vframe}
+
+\begin{frame}
+  \includegraphics[page=12,width=0.95\textwidth]{figure/oml-talk.pdf}
+\end{frame}
+\begin{frame}
+  \includegraphics[page=13,width=0.95\textwidth]{figure/oml-talk.pdf}
+\end{frame}
+\begin{frame}
+  \includegraphics[page=14,width=0.95\textwidth]{figure/oml-talk.pdf}
+\end{frame}
+\begin{frame}
+  \includegraphics[page=15,width=0.95\textwidth]{figure/oml-talk.pdf}
+\end{frame}
+\begin{frame}
+  \includegraphics[page=16,width=0.95\textwidth]{figure/oml-talk.pdf}
+\end{frame}
+
+\section{OpenML with mlr} 
+\begin{vframe}{Motivation}
+  \begin{blocki}{The good news}
+  \item CRAN serves hundreds of packages for machine learning (cf.\ CRAN task view machine learning)
+  \item Many packages are compliant to the unwritten interface definition:
+<<model-standard,eval=FALSE>>=
+model = fit(target ~ ., data = train.data, ...)
+predictions = predict(model, newdata = test.data, ...)
+@
+  \end{blocki}
+\end{vframe}
+
+\begin{vframe}{Motivation}
+  \begin{blocki}{The bad news}
+    \item Some packages do not support the formula interface or their API is \enquote{just different}
+    \item Functionality is always package or model-dependent, even though the procedure might be general
+    \item No meta-information available or buried in docs (sometimes not documented at all)
+    \item Many packages require the user to \enquote{guess} good hyperparameters
+    \item Larger experiments lead to lengthy, tedious and error-prone code
+  \end{blocki}
+  \oneliner{Our goal: A domain-specific language for many machine learning concepts!}
+\end{vframe}
+
+
+\begin{vframe}{Motivation: \pkg{mlr}}
+
+    \oneliner{\url{https://github.com/berndbischl/mlr}}
+    
+  \begin{itemize}
+    \item Unified interface for the basic building blocks: tasks, learners, resampling, hyperparameters, \ldots
+    \item Reflections: nearly all objects are queryable (i.e.\ you can ask them for their properties and program on them)
+    
+    %\item Clear S3 interface to R classification, regression, clustering and survival analysis methods
+    \item Possibility to fit, predict, evaluate and resample models
+    \item Easy extension mechanism through S3 inheritance
+    \item Abstract description of learners and tasks by properties
+    %\item Parameter system for learners to encode data types and constraints
+    %\item Many convenience methods and generic building blocks for your  machine learning experiments
+    %\item Resampling like bootstrapping and cross-validation
+    \item Different visualizations for e.g. ROC curves and predictions
+    \item Benchmarking of learners for muliple data sets
+    %\item Easy hyperparameter tuning using different optimization strategies, including potent configurators like iterated F-racing (irace) or sequential model-based optimization
+    \item Variable selection with filters and wrappers
+    %\item Nested resampling of models with tuning and feature selection
+    %\item Cost-sensitive learning, threshold tuning and imbalance correction
+    %\item Wrapper mechanism to extend learner functionality and complex and custom ways
+    %\item Combine different processing steps to a complex data mining chain that can be jointly optimized
+    %\item OpenML connector for the Open Machine Learning server
+    %\item Extension points to integrate your own stuff
+    \item Parallelization is built-in
+    \item ...
+  \end{itemize}
+\end{vframe}
+
+
+\section{OpenML Website}
+\begin{vframe}{OpenML Website}
+  \oneliner{Let's visit the website}
+  %\framebreak
+\end{vframe}
+
+\section{OpenML R-Package}
+\begin{vframe}{OpenML R-Package}
+  \oneliner{\url{https://github.com/openml/r}}
+  \begin{blocki}{Current API in R}
+    \item Explore data and tasks
+    \item Download data and tasks
+    \item Register learners
+    \item Upload runs
+    \item Explore your own and other people's results
+  \end{blocki}
+
+  \begin{center}
+  Already nicely connected to \pkg{mlr}!
+  \end{center}
+\end{vframe}
+
+\begin{vframe}{OpenML R-Package}
+  \oneliner{Let's have a look at the R-Package}
+  %\framebreak
+\end{vframe}
+
+% \begin{vframe}{OpenML R-Package}
+% \oneliner{\url{https://github.com/openml/r}}
+%   \begin{blocki}{Tutorial}
+%     \item Stage 0: Explore and Select Data
+%     \item Stage 1: Download a Data Set
+%     \item Stage 2: Run a Task
+%     \item Stage 3: Upload Learners
+%     \item Explore your own and other people's results
+%   \end{blocki}
+% \end{vframe}
+
+% \begin{frame}
+%   \includegraphics[page=41,width=0.95\textwidth]{figure/oml-talk.pdf}
+% \end{frame}
+% 
+% \section{The End}
+% \begin{vframe}{There is more \ldots}
+%   \begin{blocki*}
+%   \item Regular cost-sensitive learning (class-specific costs)
+%   \item Cost-sensitive learning (example-dependent costs)
+%   \item Model-based optimization
+%   \item Multi-criteria optimization
+%   \item OpenML
+%   \item \ldots
+%   \end{blocki*}
+% \end{vframe}
+% 
+% \begin{vframe}{Outlook}
+%   \begin{blocki}{We are working on}
+%   \item Even better tuning system
+%   \item More interactive plots
+%   \item Large-Scale SVM ensembles
+%   \item Time-Series tasks
+%   \item Better benchmark analysis
+%   \item Multi-Label classification
+%   \item \ldots
+%   \end{blocki}
+% \end{vframe}
+
+\begin{vframe}
+  \oneliner{Thanks!}
+  \color{white}\cite{van2013openml} and \cite{vanschoren2014openml} 
+\end{vframe}
+
+\begin{frame}[allowframebreaks]
+\frametitle{References}
+\bibliographystyle{apalike}
+\bibliography{../Bib}
+\end{frame}
+
+\end{document}
+% vim: set spelllang=en :

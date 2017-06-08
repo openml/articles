@@ -1,0 +1,167 @@
+
+%\begin{vframe}{Overview}
+%  \tableofcontents
+%\end{vframe}
+\section{The \pkg{mlr} Package}
+\begin{vframe}{Motivation}
+\begin{blocki}{The good news}
+\item CRAN serves hundreds of packages for machine learning %(cf.\ CRAN task view machine learning)
+\item Many packages are compliant to the unwritten interface definition:
+  <<model-standard,eval=FALSE>>=
+    model = fit(target ~ ., data = train.data, ...)
+    predictions = predict(model, newdata = test.data, ...)
+    @
+      \end{blocki}
+
+    \begin{blocki}{The bad news}
+    \item Some packages do not support the formula interface or their API is \enquote{just different}
+    %\item Functionality is always package or model-dependent, even though the procedure might be general
+    \item No meta-information available or buried in docs (sometimes not documented at all)
+    %\item Many packages require the user to \enquote{guess} good hyperparameters
+    \item Larger experiments lead to lengthy, tedious and error-prone code
+    \end{blocki}
+    \end{vframe}
+
+
+    \begin{vframe}{Motivation: \pkg{mlr}}
+
+    \oneliner{\url{https://github.com/mlr-org/mlr}}
+
+    \begin{itemize}
+    \item Unified interface for the basic building blocks: tasks, learners, resampling, hyperparameters, \ldots
+    \item Reflections: nearly all objects are queryable (i.e.\ you can ask them for their properties and program on them)
+
+    %\item Clear S3 interface to R classification, regression, clustering and survival analysis methods
+    \item Possibility to fit, predict, evaluate and resample models
+    %\item Easy extension mechanism through S3 inheritance
+    %\item Abstract description of learners and tasks by properties
+    %\item Parameter system for learners to encode data types and constraints
+    %\item Many convenience methods and generic building blocks for your  machine learning experiments
+    %\item Resampling like bootstrapping and cross-validation
+    \item Different visualizations for e.g. ROC curves and predictions
+    \item Benchmarking of learners for muliple data sets
+    %\item Easy hyperparameter tuning using different optimization strategies%, including potent configurators like iterated F-racing (irace) or sequential model-based optimization
+    %\item Variable selection with filters and wrappers
+    %\item Nested resampling of models with tuning and feature selection
+    %\item Cost-sensitive learning, threshold tuning and imbalance correction
+    %\item Wrapper mechanism to extend learner functionality and complex and custom ways
+    %\item Combine different processing steps to a complex data mining chain that can be jointly optimized
+    %\item OpenML connector for the Open Machine Learning server
+    %\item Extension points to integrate your own stuff
+    \item Parallelization is built-in
+    \item ...
+    \end{itemize}
+    \end{vframe}
+
+
+    \begin{frame}[containsverbatim]{Task Abstractions}
+    \begin{itemize}
+    \item Regression, classification, survival and cost-sensitive tasks
+    \item Internally: data frame with annotations: target column(s), weights, misclassification costs, \ldots)
+\end{itemize}
+<<task>>=
+data("Sonar", package = "mlbench")
+task = makeClassifTask(data = Sonar, target = "Class")
+print(task)
+@
+  \end{frame}
+
+
+\begin{frame}[containsverbatim]{Learner Abstractions}
+\begin{itemize}
+\item \Sexpr{nl["classif"]}~classification, \Sexpr{nl["regr"]}~regression, \Sexpr{nl["surv"]}~survival, \Sexpr{nl["cluster"]}~cluster
+% \item Internally: functions to train and predict%, parameter set and annotations
+\end{itemize}
+<<learner, size = "tiny">>=
+lrn = makeLearner("classif.rpart")
+print(lrn)
+lrn = makeLearner("classif.rpart", minsplit = 20, predict.type = "prob")
+getParamSet(lrn)
+@
+\end{frame}
+
+%' \begin{frame}[containsverbatim]{Learner Abstractions}
+%' <<parmset>>=
+  %' getParamSet(lrn)
+%' @
+  %'
+%' \end{frame}
+
+%' \begin{frame}[containsverbatim]{Performance Measures}
+%' \begin{itemize}
+%'   \item \Sexpr{nm["classif"]}~classification, \Sexpr{nm["regr"]}~regression, \Sexpr{nm["surv"]}~survival
+%'   \item Internally: performance function, aggregation function and annotations
+%' \end{itemize}
+%' <<measure>>=
+  %' print(mmce)
+%' print(timetrain)
+%' @
+%' \end{frame}
+
+
+\begin{frame}[containsverbatim]{Resampling}
+\begin{itemize}
+\item Resampling techniques: CV, Bootstrap, Subsampling, \ldots
+<<rdesc>>=
+cv3f = makeResampleDesc("CV", iters = 3, stratify = TRUE)
+@
+\item 10-fold CV of rpart on iris
+<<resample>>=
+lrn = makeLearner("classif.rpart", predict.type = "prob")
+cv10f = makeResampleDesc("CV", iters = 10)
+measures = list(acc, auc)
+
+resample(lrn, task, cv10f, measures)$aggr
+@
+\item For the lazy:
+<<resample2>>=
+r = crossval(lrn, task, iters = 3L)
+@
+\end{itemize}
+\end{frame}
+
+
+
+\begin{frame}[containsverbatim]{Benchmarking}
+\begin{itemize}
+\item Compare multiple learners on multiple tasks
+\item Fair comparisons: same training and test sets for each learner
+\end{itemize}
+<<benchmark>>=
+sonar.task = makeClassifTask(data = Sonar, target = "Class")
+cv10f = makeResampleDesc("CV", iters = 10)
+measures = list(acc, auc)
+learners = list(
+  makeLearner("classif.randomForest", predict.type = "prob"),
+  makeLearner("classif.rpart", predict.type = "prob")
+)
+
+(res = benchmark(learners, sonar.task, cv10f, measures))
+@
+
+\end{frame}
+
+
+\begin{frame}[containsverbatim]{Benchmarking}
+
+<<benchmark2>>=
+plotBMRBoxplots(res)
+@
+
+\end{frame}
+
+\begin{vframe}{Further Features}
+
+  \begin{itemize}
+      \item Easy extension mechanism through S3 inheritance
+      \item Many convenience methods and generic building blocks for your  machine learning experiments
+      \item Easy hyperparameter tuning using different optimization strategies, including potent configurators like iterated F-racing (irace) or sequential model-based optimization
+      \item Variable selection with filters and wrappers
+      \item Nested resampling of models with tuning and feature selection
+      \item Cost-sensitive learning, threshold tuning and imbalance correction
+      \item Wrapper mechanism to extend learner functionality and complex and custom ways
+      \item Combine different processing steps to a complex data mining chain that can be jointly optimized
+    \item ...
+  \end{itemize}
+\end{vframe}
+
