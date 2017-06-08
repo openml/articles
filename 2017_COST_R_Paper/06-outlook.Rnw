@@ -1,0 +1,23 @@
+\Sexpr{set_parent('Makepaper.Rnw')}
+\section{Conclusion and Outlook}
+\label{sec:outlook}
+
+OpenML is an online platform for open machine learning that is aimed at
+connecting researchers who deal with any part of the machine learning
+workflow. The OpenML platform automates the sharing of machine learning tasks and 
+experiments through the tools that scientists are already using, such as \code{R}. 
+The \code{OpenML} package introduced in this paper makes it easy to share and
+reuse data sets, tasks, flows and runs directly from the current \code{R} session 
+without the need of using other programming environments or the web interface.
+%One can collaboratively work on and share data, code, workflows, and studies\todoBH{What is a study? Is this related to the tag? Studies were not introduced above!}. 
+%The \code{OpenML R} package provides access to the online platform
+%and allows researchers who already work with \code{R} to interact with the
+%platform directly from the current \code{R} session without the need of using 
+%other programming environments.
+%\todoBH{A bit over-exaggerated as one has to learn new skills, i.e., OpenML commands and perhaps also mlr commands. However, it is true that it all works within a single programming environment with no need to leave this ecosphere. I would stress this point!} %The \code{OpenML R} package provides all functionality needed to communicate withthe platform from any machine with internet connection and \code{R} installed.
+
+Current work is being done on implementing the possibility to connect to OpenML 
+via browser notebooks \new{(\url{https://github.com/everware})} and running analysis 
+directly on online servers without the need of having \code{R} or any other 
+software installed locally. In the future, it will also be possible that users 
+can specify with whom they want to share, e.g., data sets.

@@ -1,0 +1,50 @@
+\Sexpr{set_parent('Makepaper.Rnw')}
+\section{The mlr R Package}
+\label{sec:mlr}
+
+%\todo{cite: multilabel paper}
+
+The \code{mlr} package \citep{JMLR:v17:15-066, schiffner2016mlr} offers a clean, easy-to-use and flexible
+domain-specific language for machine learning experiments in \code{R}. An
+object-\new{oriented} interface is adopted to unify the definition of machine
+learning tasks, setup of learning algorithms, training of models, predicting
+and evaluating the algorithm's performance. This unified interface hides the
+actual implementations of the underlying learning algorithms. Replacing one
+learning algorithm with another becomes as easy as changing a string. Currently,
+\code{mlr} has built-in support for classification,
+regression, multilabel classification, clustering and survival analysis and includes in total 160 modelling techniques.
+\new{
+A complete list of the integrated learners and how to integrate own learners, as well as
+further information on the \code{mlr} package can be found in the corresponding
+tutorial (\url{http://mlr-org.github.io/mlr-tutorial/}).
+}
+%\code{mlr} goes far
+%beyond simply providing a unified interface.
+%Since \code{mlr}'s long term goal\todoBH{Again the question of "we" and what story we want to tell.}
+%is to provide a high-level domain-specific language for machine learning, a
+A plethora of further functionality is implemented in \code{mlr}, e.g., assessment of
+generalization performance, comparison of different algorithms in a
+scientifically rigorous way, feature selection and algorithms for hyperparameter tuning,
+\new{including Iterated F-Racing \citep{lang2015automatic} and Bayesian optimization with the package
+  \code{mlrMBO}~\citep{mlrMBO}}.
+% and a
+%sophisticated wrapper mechanism. The latter mechanism allows to easily extend
+%the learners capapility, e.g., handle missing values with an imputation
+%wrapper.
+On top of that, \code{mlr} offers a wrapper mechanism, which
+allows to extend learners through pre-train, post-train, pre-predict and
+post-predict hooks. A wrapper extends the current learner with added
+functionality and expands the hyperparameter set of the learner with additional
+hyperparameters provided by the wrapper. Currently, many wrappers are
+available, e.g., missing value imputation, class imbalance correction,
+feature selection, tuning, bagging and stacking, as well as a wrapper for
+user-defined data pre-processing. Wrappers can be nested in other
+wrappers, which can be used to create even more complex workflows.
+The package also supports parallelization on different levels
+\new{based on different parallelization backends (local multicore, socket, MPI)
+with the package \code{parallelMap}~\citep{parallelMap} or on managed high-performance systems via the package \code{batchtools}~\citep{batchtools}.
+Furthermore, visualization methods for research and teaching are also supplied.}
+
+The \code{OpenML} package makes use of \code{mlr} as a supporting package. It
+offers methods to automatically run \code{mlr} learners (flows) on OpenML
+tasks while hiding all of the necessary structural transformations (see Section~\ref{sec:runs}).

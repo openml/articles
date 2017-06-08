@@ -1,0 +1,164 @@
+\Sexpr{set_parent('Makepaper.Rnw')}
+\section{Case Study}
+\label{sec:study}
+
+In this section, we illustrate the usage of OpenML by performing a small
+comparison study between a random forest, bagged trees and single classification trees. We first
+create the respective binary classification learners using \code{mlr}, then query
+OpenML for suitable tasks, apply the learners to the tasks and finally evaluate
+the results.
+
+\subsection{Creating Learners}
+
+We choose three implementations of different tree
+algorithms, namely the \textit{CART} algorithm implemented in the
+\code{rpart} package~\citep{rpart}, the \textit{C5.0} algorithm from the package
+\code{C50}~\citep{C50} and the \textit{conditional inference trees} implemented
+in the \code{ctree} function from the package \code{party}~\citep{party}.
+For the \textit{random forest}, we use the implementation from the package
+\code{randomForest}~\citep{randomForest}.
+%While the three tree learners and the random forest learner can be used as is,
+The bagged trees can conveniently be created using \code{mlr}'s bagging wrapper.
+\new{Note that we do not use bagging for the \code{ctree} algorithm due to large memory requirements.}
+For the random forest and all bagged tree learners, the number of trees is set to 50.
+We create a list that contains the random forest, the two bagged trees and the three tree algorithms:
+
+<<cache=FALSE>>=
+lrn.list = list(
+  makeLearner("classif.randomForest", ntree = 50),
+  makeBaggingWrapper(makeLearner("classif.rpart"), bw.iters = 50),
+  makeBaggingWrapper(makeLearner("classif.C50"), bw.iters = 50),
+  makeLearner("classif.rpart"),
+  makeLearner("classif.C50"),
+  makeLearner("classif.ctree")
+)
+@
+
+\subsection{Querying OpenML}
+
+For this study, we consider only binary classification tasks that use smaller 
+data sets from UCI~\citep{Asuncion:2007p519}, e.g., between 100 and 999 observations, 
+have no missing values and use 10-fold cross-validation for validation:
+% \begin{enumerate}
+%   %\item Binary classification tasks
+%   \item 10-fold cross-validation for validation %\todo{DK: I highly prefer ``cross-validation'' over ``crossvalidation'', but in the string for the estimation procedure there’s also no hyphen. We should make it consistent by whatever means.}
+%   \item No missing values 
+%   %-- Random Forest cannot handle them automatically\todoBH{no real sentence... and do you mean the algorithm or the implementation/package? How should Random Forest be spelled and typesetted?}
+%   \item Between 100 and 999 observations 
+%   %-- To keep evaluation time low\todoBH{no real sentence...}
+%   %  \item Less than 100 features %instances, $p < n$
+%   %\item Predictive accuracy as evaluation measure
+% \end{enumerate}
+ %that can be further filtered with the \code{subset()} function to meet the aforementioned criteria:\todoBH{For me this looks unnecessarily complex. Why not all in one command?} %How do I know what I can query directly on the server and what needs to be selected locally? Even if the API does not allow this, couldn't one implement this so that the \code{listOMLTasks} function brings the arguments to the correct places? And why does \code{c(100, 999)} return 100 to 999? This would be \code{100:999}!}\todo{DK: +1 for changing \code{c(100, 999)} to \code{100:999} -- 4 characters less and a greater flexibility}
+
+<<subset-task, message = FALSE, cache=TRUE, eval = TRUE, echo = TRUE>>=
+tasks = listOMLTasks(data.tag = "uci",
+  task.type = "Supervised Classification", number.of.classes = 2,
+  number.of.missing.values = 0, number.of.instances = c(100, 999),
+  estimation.procedure = "10-fold Crossvalidation")
+@
+
+%All UCI data sets that are available on OpenML are tagged with the string 
+%\code{"uci"}, therefore using \code{data.tag = "uci"} in the \code{listOMLTasks} 
+%function considers tasks that only use UCI data sets. 
+Table \ref{tab:tasks} shows the resulting tasks of the query, which will be used for the further analysis.
+
+<<table, echo = FALSE, results = 'asis'>>=
+print(xtable(tasks[, c("task.id", "name", "number.of.instances",
+  "number.of.features")],
+  caption = "Overview of OpenML tasks that will be used in the study.",
+  label = "tab:tasks", align = c("ccccc")), type = "latex",  include.rownames = FALSE)
+#knitr::kable(tasks[, c("task.id", "name", "number.of.instances", "number.of.features")],
+#  caption = "Resulting OpenML tasks that will be used in the study.")
+@
+
+\subsection{Evaluating Results}
+\label{sec:evaluation}
+% The function \code{runTaskMlr} applies an \code{mlr} learner to an OpenML task and
+% returns an \code{OMLMlrRun} object that consists of three slots, the
+% \code{\$run} slot containing the \code{OMLRun} object, the \code{\$bmr} slot
+% containing the \code{BenchmarkResult} object from the \code{mlr} package and
+% the \code{\$flow} slot containing the \code{OMLFlow} object. 
+%mlr learner that is internally converted
+%into an \code{OMLFlow} object via the \code{convertMlrLearnerToOMLFlow}
+%function. 
+We now apply all learners from \code{lrn.list} to the selected tasks using the \code{runTaskMlr} function
+and use the \code{convertOMLMlrRunToBMR} function to create a single 
+\code{BenchmarkResult} object containing the results of all experiments.
+This allows using, for example, the \code{plotBMRBoxplots} function from 
+\code{mlr} to visualize the experiment results (see Figure~\ref{fig:bmrplot}):
+
+<<eval = FALSE, echo = FALSE>>=
+grid = expand.grid(task.id = tasks$task.id,
+  lrn.ind = seq_along(lrn.list))
+library(parallelMap)
+parallelStartSocket(18)
+parallelExport("grid", "lrn.list")
+runs = parallelLapply(seq_row(grid), function(i) {
+  library("devtools")
+  load_all("../openml-r")
+  task = getOMLTask(grid$task.id[i])
+  ind = grid$lrn.ind[i]
+  runTaskMlr(task, lrn.list[[ind]])
+})
+parallelStop()
+for(i in 1:length(runs)) {
+  runs[[i]]$bmr$results[[1]][[1]]$models = NULL
+}
+save(runs, file = "case_study.RData")
+
+#flows = lapply(lrn.list, uploadOMLFlow)
+#runs.list$flow.name = gsub("mlr.classif.|\\(.*", "", runs.list$flow.name)
+@
+
+<<eval = FALSE, cache=FALSE>>=
+grid = expand.grid(task.id = tasks$task.id, lrn.ind = seq_along(lrn.list))
+runs = lapply(seq_row(grid), function(i) {
+  task = getOMLTask(grid$task.id[i])
+  ind = grid$lrn.ind[i]
+  runTaskMlr(task, lrn.list[[ind]])
+})
+bmr = do.call(convertOMLMlrRunToBMR, runs)
+plotBMRBoxplots(bmr, pretty.names = FALSE)
+@
+
+<<bmrplot, message=FALSE, eval = TRUE, echo = FALSE, results = 'hide', fig.cap="Cross-validated predictive accuracy per learner and task. Each boxplot contains 10 values for one complete cross-validation.", fig.lp="fig:", fig.align='center', fig.show='asis', fig.height=5, fig.width=8, fig.pos="!h", warning=FALSE, out.width='\\textwidth'>>=
+load("case_study.RData")
+bmr = do.call(convertOMLMlrRunToBMR, runs)
+plotBMRBoxplots(bmr, pretty.names = FALSE) + theme(plot.margin = unit(c(0,1,0,0),"cm")) + ylab("Predictive Accuracy")
+
+#a = print(bmr)$acc.test.join
+#summary(a-evals$predictive.accuracy[order(evals$data.name)])
+@
+
+We can upload and tag the runs, e.g., with the string \code{"study\_30"}
+to facilitate finding and listing the results of the runs using this tag:
+
+<<eval = FALSE>>=
+lapply(runs, uploadOMLRun, tags = "study_30")
+@
+
+The server will then compute all possible measures, which takes some time
+depending on the number of runs.
+The results can then be listed using the \code{listOMLRunEvaluations} function
+and can be visualized using the \code{ggplot2} package: %\todoBH{Is it neccessary to tag the results? And is it necessary to upload the results bevore they can be visualized? What if I am working offline? And does one have to wait for the server to evaluate the runs?}
+
+<<res, message=FALSE, eval = TRUE, results = 'hide', fig.cap="Results of the produced runs. Each point represents the averaged predictive accuracy over all cross-validation iterations generated by running a particular learner on the respective task.", fig.lp="fig:", fig.align='center', fig.show='asis', fig.height=4, fig.width=6, fig.pos="!h", warning=FALSE, out.width='\\textwidth', cache=TRUE>>=
+evals = listOMLRunEvaluations(tag = "study_30")
+evals$learner.name = as.factor(evals$learner.name)
+evals$task.id = as.factor(evals$task.id)
+
+library("ggplot2")
+ggplot(evals, aes(x = data.name, y = predictive.accuracy, colour = learner.name, 
+  group = learner.name, linetype = learner.name, shape = learner.name)) +
+  geom_point() + geom_line() + ylab("Predictive Accuracy") + xlab("Data Set") +
+  theme(axis.text.x = element_text(angle = -45, hjust = 0))
+@
+
+%\todoBH{%I've changed the figure (swapped groups and x-axis) as this allows a comparison of the algorithms on the specific task and shows which algorithms are best over all tasks. Is this ok?
+%Please add some more text to the caption. Currently this is VERY concise! Remove last lines if you keep this display.}
+Figure~\ref{fig:res} shows the cross-validated predictive accuracies of our six learners on the considered tasks. Here, the random forest produced the best predictions, except on \new{the tic-tac-toe data set}, where the bagged C50 trees achieved a slightly better result. In general, the two bagged trees performed marginally worse than the random forest and better than the single tree learners.
+%The results are shown in Figure~\ref{fig:res}. For most of the given tasks
+%there is no clear difference in predictive accuracy between random forests and
+%bagged trees. However, the single tree algorithms perform in general worse than
+%bagged trees and random forests.
