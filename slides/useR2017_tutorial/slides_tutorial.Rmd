@@ -205,6 +205,11 @@ class:inverse
 - List the names of all data sets in study_27 
 - Summarize the performance results of study_27
 
+
+- Bonus questions for fast solvers: 
+  + What are the two different versions of ksvm?
+  + What do the different setup.id s mean?
+
 ---
 class:inverse
 
