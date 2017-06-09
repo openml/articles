@@ -16,7 +16,7 @@ output:
 
 ```{r setup, include=FALSE}
 options(htmltools.dir.version = FALSE)
-knitr::opts_chunk$set(dpi = 300, cache = TRUE, message = FALSE)
+knitr::opts_chunk$set(dpi = 300, cache = TRUE, message = FALSE, eval = FALSE)
 ```
 
 - If you haven't done so yet, create an account on [OpenML.org](www.openml.org).
@@ -38,6 +38,11 @@ library("OpenML")
 - We will have lots of practicals, if you are faster than others, you can 
 check out https://www.openml.org/guide or help others.
 
+
+
+---
+Help
+![](slides_tutorial_files/openml-cheatsheet.jpg)
 
 ---
 ## Intro to openml.org 
@@ -271,7 +276,7 @@ evals$type
 
 evals$type[is.na(evals$type)] <- getDefaults( 
   getParamSet( 
-    {{convertOMLFlowToMlr(flws[[1]])}}
+{{  convertOMLFlowToMlr(flws[[1]])}}
   ) 
 )$type
 

@@ -46,6 +46,11 @@ library("OpenML")
 check out https://www.openml.org/guide or help others.
 
 
+
+---
+Help
+![](slides_tutorial_files/openml-cheatsheet.jpg)
+
 ---
 ## Intro to openml.org 
 &lt;!-- [15 minutes, Joaquin] --&gt;
@@ -200,14 +205,7 @@ evals = listOMLRunEvaluations(tag = "study_30")
 evals[1:3, c("data.name", "learner.name", "predictive.accuracy")]
 ```
 
-```
-##   data.name         learner.name predictive.accuracy
-## 1  diabetes classif.randomForest            0.772135
-## 2     sonar classif.randomForest            0.817308
-## 3  haberman classif.randomForest            0.748366
-```
 
-![](slides_tutorial_files/figure-html/unnamed-chunk-5-1.png)&lt;!-- --&gt;
 
 
 ---
@@ -245,8 +243,6 @@ ggplot(evals, aes(x = setup.id, y = predictive.accuracy,
   facet_grid(~ flow.name, scales = "free")
 ```
 
-![](slides_tutorial_files/figure-html/unnamed-chunk-6-1.png)&lt;!-- --&gt;
-
 ---
 class:inverse
 Why are the two different versions of the flow?
@@ -255,24 +251,6 @@ Why are the two different versions of the flow?
 fids &lt;- unique(evals$flow.id)
 flws &lt;- lapply(fids, getOMLFlow)
 flws
-```
-
-```
-## [[1]]
-## 
-## Flow "mlr.classif.ksvm" :: (Version = 4, Flow ID = 4704)
-## 	External Version         : R_3.3.1-v2.bf0ac616
-## 	Dependencies             : R_3.3.1, OpenML_1.0, mlr_2.9, kernlab_0.9.24
-## 	Number of Flow Parameters: 19
-## 	Number of Flow Components: 0
-## 
-## [[2]]
-## 
-## Flow "mlr.classif.ksvm" :: (Version = 5, Flow ID = 4705)
-## 	External Version         : R_3.2.2-v2.f878bda4
-## 	Dependencies             : R_3.2.2, OpenML_1.0, mlr_2.10, kernlab_0.9.24
-## 	Number of Flow Parameters: 19
-## 	Number of Flow Components: 0
 ```
 
 ---
@@ -284,34 +262,8 @@ rids &lt;- evals$run.id
 runs &lt;- lapply(rids, getOMLRun)
 params &lt;- lapply(runs, getOMLRunParList)
 params[[1]]
-```
-
-```
-## This is a 'OMLRunParList' with the following parameters:
-##    name value component
-## 1:  fit FALSE        NA
-```
-
-```r
 params[[5]]
-```
-
-```
-## This is a 'OMLRunParList' with the following parameters:
-##    name   value component
-## 1: type kbb-svc        NA
-## 2:  fit   FALSE        NA
-```
-
-```r
 params[[19]]
-```
-
-```
-## This is a 'OMLRunParList' with the following parameters:
-##    name    value component
-## 1: type spoc-svc        NA
-## 2:  fit    FALSE        NA
 ```
 The difference seems to be the type.
 
@@ -324,30 +276,15 @@ evals$type &lt;- sapply(params,
                      function(x) ifelse(is.null(x$type$value), 
                                         NA, x$type$value))
 evals$type
-```
 
-```
-##  [1] NA         NA         NA         "kbb-svc"  "kbb-svc"  "kbb-svc" 
-##  [7] "spoc-svc" "spoc-svc" "spoc-svc" NA         NA         NA        
-## [13] NA         "kbb-svc"  "kbb-svc"  "kbb-svc"  "spoc-svc" "spoc-svc"
-## [19] "spoc-svc"
-```
 
-```r
 evals$type[is.na(evals$type)] &lt;- getDefaults( 
   getParamSet( 
-    *convertOMLFlowToMlr(flws[[1]])
+*  convertOMLFlowToMlr(flws[[1]])
   ) 
 )$type
 
 evals$type
-```
-
-```
-##  [1] "C-svc"    "C-svc"    "C-svc"    "kbb-svc"  "kbb-svc"  "kbb-svc" 
-##  [7] "spoc-svc" "spoc-svc" "spoc-svc" "C-svc"    "C-svc"    "C-svc"   
-## [13] "C-svc"    "kbb-svc"  "kbb-svc"  "kbb-svc"  "spoc-svc" "spoc-svc"
-## [19] "spoc-svc"
 ```
 
 ---
@@ -360,8 +297,6 @@ ggplot(evals, aes(x = type, y = predictive.accuracy,
   geom_point() + geom_line() + 
   facet_grid(~ flow.name, scales = "free")
 ```
-
-![](slides_tutorial_files/figure-html/unnamed-chunk-10-1.png)&lt;!-- --&gt;
 
 
 
