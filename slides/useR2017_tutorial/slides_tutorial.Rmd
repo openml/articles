@@ -120,7 +120,8 @@ class:inverse
 
 ---
 class: inverse
-background-image: url(https://c1.staticflickr.com/5/4049/4468213356_07ffffd287_z.jpg)
+<!-- background-image: url(https://c1.staticflickr.com/5/4049/4468213356_07ffffd287_z.jpg) -->
+background-image: url(slides_tutorial_files/cat.jpg)
 background-size: cover
 
 # BREAK TIME
@@ -169,6 +170,12 @@ Tag must be `study_XX`
 
 ![](slides_tutorial_files/Screenshot_study.png)
 
+???
+- With tasks we can e.g. combine several runs and find them again and make 
+a little benchmarking study.
+- The information what the tag means probably not obvious to other OpenML users:
+this is why we created studies
+- Study = tag + website with study information
 
 
 
@@ -181,10 +188,10 @@ Tag must be `study_XX`
 ## Studies
 ```{r, message=FALSE}
 evals = listOMLRunEvaluations(tag = "study_30")
-head(evals[, c("data.name", "learner.name", "predictive.accuracy")])
+evals[1:3, c("data.name", "learner.name", "predictive.accuracy")]
 ```
 
-```{r, echo=FALSE, fig.height=4}
+```{r, echo=FALSE, fig.height=3}
 evals$learner.name = as.factor(evals$learner.name)
 evals$task.id = as.factor(evals$task.id)
 
@@ -192,7 +199,7 @@ library("ggplot2")
 ggplot(evals, aes(x = data.name, y = predictive.accuracy, colour = learner.name,
                   group = learner.name, linetype = learner.name, shape = learner.name)) +
   geom_point() + geom_line() + ylab("Predictive Accuracy") + xlab("Data Set") +
-  theme(axis.text.x = element_text(angle = -45, hjust = 0))
+  theme(axis.text.x = element_text(angle = -15, hjust = 0))
 ```
 
 
@@ -308,7 +315,8 @@ Predict which drugs will inhibit certain proteins
 
 ---
 class: inverse
-background-image: url(https://c1.staticflickr.com/6/5477/14101220086_a633ec9674_c.jpg)
+<!-- background-image: url(https://c1.staticflickr.com/6/5477/14101220086_a633ec9674_c.jpg) -->
+background-image: url(fish.jpg)
 background-size: cover
 
 # Contributors needed! https://github.com/openml/OpenML/wiki/How-to-contribute
