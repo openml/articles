@@ -159,8 +159,10 @@ Hint: use `listLearners()` to find learners.
 ---
 ## Tags
 &lt;!-- [10 minutes, Heidi] --&gt;
+Use tags to sort and find data, tasks, flows and runs.
 
-![](slides_tutorial_files/Screenshot_tags.png)
+![](slides_tutorial_files/Screenshot_tags.png) 
+
 
 
 
@@ -170,8 +172,12 @@ uploadOMLRun(myrun, tags = c("tag1", "tag2"))
 
 ---
 ## Studies
+Studies are an extension of tags and get their own website.   
+Tag must be `study_XX`
 
 ![](slides_tutorial_files/Screenshot_study.png)
+
+
 
 
 ---
@@ -195,30 +201,6 @@ head(evals[, c("data.name", "learner.name", "predictive.accuracy")])
 ## 4   tic-tac-toe classif.randomForest            0.986430
 ## 5 heart-statlog classif.randomForest            0.825926
 ## 6    ionosphere classif.randomForest            0.934473
-```
-
-```r
-fids &lt;- unique(evals$flow.id)
-flws &lt;- lapply(fids, getOMLFlow)
-flws[1:2]
-```
-
-```
-## [[1]]
-## 
-## Flow "mlr.classif.randomForest" :: (Version = 17, Flow ID = 4782)
-## 	External Version         : R_3.3.0-v2.b80d1ffc
-## 	Dependencies             : R_3.3.0, OpenML_1.0, mlr_2.10, randomForest_4.6.12
-## 	Number of Flow Parameters: 20
-## 	Number of Flow Components: 0
-## 
-## [[2]]
-## 
-## Flow "mlr.classif.rpart.bagged" :: (Version = 9, Flow ID = 4783)
-## 	External Version         : R_3.3.0-v2.dff90e83
-## 	Dependencies             : R_3.3.0, OpenML_1.0, mlr_2.10, rpart_4.1.10
-## 	Number of Flow Parameters: 17
-## 	Number of Flow Components: 0
 ```
 
 ![](slides_tutorial_files/figure-html/unnamed-chunk-5-1.png)&lt;!-- --&gt;
@@ -255,6 +237,123 @@ ggplot(evals, aes(x = setup.id, y = predictive.accuracy,
 ```
 
 ![](slides_tutorial_files/figure-html/unnamed-chunk-6-1.png)&lt;!-- --&gt;
+
+---
+class:inverse
+Why are the two different versions of the flow?
+
+```r
+fids &lt;- unique(evals$flow.id)
+flws &lt;- lapply(fids, getOMLFlow)
+flws
+```
+
+```
+## [[1]]
+## 
+## Flow "mlr.classif.ksvm" :: (Version = 4, Flow ID = 4704)
+## 	External Version         : R_3.3.1-v2.bf0ac616
+## 	Dependencies             : R_3.3.1, OpenML_1.0, mlr_2.9, kernlab_0.9.24
+## 	Number of Flow Parameters: 19
+## 	Number of Flow Components: 0
+## 
+## [[2]]
+## 
+## Flow "mlr.classif.ksvm" :: (Version = 5, Flow ID = 4705)
+## 	External Version         : R_3.2.2-v2.f878bda4
+## 	Dependencies             : R_3.2.2, OpenML_1.0, mlr_2.10, kernlab_0.9.24
+## 	Number of Flow Parameters: 19
+## 	Number of Flow Components: 0
+```
+
+---
+class:inverse
+What are the different setup IDs?
+
+```r
+rids &lt;- evals$run.id
+runs &lt;- lapply(rids, getOMLRun)
+params &lt;- lapply(runs, getOMLRunParList)
+params[[1]]
+```
+
+```
+## This is a 'OMLRunParList' with the following parameters:
+##    name value component
+## 1:  fit FALSE        NA
+```
+
+```r
+params[[5]]
+```
+
+```
+## This is a 'OMLRunParList' with the following parameters:
+##    name   value component
+## 1: type kbb-svc        NA
+## 2:  fit   FALSE        NA
+```
+
+```r
+params[[19]]
+```
+
+```
+## This is a 'OMLRunParList' with the following parameters:
+##    name    value component
+## 1: type spoc-svc        NA
+## 2:  fit    FALSE        NA
+```
+The difference seems to be the type.
+
+---
+class:inverse
+Let's add the type info to the evals data frame.
+
+```r
+evals$type &lt;- sapply(params, 
+                     function(x) ifelse(is.null(x$type$value), 
+                                        NA, x$type$value))
+evals$type
+```
+
+```
+##  [1] NA         NA         NA         "kbb-svc"  "kbb-svc"  "kbb-svc" 
+##  [7] "spoc-svc" "spoc-svc" "spoc-svc" NA         NA         NA        
+## [13] NA         "kbb-svc"  "kbb-svc"  "kbb-svc"  "spoc-svc" "spoc-svc"
+## [19] "spoc-svc"
+```
+
+```r
+evals$type[is.na(evals$type)] &lt;- getDefaults( 
+  getParamSet( 
+    *convertOMLFlowToMlr(flws[[1]])
+  ) 
+)$type
+
+evals$type
+```
+
+```
+##  [1] "C-svc"    "C-svc"    "C-svc"    "kbb-svc"  "kbb-svc"  "kbb-svc" 
+##  [7] "spoc-svc" "spoc-svc" "spoc-svc" "C-svc"    "C-svc"    "C-svc"   
+## [13] "C-svc"    "kbb-svc"  "kbb-svc"  "kbb-svc"  "spoc-svc" "spoc-svc"
+## [19] "spoc-svc"
+```
+
+---
+class:inverse
+Now we can make a more understandable plot.
+
+```r
+ggplot(evals, aes(x = type, y = predictive.accuracy, 
+                  color = data.name, group = data.name)) + 
+  geom_point() + geom_line() + 
+  facet_grid(~ flow.name, scales = "free")
+```
+
+![](slides_tutorial_files/figure-html/unnamed-chunk-10-1.png)&lt;!-- --&gt;
+
 
 
 ---

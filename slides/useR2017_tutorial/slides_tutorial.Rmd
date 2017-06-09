@@ -152,8 +152,10 @@ Hint: use `listLearners()` to find learners.
 ---
 ## Tags
 <!-- [10 minutes, Heidi] -->
+Use tags to sort and find data, tasks, flows and runs.
 
-![](slides_tutorial_files/Screenshot_tags.png)
+![](slides_tutorial_files/Screenshot_tags.png) 
+
 
 
 ```{r, eval=FALSE}
@@ -162,8 +164,12 @@ uploadOMLRun(myrun, tags = c("tag1", "tag2"))
 
 ---
 ## Studies
+Studies are an extension of tags and get their own website.   
+Tag must be `study_XX`
 
 ![](slides_tutorial_files/Screenshot_study.png)
+
+
 
 
 ---
@@ -176,10 +182,6 @@ uploadOMLRun(myrun, tags = c("tag1", "tag2"))
 ```{r, message=FALSE}
 evals = listOMLRunEvaluations(tag = "study_30")
 head(evals[, c("data.name", "learner.name", "predictive.accuracy")])
-
-fids <- unique(evals$flow.id)
-flws <- lapply(fids, getOMLFlow)
-flws[1:2]
 ```
 
 ```{r, echo=FALSE, fig.height=4}
@@ -222,6 +224,58 @@ ggplot(evals, aes(x = setup.id, y = predictive.accuracy,
   geom_point() + geom_line() + 
   facet_grid(~ flow.name, scales = "free")
 ```
+
+---
+class:inverse
+Why are the two different versions of the flow?
+```{r}
+fids <- unique(evals$flow.id)
+flws <- lapply(fids, getOMLFlow)
+flws
+```
+
+---
+class:inverse
+What are the different setup IDs?
+```{r}
+rids <- evals$run.id
+runs <- lapply(rids, getOMLRun)
+params <- lapply(runs, getOMLRunParList)
+params[[1]]
+params[[5]]
+params[[19]]
+```
+The difference seems to be the type.
+
+---
+class:inverse
+Let's add the type info to the evals data frame.
+```{r}
+evals$type <- sapply(params, 
+                     function(x) ifelse(is.null(x$type$value), 
+                                        NA, x$type$value))
+evals$type
+
+
+evals$type[is.na(evals$type)] <- getDefaults( 
+  getParamSet( 
+    {{convertOMLFlowToMlr(flws[[1]])}}
+  ) 
+)$type
+
+evals$type
+```
+
+---
+class:inverse
+Now we can make a more understandable plot.
+```{r, fig.height=3}
+ggplot(evals, aes(x = type, y = predictive.accuracy, 
+                  color = data.name, group = data.name)) + 
+  geom_point() + geom_line() + 
+  facet_grid(~ flow.name, scales = "free")
+```
+
 
 
 ---
