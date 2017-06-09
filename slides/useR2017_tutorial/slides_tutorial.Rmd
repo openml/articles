@@ -117,7 +117,7 @@ class:inverse
 ### *Practical*  
 <!-- [5 minutes, Jouaqin] -->
 
-- List all regresssion tasks corresponding to data sets with between 
+- List all regression tasks corresponding to data sets with between 
   50 and 55 observations.
 
 
