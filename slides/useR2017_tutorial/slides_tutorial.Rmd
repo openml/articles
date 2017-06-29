@@ -16,7 +16,7 @@ output:
 
 ```{r setup, include=FALSE}
 options(htmltools.dir.version = FALSE)
-knitr::opts_chunk$set(dpi = 300, cache = TRUE, message = FALSE, eval = FALSE)
+knitr::opts_chunk$set(dpi = 300, cache = TRUE, message = FALSE, eval = TRUE)
 ```
 
 - If you haven't done so yet, create an account on [OpenML.org](www.openml.org).
@@ -203,9 +203,13 @@ this is why we created studies
 ## Studies
 
 ![](slides_tutorial_files/Screenshot_study2.png)
+```{r, eval=FALSE}
+uploadOMLRun(myrun, tags = "study_30")
+```
+
 
 ---
-## Studies
+## Evaluations
 ```{r, message=FALSE}
 evals = listOMLRunEvaluations(tag = "study_30")
 evals[1:3, c("data.name", "learner.name", "predictive.accuracy")]
@@ -230,8 +234,10 @@ class:inverse
 <!-- [10 minutes, Heidi] -->
 
 - List the names of all data sets in study_27 
-- Summarize the performance results of study_27
+- Summarize the performance results of study_27 (look at predictive accuracy)
 
+> Predictive accuracy is the percentage of instances that are classified correctly.   
+> (Information like this can be found on [openml.org/a](https://www.openml.org/a))
 
 - Bonus questions for fast solvers: 
   + What are the two different versions of ksvm?
@@ -259,7 +265,7 @@ ggplot(evals, aes(x = setup.id, y = predictive.accuracy,
 
 ---
 class:inverse
-Why are the two different versions of the flow?
+Why are there two different versions of the flow?
 ```{r}
 fids <- unique(evals$flow.id)
 flws <- lapply(fids, getOMLFlow)
