@@ -342,7 +342,7 @@ Predict which drugs will inhibit certain proteins
 ---
 class: inverse
 <!-- background-image: url(https://c1.staticflickr.com/6/5477/14101220086_a633ec9674_c.jpg) -->
-background-image: url(fish.jpg)
+background-image: url(slides_tutorial_files/fish.jpg)
 background-size: cover
 
 # Contributors needed! https://github.com/openml/OpenML/wiki/How-to-contribute
