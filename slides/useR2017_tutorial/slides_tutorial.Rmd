@@ -327,6 +327,13 @@ Image-credit: https://commons.wikimedia.org
 
 ![](slides_tutorial_files/robot_profil.PNG)
 
+---
+### OpenML meta learning: Making defaults great again!
+- Choose between different performance measures (AUC, RMSE, ...)
+- Predict the pareto front for this measure and the training time
+- E. g. for xgboost: Prediction for hyperparameters on a new dataset, which will outperform the defaults
+
+![](slides_tutorial_files/xgboost_pareto_front.PNG)
 
 ---
 ### OpenML in drug discovery
