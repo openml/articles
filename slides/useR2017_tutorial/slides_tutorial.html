@@ -165,18 +165,123 @@ Image credit: [Dave Dugdale](https://flic.kr/p/7NQLaj)
 ### Running and uploading 
 &lt;!-- [10 minutes, Bernd] --&gt;
 
+The easiest way to create a run is to
+
+- define a learner using the `mlr` package and to
+- apply the learner to a task using the `runTaskMlr` function.
+
+
+```r
+# create a randomForest learner
+lrn = makeLearner("classif.randomForest", mtry = 2)
+# download a task
+task = getOMLTask(task.id = 37)
+# create the run
+run.mlr = runTaskMlr(task, lrn)
+```
+
+- You can extract the `BenchmarkResult` object via
+
+
+```r
+convertOMLMlrRunToBMR(run.mlr)
+```
+
+```
+##    task.id           learner.id acc.test.join timetrain.test.sum
+## 1 diabetes classif.randomForest     0.7708333                4.1
+##   timepredict.test.sum
+## 1                 0.03
+```
+
+&lt;!--
+- The `run.mlr` object contains three slots
+  - `run`: contains the information of the run, i.e., the hyperparameter values and the learner predictions.
+  - `bmr`: the `BenchmarkResult` object containing the results of the learner that is applied on the task.
+  - `flow`: contains information about the algorithm.
+--&gt;
+---
+### Running and uploading 
+
+- A run created with the `runTaskMlr` function can be uploaded via 
+
+```r
+run.id = uploadOMLRun(run.mlr)
+run.id
+```
+
+```
+## [1] 3813335
+```
+- The OpenML server assigns a unique `run.id` to the run which 
+
+  - can be used to download the run, i.e., via 
+getOMLRun(3813335) or
+  - to look up the run online on https://www.openml.org/r/3813335.
+  
+- The server will automatically compute several evaluation measures for this run.
+- It is also possible to upload runs with specific tags using the `tags` argument, so that finding the run with a specific tag becomes easier.
+
 ---
 class:inverse
 ### *Practical*  
 &lt;!-- [25 minutes, Bernd] --&gt;
 
 - Run your favorite learner/algorithm (from mlr) on task XXX that you already downloaded.
-Hint: use `listLearners()` to find learners.
+Hint: use `listLearners()` to find appropriate learners for that task.
 - Upload your run to OpenML. Add the tag "useR17". 
 - Check if the upload worked by going to the website. Also check if the tag was
   added (you can also still add it on the website). 
-- Check the website on how well you did
+- Check the predictive performance of the run by looking at several evaluation measures.
   
+---
+class:inverse
+### *Practical*  
+
+- Run your favorite learner/algorithm (from mlr) on task XXX that you already downloaded.
+Hint: use `listLearners()` to find appropriate learners for that task.
+
+
+```r
+# select the learner manually from lrn.list
+lrn.list = listLearners()
+# run favorite learner
+lrn = makeLearner("classif.rpart")
+myrun = runTaskMlr(task, lrn)
+```
+
+- Upload your run to OpenML. Add the tag "useR17". 
+
+
+```r
+myrun.id = uploadOMLRun(myrun, tags = "useR17")
+myrun.id
+```
+
+```
+## [1] 3814776
+```
+
+---
+class:inverse
+### *Practical*  
+
+- Check if the upload worked by going to the website. Also check if the tag was
+  added (you can also still add it on the website). 
+  
+Use the value from `myrun.id` and go to https://www.openml.org/r/3814776.
+
+- Check the predictive performance of the run by looking at several evaluation measures.
+
+Go to https://www.openml.org/r/3814776 and scroll down to *Evaluation measures*. Maybe you have to wait a few seconds/minutes as the server needs to compute the evaluation measures.
+
+You can also get the results via
+
+```r
+listOMLRunEvaluations(run.id = myrun.id)
+```
+
+
 ---
 ## Tags
 &lt;!-- [10 minutes, Heidi] --&gt;
@@ -232,7 +337,7 @@ evals[1:3, c("data.name", "learner.name", "predictive.accuracy")]
 ## 3  haberman classif.randomForest            0.748366
 ```
 
-![](slides_tutorial_files/figure-html/unnamed-chunk-6-1.png)&lt;!-- --&gt;
+![](slides_tutorial_files/figure-html/unnamed-chunk-12-1.png)&lt;!-- --&gt;
 
 
 ---
@@ -272,7 +377,7 @@ ggplot(evals, aes(x = setup.id, y = predictive.accuracy,
   facet_grid(~ flow.name, scales = "free")
 ```
 
-![](slides_tutorial_files/figure-html/unnamed-chunk-7-1.png)&lt;!-- --&gt;
+![](slides_tutorial_files/figure-html/unnamed-chunk-13-1.png)&lt;!-- --&gt;
 
 ---
 class:inverse
@@ -388,7 +493,7 @@ ggplot(evals, aes(x = type, y = predictive.accuracy,
   facet_grid(~ flow.name, scales = "free")
 ```
 
-![](slides_tutorial_files/figure-html/unnamed-chunk-11-1.png)&lt;!-- --&gt;
+![](slides_tutorial_files/figure-html/unnamed-chunk-17-1.png)&lt;!-- --&gt;
 
 
 
