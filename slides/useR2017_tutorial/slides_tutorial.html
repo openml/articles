@@ -165,10 +165,10 @@ Image credit: [Dave Dugdale](https://flic.kr/p/7NQLaj)
 ### Running and uploading 
 &lt;!-- [10 minutes, Bernd] --&gt;
 
-The easiest way to create a run is to
+Create a run:
 
-- define a learner using the `mlr` package and to
-- apply the learner to a task using the `runTaskMlr` function.
+1. define a learner using the `mlr` package 
+2. apply to a task using `runTaskMlr()`.
 
 
 ```r
@@ -180,7 +180,7 @@ task = getOMLTask(task.id = 37)
 run.mlr = runTaskMlr(task, lrn)
 ```
 
-- You can extract the `BenchmarkResult` object via
+- Extract the `BenchmarkResult` object via
 
 
 ```r
@@ -189,9 +189,9 @@ convertOMLMlrRunToBMR(run.mlr)
 
 ```
 ##    task.id           learner.id acc.test.join timetrain.test.sum
-## 1 diabetes classif.randomForest     0.7708333                4.1
+## 1 diabetes classif.randomForest     0.7708333              5.228
 ##   timepredict.test.sum
-## 1                 0.03
+## 1                0.322
 ```
 
 &lt;!--
@@ -203,7 +203,7 @@ convertOMLMlrRunToBMR(run.mlr)
 ---
 ### Running and uploading 
 
-- A run created with the `runTaskMlr` function can be uploaded via 
+Upload run to OpenML server:
 
 ```r
 run.id = uploadOMLRun(run.mlr)
@@ -211,28 +211,28 @@ run.id
 ```
 
 ```
-## [1] 3813335
+## [1] 3824294
 ```
-- The OpenML server assigns a unique `run.id` to the run which 
+- The server assigns a `run.id` which can be used to
 
-  - can be used to download the run, i.e., via 
-getOMLRun(3813335) or
-  - to look up the run online on https://www.openml.org/r/3813335.
+  - download the run, getOMLRun(3824294) or
+  - look up the run online on https://www.openml.org/r/3824294.
   
-- The server will automatically compute several evaluation measures for this run.
-- It is also possible to upload runs with specific tags using the `tags` argument, so that finding the run with a specific tag becomes easier.
+- The server automatically computes evaluation measures.
+&lt;!-- - It is also possible to upload runs with specific tags using the `tags` argument, so that finding the run with a specific tag becomes easier. --&gt;
 
 ---
 class:inverse
 ### *Practical*  
 &lt;!-- [25 minutes, Bernd] --&gt;
 
+&lt;!-- TODO: exchange XXX with the task number --&gt;
 - Run your favorite learner/algorithm (from mlr) on task XXX that you already downloaded.
 Hint: use `listLearners()` to find appropriate learners for that task.
-- Upload your run to OpenML. Add the tag "useR17". 
+- Upload your run to OpenML. Add the tag "useR17" (Hint: ). 
 - Check if the upload worked by going to the website. Also check if the tag was
   added (you can also still add it on the website). 
-- Check the predictive performance of the run by looking at several evaluation measures.
+- Check the predictive performance of the run (It may take a while befor the server has calculated the performance measures).
   
 ---
 class:inverse
@@ -245,6 +245,21 @@ Hint: use `listLearners()` to find appropriate learners for that task.
 ```r
 # select the learner manually from lrn.list
 lrn.list = listLearners()
+```
+
+```
+## Warning in listLearners.character(obj = NA_character_, properties, quiet, : The following learners could not be constructed, probably because their packages are not installed:
+## classif.ada,classif.bartMachine,classif.bdk,classif.boosting,classif.bst,classif.clusterSVM,classif.dbnDNN,classif.dcSVM,classif.earth,classif.gaterSVM,classif.gbm,classif.geoDA,classif.hdrda,classif.kknn,classif.LiblineaRL1L2SVC,classif.LiblineaRL1LogReg,classif.LiblineaRL2L1SVC,classif.LiblineaRL2LogReg,classif.LiblineaRL2SVC,classif.LiblineaRMultiClassSVC,classif.linDA,classif.lqa,classif.mda,classif.mlp,classif.neuralnet,classif.nnTrain,classif.nodeHarvest,classif.pamr,classif.penalized.fusedlasso,classif.penalized.lasso,classif.penalized.ridge,classif.plr,classif.quaDA,classif.rda,classif.rFerns,classif.rknn,classif.rotationForest,classif.RRF,classif.rrlda,classif.saeDNN,classif.sda,classif.sparseLDA,classif.xgboost,classif.xyf,cluster.cmeans,cluster.dbscan,cluster.kmeans,multilabel.rFerns,regr.bartMachine,regr.bcart,regr.bdk,regr.bgp,regr.bgpllm,regr.blm,regr.brnn,regr.bst,regr.btgp,regr.btgpllm,regr.btlm,regr.crs,regr.cubist,regr.earth,regr.elmNN,regr.frbs,regr.gbm,regr.GPfit,regr.kknn,regr.km,regr.laGP,regr.LiblineaRL2L1SVR,regr.LiblineaRL2L2SVR,regr.mars,regr.nodeHarvest,regr.pcr,regr.penalized.fusedlasso,regr.penalized.lasso,regr.penalized.ridge,regr.plsr,regr.rknn,regr.RRF,regr.rsm,regr.slim,regr.xgboost,regr.xyf,surv.gbm,surv.penalized.fusedlasso,surv.penalized.lasso,surv.penalized.ridge
+## Check ?learners to see which packages you need or install mlr with all suggestions.
+```
+
+```
+## Warning in listLearners.character(td$type, union(props, properties), quiet, : The following learners could not be constructed, probably because their packages are not installed:
+## classif.ada,classif.bartMachine,classif.bdk,classif.boosting,classif.bst,classif.clusterSVM,classif.dbnDNN,classif.dcSVM,classif.earth,classif.gaterSVM,classif.gbm,classif.geoDA,classif.hdrda,classif.kknn,classif.LiblineaRL1L2SVC,classif.LiblineaRL1LogReg,classif.LiblineaRL2L1SVC,classif.LiblineaRL2LogReg,classif.LiblineaRL2SVC,classif.LiblineaRMultiClassSVC,classif.linDA,classif.lqa,classif.mda,classif.mlp,classif.neuralnet,classif.nnTrain,classif.nodeHarvest,classif.pamr,classif.penalized.fusedlasso,classif.penalized.lasso,classif.penalized.ridge,classif.plr,classif.quaDA,classif.rda,classif.rFerns,classif.rknn,classif.rotationForest,classif.RRF,classif.rrlda,classif.saeDNN,classif.sda,classif.sparseLDA,classif.xgboost,classif.xyf,cluster.cmeans,cluster.dbscan,cluster.kmeans,multilabel.rFerns,regr.bartMachine,regr.bcart,regr.bdk,regr.bgp,regr.bgpllm,regr.blm,regr.brnn,regr.bst,regr.btgp,regr.btgpllm,regr.btlm,regr.crs,regr.cubist,regr.earth,regr.elmNN,regr.frbs,regr.gbm,regr.GPfit,regr.kknn,regr.km,regr.laGP,regr.LiblineaRL2L1SVR,regr.LiblineaRL2L2SVR,regr.mars,regr.nodeHarvest,regr.pcr,regr.penalized.fusedlasso,regr.penalized.lasso,regr.penalized.ridge,regr.plsr,regr.rknn,regr.RRF,regr.rsm,regr.slim,regr.xgboost,regr.xyf,surv.gbm,surv.penalized.fusedlasso,surv.penalized.lasso,surv.penalized.ridge
+## Check ?learners to see which packages you need or install mlr with all suggestions.
+```
+
+```r
 # run favorite learner
 lrn = makeLearner("classif.rpart")
 myrun = runTaskMlr(task, lrn)
@@ -259,7 +274,7 @@ myrun.id
 ```
 
 ```
-## [1] 3814776
+## [1] 3824347
 ```
 
 ---
@@ -269,11 +284,12 @@ class:inverse
 - Check if the upload worked by going to the website. Also check if the tag was
   added (you can also still add it on the website). 
   
-Use the value from `myrun.id` and go to https://www.openml.org/r/3814776.
+Use the value from `myrun.id` and go to https://www.openml.org/r/3824347.
 
 - Check the predictive performance of the run by looking at several evaluation measures.
 
-Go to https://www.openml.org/r/3814776 and scroll down to *Evaluation measures*. Maybe you have to wait a few seconds/minutes as the server needs to compute the evaluation measures.
+   - Go to https://www.openml.org/r/3824347 
+   - Scroll down to *Evaluation measures*. 
 
 You can also get the results via
 
