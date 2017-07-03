@@ -153,8 +153,20 @@ Image credit: [Dave Dugdale](https://flic.kr/p/7NQLaj)
 
 ---
 
-### Intro to mlr 
+## Intro to mlr 
 <!-- [15 minutes, Bernd] -->
+
+mlr = standardized interface for machine learning algorithms in R
+
+![](slides_tutorial_files/mlr.jpg) 
+
+$\rightarrow$ exactly what is needed for OpenML!
+
+???
+Image can be changed here if needed:
+https://docs.google.com/drawings/d/1DRWxUC-fmxM-wzLZeihXcjieu1A6UKnaKj6D5lNDphA/edit?usp=sharing
+
+
 
 ---
 ### Running and uploading 
@@ -162,8 +174,8 @@ Image credit: [Dave Dugdale](https://flic.kr/p/7NQLaj)
 
 Create a run:
 
-1. define a learner using the `mlr` package 
-2. apply to a task using `runTaskMlr()`.
+1. Define a learner using the `mlr` package
+2. Apply to a task using `runTaskMlr()`
 
 ```{r}
 # create a randomForest learner
