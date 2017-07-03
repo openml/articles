@@ -501,6 +501,10 @@ Image credit: [Papahānaumokuākea Marine National Monument](https://flic.kr/p/n
 
 ---
 class: inverse, center, middle
-background-image: url(slides_tutorial_files/OpenML_heart_OS.png)
+![](slides_tutorial_files/OpenML_heart_OS.png)
+
+Thanks to all the great folks who have been contributing    
+to OpenML and the R package.    
+
 
 
