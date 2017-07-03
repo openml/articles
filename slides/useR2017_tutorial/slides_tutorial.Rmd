@@ -19,6 +19,7 @@ options(htmltools.dir.version = FALSE)
 knitr::opts_chunk$set(dpi = 300, cache = TRUE, message = FALSE, eval = TRUE)
 library(OpenML)
 setOMLConfig(confirm.upload = FALSE)
+set.seed(123)
 ```
 
 - If you haven't done so yet, create an account on [OpenML.org](www.openml.org).
@@ -186,11 +187,23 @@ task = getOMLTask(task.id = 37)
 run.mlr = runTaskMlr(task, lrn)
 ```
 
+
+---
+### Running and uploading
+```{r}
+run.mlr
+```
+
+
+<!-- From a didactical standpoint I would not include this: -->
+<!-- 
 - Extract the `BenchmarkResult` object via
 
 ```{r}
 convertOMLMlrRunToBMR(run.mlr)
 ```
+-->
+
 
 <!--
 - The `run.mlr` object contains three slots
@@ -202,16 +215,24 @@ convertOMLMlrRunToBMR(run.mlr)
 ### Running and uploading 
 
 Upload run to OpenML server:
-```{r}
+```{r, eval=FALSE}
 run.id = uploadOMLRun(run.mlr)
+```
+```{r, echo=FALSE}
+run.id = 3828647 # so we don't actually have to upload anything 
+```
+```{r}
 run.id
 ```
+
 - The server assigns a `run.id` which can be used to
 
-  - download the run, `r sprintf("getOMLRun(%s)", run.id)` or
+  - download the run: `getOMLRun(run.id)`, or
   - look up the run online on `r paste0("https://www.openml.org/r/", run.id)`.
   
-- The server automatically computes evaluation measures.
+- The server automatically computes evaluation measures     
+$\rightarrow$`r paste0("https://www.openml.org/r/", run.id)`.
+
 <!-- - It is also possible to upload runs with specific tags using the `tags` argument, so that finding the run with a specific tag becomes easier. -->
 
 ---
@@ -222,23 +243,29 @@ class:inverse
 <!-- TODO: exchange XXX with the task number -->
 - Run your favorite learner/algorithm (from mlr) on task XXX that you already downloaded.
 Hint: use `listLearners()` to find appropriate learners for that task.
-- Upload your run to OpenML. Add the tag "useR17" (Hint: `r run.id = uploadOMLRun(run.mlr, tag = "useR17")`). 
-- Check if the upload worked by going to the website. Also check if the tag was
-  added (you can also still add it on the website). 
-- Check the predictive performance of the run (It may take a while befor the server has calculated the performance measures).
+
+- Upload your run to OpenML. Add the tag "useR17". Hint: 
+```{r, eval=FALSE}
+run.id = uploadOMLRun(myrun, tag = "useR17")
+```
+
+- Check if the upload worked by going to the website. Check if the tag was
+  added (you can still add it on the website if you forgot during the upload). 
+  
+- Check the predictive performance of the run 
+(it may take a while before the server has calculated the performance measures $\rightarrow$ give it some time).
   
 ---
 class:inverse
 ### *Practical*  
 
 - Run your favorite learner/algorithm (from mlr) on task XXX that you already downloaded.
-Hint: use `listLearners()` to find appropriate learners for that task.
 
-```{r, echo = -c(3:4)}
+```{r, echo = -c(3:5), eval=FALSE}
 # select the learner manually from lrn.list
-lrn.list = listLearners()
+all.lrns = listLearners()
 # or ask for appropriate learners
-appropriate.lrn = 
+appropriate.lrns = 
   listLearners(obj = convertOMLTaskToMlr(task)$mlr.task)
 # run favorite learner
 lrn = makeLearner("classif.rpart")
@@ -247,10 +274,13 @@ myrun = runTaskMlr(task, lrn)
 
 - Upload your run to OpenML. Add the tag "useR17". 
 
-```{r}
+```{r, eval=FALSE}
 myrun.id = uploadOMLRun(myrun, tags = "useR17")
-myrun.id
 ```
+```{r, echo=FALSE}
+myrun.id = 3829199 # we do not want to upload this every time we generate the slides
+```
+
 
 ---
 class:inverse

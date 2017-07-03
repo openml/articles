@@ -192,6 +192,40 @@ task = getOMLTask(task.id = 37)
 run.mlr = runTaskMlr(task, lrn)
 ```
 
+
+---
+### Running and uploading
+
+```r
+run.mlr
+```
+
+```
+## $run
+## 
+## OpenML Run NA :: (Task ID = 37, Flow ID = NA)
+## 
+## $bmr
+##    task.id           learner.id acc.test.join timetrain.test.sum
+## 1 diabetes classif.randomForest     0.7708333              3.606
+##   timepredict.test.sum
+## 1                0.313
+## 
+## $flow
+## 
+## Flow "mlr.classif.randomForest" :: (Version = NA, Flow ID = NA)
+## 	External Version         : R_3.4.0-v2.f4acf450
+## 	Dependencies             : R_3.4.0, OpenML_1.3, mlr_2.11, randomForest_4.6.12
+## 	Number of Flow Parameters: 20
+## 	Number of Flow Components: 0
+## 
+## attr(,"class")
+## [1] "OMLMlrRun"
+```
+
+
+&lt;!-- From a didactical standpoint I would not include this: --&gt;
+&lt;!-- 
 - Extract the `BenchmarkResult` object via
 
 
@@ -201,10 +235,12 @@ convertOMLMlrRunToBMR(run.mlr)
 
 ```
 ##    task.id           learner.id acc.test.join timetrain.test.sum
-## 1 diabetes classif.randomForest     0.7708333              5.228
+## 1 diabetes classif.randomForest     0.7708333              3.606
 ##   timepredict.test.sum
-## 1                0.322
+## 1                0.313
 ```
+--&gt;
+
 
 &lt;!--
 - The `run.mlr` object contains three slots
@@ -219,18 +255,25 @@ Upload run to OpenML server:
 
 ```r
 run.id = uploadOMLRun(run.mlr)
+```
+
+
+```r
 run.id
 ```
 
 ```
-## [1] 3824294
+## [1] 3828647
 ```
+
 - The server assigns a `run.id` which can be used to
 
-  - download the run, getOMLRun(3824294) or
-  - look up the run online on https://www.openml.org/r/3824294.
+  - download the run: `getOMLRun(run.id)`, or
+  - look up the run online on https://www.openml.org/r/3828647.
   
-- The server automatically computes evaluation measures.
+- The server automatically computes evaluation measures     
+`\(\rightarrow\)`https://www.openml.org/r/3828647.
+
 &lt;!-- - It is also possible to upload runs with specific tags using the `tags` argument, so that finding the run with a specific tag becomes easier. --&gt;
 
 ---
@@ -241,37 +284,29 @@ class:inverse
 &lt;!-- TODO: exchange XXX with the task number --&gt;
 - Run your favorite learner/algorithm (from mlr) on task XXX that you already downloaded.
 Hint: use `listLearners()` to find appropriate learners for that task.
-- Upload your run to OpenML. Add the tag "useR17" (Hint: ). 
-- Check if the upload worked by going to the website. Also check if the tag was
-  added (you can also still add it on the website). 
-- Check the predictive performance of the run (It may take a while befor the server has calculated the performance measures).
+
+- Upload your run to OpenML. Add the tag "useR17". Hint: 
+
+```r
+run.id = uploadOMLRun(myrun, tag = "useR17")
+```
+
+- Check if the upload worked by going to the website. Check if the tag was
+  added (you can still add it on the website if you forgot during the upload). 
+  
+- Check the predictive performance of the run 
+(it may take a while before the server has calculated the performance measures `\(\rightarrow\)` give it some time).
   
 ---
 class:inverse
 ### *Practical*  
 
 - Run your favorite learner/algorithm (from mlr) on task XXX that you already downloaded.
-Hint: use `listLearners()` to find appropriate learners for that task.
 
 
 ```r
 # select the learner manually from lrn.list
-lrn.list = listLearners()
-```
-
-```
-## Warning in listLearners.character(obj = NA_character_, properties, quiet, : The following learners could not be constructed, probably because their packages are not installed:
-## classif.ada,classif.bartMachine,classif.bdk,classif.boosting,classif.bst,classif.clusterSVM,classif.dbnDNN,classif.dcSVM,classif.earth,classif.gaterSVM,classif.gbm,classif.geoDA,classif.hdrda,classif.kknn,classif.LiblineaRL1L2SVC,classif.LiblineaRL1LogReg,classif.LiblineaRL2L1SVC,classif.LiblineaRL2LogReg,classif.LiblineaRL2SVC,classif.LiblineaRMultiClassSVC,classif.linDA,classif.lqa,classif.mda,classif.mlp,classif.neuralnet,classif.nnTrain,classif.nodeHarvest,classif.pamr,classif.penalized.fusedlasso,classif.penalized.lasso,classif.penalized.ridge,classif.plr,classif.quaDA,classif.rda,classif.rFerns,classif.rknn,classif.rotationForest,classif.RRF,classif.rrlda,classif.saeDNN,classif.sda,classif.sparseLDA,classif.xgboost,classif.xyf,cluster.cmeans,cluster.dbscan,cluster.kmeans,multilabel.rFerns,regr.bartMachine,regr.bcart,regr.bdk,regr.bgp,regr.bgpllm,regr.blm,regr.brnn,regr.bst,regr.btgp,regr.btgpllm,regr.btlm,regr.crs,regr.cubist,regr.earth,regr.elmNN,regr.frbs,regr.gbm,regr.GPfit,regr.kknn,regr.km,regr.laGP,regr.LiblineaRL2L1SVR,regr.LiblineaRL2L2SVR,regr.mars,regr.nodeHarvest,regr.pcr,regr.penalized.fusedlasso,regr.penalized.lasso,regr.penalized.ridge,regr.plsr,regr.rknn,regr.RRF,regr.rsm,regr.slim,regr.xgboost,regr.xyf,surv.gbm,surv.penalized.fusedlasso,surv.penalized.lasso,surv.penalized.ridge
-## Check ?learners to see which packages you need or install mlr with all suggestions.
-```
-
-```
-## Warning in listLearners.character(td$type, union(props, properties), quiet, : The following learners could not be constructed, probably because their packages are not installed:
-## classif.ada,classif.bartMachine,classif.bdk,classif.boosting,classif.bst,classif.clusterSVM,classif.dbnDNN,classif.dcSVM,classif.earth,classif.gaterSVM,classif.gbm,classif.geoDA,classif.hdrda,classif.kknn,classif.LiblineaRL1L2SVC,classif.LiblineaRL1LogReg,classif.LiblineaRL2L1SVC,classif.LiblineaRL2LogReg,classif.LiblineaRL2SVC,classif.LiblineaRMultiClassSVC,classif.linDA,classif.lqa,classif.mda,classif.mlp,classif.neuralnet,classif.nnTrain,classif.nodeHarvest,classif.pamr,classif.penalized.fusedlasso,classif.penalized.lasso,classif.penalized.ridge,classif.plr,classif.quaDA,classif.rda,classif.rFerns,classif.rknn,classif.rotationForest,classif.RRF,classif.rrlda,classif.saeDNN,classif.sda,classif.sparseLDA,classif.xgboost,classif.xyf,cluster.cmeans,cluster.dbscan,cluster.kmeans,multilabel.rFerns,regr.bartMachine,regr.bcart,regr.bdk,regr.bgp,regr.bgpllm,regr.blm,regr.brnn,regr.bst,regr.btgp,regr.btgpllm,regr.btlm,regr.crs,regr.cubist,regr.earth,regr.elmNN,regr.frbs,regr.gbm,regr.GPfit,regr.kknn,regr.km,regr.laGP,regr.LiblineaRL2L1SVR,regr.LiblineaRL2L2SVR,regr.mars,regr.nodeHarvest,regr.pcr,regr.penalized.fusedlasso,regr.penalized.lasso,regr.penalized.ridge,regr.plsr,regr.rknn,regr.RRF,regr.rsm,regr.slim,regr.xgboost,regr.xyf,surv.gbm,surv.penalized.fusedlasso,surv.penalized.lasso,surv.penalized.ridge
-## Check ?learners to see which packages you need or install mlr with all suggestions.
-```
-
-```r
+all.lrns = listLearners()
 # run favorite learner
 lrn = makeLearner("classif.rpart")
 myrun = runTaskMlr(task, lrn)
@@ -282,12 +317,9 @@ myrun = runTaskMlr(task, lrn)
 
 ```r
 myrun.id = uploadOMLRun(myrun, tags = "useR17")
-myrun.id
 ```
 
-```
-## [1] 3824347
-```
+
 
 ---
 class:inverse
@@ -296,11 +328,11 @@ class:inverse
 - Check if the upload worked by going to the website. Also check if the tag was
   added (you can also still add it on the website). 
   
-Use the value from `myrun.id` and go to https://www.openml.org/r/3824347.
+Use the value from `myrun.id` and go to https://www.openml.org/r/3829199.
 
 - Check the predictive performance of the run by looking at several evaluation measures.
 
-   - Go to https://www.openml.org/r/3824347 
+   - Go to https://www.openml.org/r/3829199 
    - Scroll down to *Evaluation measures*. 
 
 You can also get the results via
@@ -365,7 +397,7 @@ evals[1:3, c("data.name", "learner.name", "predictive.accuracy")]
 ## 3  haberman classif.randomForest            0.748366
 ```
 
-![](slides_tutorial_files/figure-html/unnamed-chunk-12-1.png)&lt;!-- --&gt;
+![](slides_tutorial_files/figure-html/unnamed-chunk-17-1.png)&lt;!-- --&gt;
 
 
 ---
@@ -405,7 +437,7 @@ ggplot(evals, aes(x = setup.id, y = predictive.accuracy,
   facet_grid(~ flow.name, scales = "free")
 ```
 
-![](slides_tutorial_files/figure-html/unnamed-chunk-13-1.png)&lt;!-- --&gt;
+![](slides_tutorial_files/figure-html/unnamed-chunk-18-1.png)&lt;!-- --&gt;
 
 ---
 class:inverse
@@ -521,7 +553,7 @@ ggplot(evals, aes(x = type, y = predictive.accuracy,
   facet_grid(~ flow.name, scales = "free")
 ```
 
-![](slides_tutorial_files/figure-html/unnamed-chunk-17-1.png)&lt;!-- --&gt;
+![](slides_tutorial_files/figure-html/unnamed-chunk-22-1.png)&lt;!-- --&gt;
 
 
 
