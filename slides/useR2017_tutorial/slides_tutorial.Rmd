@@ -339,7 +339,7 @@ Image-credit: https://commons.wikimedia.org
 - Predict the pareto front for this measure and the training time
 - E. g. for xgboost: Prediction for hyperparameters on a new dataset, which will outperform the defaults
 
-![](slides_tutorial_files/xgboost_pareto_front.PNG)
+![](slides_tutorial_files/xgboost_pareto_front.png)
 
 ---
 ### OpenML in drug discovery
