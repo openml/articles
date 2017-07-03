@@ -399,8 +399,8 @@ ggplot(evals, aes(x = setup.id, y = predictive.accuracy,
 class:inverse
 Why are there two different versions of the flow?
 ```{r}
-fids <- unique(evals$flow.id)
-flws <- lapply(fids, getOMLFlow)
+fids = unique(evals$flow.id)
+flws = lapply(fids, getOMLFlow)
 flws
 ```
 
@@ -408,9 +408,9 @@ flws
 class:inverse
 What are the different setup IDs?
 ```{r}
-rids <- evals$run.id
-runs <- lapply(rids, getOMLRun)
-params <- lapply(runs, getOMLRunParList)
+rids = evals$run.id
+runs = lapply(rids, getOMLRun)
+params = lapply(runs, getOMLRunParList)
 params[[1]]
 params[[5]]
 params[[19]]
@@ -421,13 +421,13 @@ The difference seems to be the type.
 class:inverse
 Let's add the type info to the evals data frame.
 ```{r}
-evals$type <- sapply(params, 
+evals$type = sapply(params, 
                      function(x) ifelse(is.null(x$type$value), 
                                         NA, x$type$value))
 evals$type
 
 
-evals$type[is.na(evals$type)] <- getDefaults( 
+evals$type[is.na(evals$type)] = getDefaults( 
   getParamSet( 
 {{  convertOMLFlowToMlr(flws[[1]])}}
   ) 

@@ -444,8 +444,8 @@ class:inverse
 Why are there two different versions of the flow?
 
 ```r
-fids &lt;- unique(evals$flow.id)
-flws &lt;- lapply(fids, getOMLFlow)
+fids = unique(evals$flow.id)
+flws = lapply(fids, getOMLFlow)
 flws
 ```
 
@@ -472,9 +472,9 @@ class:inverse
 What are the different setup IDs?
 
 ```r
-rids &lt;- evals$run.id
-runs &lt;- lapply(rids, getOMLRun)
-params &lt;- lapply(runs, getOMLRunParList)
+rids = evals$run.id
+runs = lapply(rids, getOMLRun)
+params = lapply(runs, getOMLRunParList)
 params[[1]]
 ```
 
@@ -512,7 +512,7 @@ class:inverse
 Let's add the type info to the evals data frame.
 
 ```r
-evals$type &lt;- sapply(params, 
+evals$type = sapply(params, 
                      function(x) ifelse(is.null(x$type$value), 
                                         NA, x$type$value))
 evals$type
@@ -526,7 +526,7 @@ evals$type
 ```
 
 ```r
-evals$type[is.na(evals$type)] &lt;- getDefaults( 
+evals$type[is.na(evals$type)] = getDefaults( 
   getParamSet( 
 *  convertOMLFlowToMlr(flws[[1]])
   ) 
