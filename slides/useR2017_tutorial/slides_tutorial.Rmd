@@ -257,7 +257,7 @@ run.id = uploadOMLRun(myrun, tag = "useR17")
   
 ---
 class:inverse
-### *Practical*  
+### *Solution*  
 
 - Run your favorite learner/algorithm (from mlr) on task XXX that you already downloaded.
 
@@ -284,7 +284,7 @@ myrun.id = 3829199 # we do not want to upload this every time we generate the sl
 
 ---
 class:inverse
-### *Practical*  
+### *Solution*  
 
 - Check if the upload worked by going to the website. Also check if the tag was
   added (you can also still add it on the website). 
@@ -378,7 +378,7 @@ class:inverse
 ---
 class:inverse
 
-### *Practical*  
+### *Solution*  
 <!-- [10 minutes, Heidi] -->
 
 - List the names of all data sets in study_27
