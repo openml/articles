@@ -115,35 +115,38 @@ run.id = uploadOMLRun(run.mlr, tags = "useR17")
 
 You need OpenML and an ARFF reader
 
+```{r, eval=FALSE}
+install.packages(c("OpenML","farff"))
+```
 ```{r}
-# install.packages(c("OpenML","farff"))
 library("OpenML")
 ```
 
 ---
 You also need an OpenML API key to talk to the server
 
-```{r}
-#setOMLConfig(apikey = "c1994bdb7ecb3c6f3c8f3b35f4b47f1f")
+```{r, eval=FALSE}
+setOMLConfig(apikey = "c1994bdb7ecb3c6f3c8f3b35f4b47f1f")
 ```
 
 - Find your own key in your OpenML profile
 
 ![](slides_tutorial_files/screenshot_apikey.png) 
 ---
-Permanently save your API disk to you config file (~/.openml/config)
+Permanently save your API disk to your config file (~/.openml/config)
 
-```{r}
-#saveOMLConfig(apikey = "c1994bdb7ecb3c6f3c8f3b35f4b47f1f", overwrite=TRUE)
+```{r, eval=FALSE}
+saveOMLConfig(apikey = "c1994...47f1f", overwrite=TRUE)
 ```
 
-Other options:
-- 'server': default http://www.openml.org/api/v1
-- 'cachedir': cache directory
-- 'verbosity': 0 (normal) - 2 (debug)
-- 'arff.reader': 'farff' (default) or 'RWeka'
-- 'confirm.upload': default FALSE
+Other configuration options:
+- `server`: default https://www.openml.org/api/v1
+- `cachedir`: cache directory
+- `verbosity`: 0 (normal) - 2 (debug)
+- `arff.reader`: 'farff' (default) or 'RWeka'
+- `confirm.upload`: default FALSE
 
+View your configuration
 ```{r}
 getOMLConfig()
 ```
@@ -152,7 +155,7 @@ getOMLConfig()
 class:inverse
 
 ### *Practical*  
-<!-- [5 minutes, Jouaqin] -->
+<!-- [5 minutes, Joaquin] -->
 
 - Install the OpenML R package (if you haven't done so yet)
 - Add your API-key to your config file
@@ -160,27 +163,27 @@ class:inverse
 
 ---
 ### Listing 
-<!-- [7 minutes, Jouaqin] -->
+<!-- [7 minutes, Joaquin] -->
 Listing datasets
-- First time can take a short while, cached aftrwards
 ```{r}
-datasets = listOMLDataSets()  # returns active data sets
-datasets[1:20, c("data.id", "name", "number.of.instances", "number.of.features")]
+datasets = listOMLDataSets()  # returns all active data sets
+datasets[1:20, c("data.id", "name", "number.of.instances", 
+                 "number.of.features")]
 ```
 
-- Find datasets by name
+---
+Find datasets by name
 ```{r}
-subset(datasets, name == "eeg-eye-state")
+str(subset(datasets, name == "eeg-eye-state"))
 ```
 ---
 Idem:
-- List tasks
-```{r}
+- List tasks (can take a few minutes)
+```{r, eval=FALSE}
 tasks = listOMLTasks()
-eeg_tasks = listOMLTasks(data.name = "eeg-eye-state")
 ```
 
-Includes:
+Result includes:
 - task.id
 - task.type (e.g. classification)
 - all data properties
@@ -188,21 +191,29 @@ Includes:
 - estimation.procedure (e.g. 10-fold CV)
 - evaluation.measure (e.g. AUROC)
 
+```{r}
+listOMLTasks(data.name = "GesturePhaseSegmentationRAW")[0:8]
+```
+
 ---
 Likewise:
 - List flows
 ```{r}
 flows = listOMLFlows()
+flows[56:63, 1:4]
 ```
 ---
 Runs and evaluations need at least a task.id, flow.id, run.id, uploader.id, tag
 - List runs
 ```{r}
 runs = listOMLRuns(task.id = 146567L)
+head(runs)
 ```
+---
 - List evaluations
 ```{r}
-runs = listOMLRunEvaluations(task.id = 146567L)
+evals = listOMLRunEvaluations(task.id = 146567L)
+evals[1:20, c("flow.name", "predictive.accuracy")]
 ```
 
 ---
@@ -215,7 +226,7 @@ class:inverse
 - List all regression tasks corresponding to data sets with between 
   50 and 55 observations.
 - Find the data.id for dataset 'GesturePhaseSegmentationRAW'
-- List all area_under_roc_curve evaluations for task 146567
+- List all `predictive.accuracy` evaluations for task 146567
 ---
 
 ### Downloading 
@@ -223,6 +234,7 @@ class:inverse
 Download dataset:
 ```{r}
 gesture.data = getOMLDataSet(data.id = 4537L)
+gesture.data$desc
 head(gesture.data$data)
 ```
 
