@@ -22,6 +22,7 @@ library(OpenML)
 setOMLConfig(confirm.upload = FALSE)
 set.seed(123)
 ```
+## Preliminaries
 
 - If you haven't done so yet, create an account on [OpenML.org](www.openml.org).
 
@@ -35,11 +36,9 @@ library("OpenML")
 ```
 
 
-
-
 - If something is not clear / you have a question / you have a problem, please **let us know**!
 
-- We will have lots of practicals, if you are faster than others, you can 
+- We will have lots of practicals, if you are faster than others, you can
 check out https://www.openml.org/guide or help others.
 
 
