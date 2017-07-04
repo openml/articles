@@ -11,12 +11,9 @@
 class: center, middle, inverse, title-slide
 
 # OpenML: Connecting R to the Machine Learning Platform OpenML
-## useR! 2017 tutorial
+## useR! 2017 tutorial - <a href="http://bit.ly/2tcb2b7" class="uri">http://bit.ly/2tcb2b7</a>
 ### Joaquin Vanschoren, Bernd Bischl, Heidi Seibold
-### <ul>
-<li><em>If you haven’t done so yet, create an account on OpenML.org.</em></li>
-<li><em>If you haven’t done so yet, install the OpenML R package and one of the packages farff or RWeka</em></li>
-</ul>
+### <em>If you haven’t done so yet, create an account on OpenML.org, and install the OpenML R package and either packages farff or RWeka</em>
 
 ---
 
@@ -64,55 +61,6 @@ Learning goals:
   
 - Know about cool OpenML **projects** and how to **get involved**
 
-
-
----
-## Intro to openml.org 
-&lt;!-- [15 minutes, Joaquin] --&gt;
-
-&gt; Resources:  
-&gt; [NIPS slides](https://github.com/openml/articles/blob/master/OpenML%20NIPS.pdf)
-
-- Why, what, how, who, for whom
-- Data sets, tasks, flows, runs (all have their own website)
-- vocabulary: features = covariates, number of observations = number of instances, ML = Machine Learing (not maximum likelihood)
-
-
-
----
-## Intro to the OpenML R package
-&gt; Resources:  
-&gt; [Paper](https://bitbucket.org/giuseppec/openml-r-paper/src)  
-&gt; [Tutorial](http://openml.github.io/openml-r/vignettes/OpenML.html)  
-&gt; [Reisensburg talk](https://bitbucket.org/giuseppec/openml-r-paper/src)  
-&gt; [Heidi's departement presentation](https://github.com/openml/articles/tree/master/slides/heidi_hittisau)  
-&gt; [mlr loves OpenML blogpost](http://mlr-org.github.io/mlr-loves-OpenML/)
-
-
-
----
-### Motivating example: A small benchmarking study demo 
-&lt;!-- [5 minutes, Joaquin] --&gt;
-
-- What we want to do today: How to run a simple benchmark study
-- E.g. Gesture phase recognition (https://www.openml.org/d/4537)
-- Try to join if you (already) can
-- Link to batchmark blogpost [TODO?]
-
-
-```r
-library("OpenML")
-library("mlr")
-
-# Download a machine learning task from OpenML
-task = getOMLTask(task.id = 146567L)
-# Build any classifier with mlr
-lrn = makeLearner("classif.rpart")
-# Run the learner on the task
-run.mlr = runTaskMlr(task, lrn)
-# Upload and tag
-run.id = uploadOMLRun(run.mlr, tags = "useR17")
-```
 
 ---
 ### Installation and configuration 
@@ -163,12 +111,12 @@ getOMLConfig()
 
 ```
 ## OpenML configuration:
-##   server           : https://www.openml.org/api/v1
-##   cachedir         : /tmp/Rtmp6Ygsyz/cache
+##   server           : http://www.openml.org/api/v1
+##   cachedir         : /home/bischl/.openml/cache
 ##   verbosity        : 1
 ##   arff.reader      : farff
 ##   confirm.upload   : FALSE
-##   apikey           : ***************************a89ce
+##   apikey           : ***************************af579
 ```
 
 ---
@@ -182,41 +130,61 @@ class:inverse
 - Configure OpenML to your liking
 
 ---
-### Listing 
+### Listing datasets
 &lt;!-- [7 minutes, Joaquin] --&gt;
-Listing datasets
 
 ```r
-datasets = listOMLDataSets()  # returns all active data sets
-datasets[1:20, c("data.id", "name", "number.of.instances", 
-                 "number.of.features")]
+datasets = listOMLDataSets() # get first 5K results (LIMIT option) 
+colnames(datasets)
 ```
 
 ```
-##    data.id                name number.of.instances number.of.features
-## 1        1              anneal                 898                 39
-## 2        2              anneal                 898                 39
-## 3        3            kr-vs-kp                3196                 37
-## 4        4               labor                  57                 17
-## 5        5          arrhythmia                 452                280
-## 6        6              letter               20000                 17
-## 7        7           audiology                 226                 70
-## 8        8     liver-disorders                 345                  7
-## 9        9               autos                 205                 26
-## 10      10               lymph                 148                 19
-## 11      11       balance-scale                 625                  5
-## 12      12       mfeat-factors                2000                217
-## 13      13       breast-cancer                 286                 10
-## 14      14       mfeat-fourier                2000                 77
-## 15      15            breast-w                 699                 10
-## 16      16      mfeat-karhunen                2000                 65
-## 17      18 mfeat-morphological                2000                  7
-## 18      20         mfeat-pixel                2000                241
-## 19      21                 car                1728                  7
-## 20      22       mfeat-zernike                2000                 48
+##  [1] "data.id"                                
+##  [2] "name"                                   
+##  [3] "version"                                
+##  [4] "status"                                 
+##  [5] "format"                                 
+##  [6] "tags"                                   
+##  [7] "majority.class.size"                    
+##  [8] "max.nominal.att.distinct.values"        
+##  [9] "minority.class.size"                    
+## [10] "number.of.classes"                      
+## [11] "number.of.features"                     
+## [12] "number.of.instances"                    
+## [13] "number.of.instances.with.missing.values"
+## [14] "number.of.missing.values"               
+## [15] "number.of.numeric.features"             
+## [16] "number.of.symbolic.features"
 ```
 
 ---
+### Listing datasets
+
+```r
+datasets[1:15, c(1,2,11,12)] # subset for compact display
+```
+
+```
+##    data.id            name number.of.features number.of.instances
+## 1        1          anneal                 39                 898
+## 2        2          anneal                 39                 898
+## 3        3        kr-vs-kp                 37                3196
+## 4        4           labor                 17                  57
+## 5        5      arrhythmia                280                 452
+## 6        6          letter                 17               20000
+## 7        7       audiology                 70                 226
+## 8        8 liver-disorders                  7                 345
+## 9        9           autos                 26                 205
+## 10      10           lymph                 19                 148
+## 11      11   balance-scale                  5                 625
+## 12      12   mfeat-factors                217                2000
+## 13      13   breast-cancer                 10                 286
+## 14      14   mfeat-fourier                 77                2000
+## 15      15        breast-w                 10                 699
+```
+
+---
+### Listing datasets
 Find datasets by name
 
 ```r
@@ -242,25 +210,56 @@ str(subset(datasets, name == "eeg-eye-state"))
 ##  $ number.of.numeric.features             : int 14
 ##  $ number.of.symbolic.features            : int 1
 ```
+
 ---
-Idem:
-- List tasks (can take a few minutes)
+### Listing tasks 
 
 ```r
-tasks = listOMLTasks()
+tasks = listOMLTasks() # limits results again
+colnames(tasks)[1:20]
 ```
 
-Result includes:
-- task.id
-- task.type (e.g. classification)
-- all data properties
-- target.feature
-- estimation.procedure (e.g. 10-fold CV)
-- evaluation.measure (e.g. AUROC)
+```
+##  [1] "task.id"                         "task.type"                      
+##  [3] "data.id"                         "name"                           
+##  [5] "status"                          "format"                         
+##  [7] "estimation.procedure"            "evaluation.measures"            
+##  [9] "target.feature"                  "cost.matrix"                    
+## [11] "source.data.labeled"             "target.feature.event"           
+## [13] "target.feature.left"             "target.feature.right"           
+## [15] "quality.measure"                 "tags"                           
+## [17] "majority.class.size"             "max.nominal.att.distinct.values"
+## [19] "minority.class.size"             "number.of.classes"
+```
 
+---
+### Listing tasks 
 
 ```r
-listOMLTasks(data.name = "GesturePhaseSegmentationRAW")[0:8]
+tasks[1:5, 1:9]
+```
+
+```
+##   task.id                 task.type data.id       name status format
+## 1       1 Supervised Classification       1     anneal active   ARFF
+## 2       2 Supervised Classification       2     anneal active   ARFF
+## 3       3 Supervised Classification       3   kr-vs-kp active   ARFF
+## 4       4 Supervised Classification       4      labor active   ARFF
+## 5       5 Supervised Classification       5 arrhythmia active   ARFF
+##      estimation.procedure evaluation.measures target.feature
+## 1 10-fold Crossvalidation predictive_accuracy          class
+## 2 10-fold Crossvalidation predictive_accuracy          class
+## 3 10-fold Crossvalidation predictive_accuracy          class
+## 4 10-fold Crossvalidation predictive_accuracy          class
+## 5 10-fold Crossvalidation predictive_accuracy          class
+```
+
+
+---
+### Listing tasks 
+
+```r
+listOMLTasks(data.name = "GesturePhaseSegmentationRAW")[,1:8]
 ```
 
 ```
@@ -275,28 +274,28 @@ listOMLTasks(data.name = "GesturePhaseSegmentationRAW")[0:8]
 ```
 
 ---
-Likewise:
-- List flows
+### Listing flows 
 
 ```r
 flows = listOMLFlows()
-flows[56:63, 1:4]
+flows[56:63, c(1,2,6,7)]
 ```
 
 ```
-##    flow.id             full.name               name version
-## 56      56         weka.ZeroR(1)         weka.ZeroR       1
-## 57      57          weka.OneR(1)          weka.OneR       1
-## 58      58    weka.NaiveBayes(1)    weka.NaiveBayes       1
-## 59      59          weka.JRip(1)          weka.JRip       1
-## 60      60           weka.J48(1)           weka.J48       1
-## 61      61       weka.REPTree(1)       weka.REPTree       1
-## 62      62 weka.DecisionStump(1) weka.DecisionStump       1
-## 63      63 weka.HoeffdingTree(1) weka.HoeffdingTree       1
+##    flow.id             full.name uploader    tags
+## 56      56         weka.ZeroR(1)        1 study_7
+## 57      57          weka.OneR(1)        1        
+## 58      58    weka.NaiveBayes(1)        1        
+## 59      59          weka.JRip(1)        1        
+## 60      60           weka.J48(1)        1        
+## 61      61       weka.REPTree(1)        1        
+## 62      62 weka.DecisionStump(1)        1        
+## 63      63 weka.HoeffdingTree(1)        1
 ```
+
 ---
-Runs and evaluations need at least a task.id, flow.id, run.id, uploader.id, tag
-- List runs
+### Listing runs and evaluations
+Runs and evaluations need at least one of: task.id, flow.id, run.id, uploader.id, tag
 
 ```r
 runs = listOMLRuns(task.id = 146567L)
@@ -312,54 +311,141 @@ head(runs)
 ## 5 3963816  146567    24109    4840       27          &lt;NA&gt; useR17
 ## 6 3963925  146567    24109    4840       27          &lt;NA&gt; useR17
 ```
+
 ---
-- List evaluations
+### Listing runs and evaluations
 
 ```r
 evals = listOMLRunEvaluations(task.id = 146567L)
-evals[1:20, c("flow.name", "predictive.accuracy")]
+evals[, c("flow.name", "predictive.accuracy")]
 ```
 
 ```
-##                          flow.name predictive.accuracy
-## 1     mlr.classif.randomForest(30)            0.944551
-## 2            mlr.classif.rpart(37)            0.577719
-## 3            mlr.classif.rpart(24)            0.577719
-## 4            mlr.classif.rpart(24)            0.577719
-## 5            mlr.classif.rpart(37)            0.577719
-## NA                            &lt;NA&gt;                  NA
-## NA.1                          &lt;NA&gt;                  NA
-## NA.2                          &lt;NA&gt;                  NA
-## NA.3                          &lt;NA&gt;                  NA
-## NA.4                          &lt;NA&gt;                  NA
-## NA.5                          &lt;NA&gt;                  NA
-## NA.6                          &lt;NA&gt;                  NA
-## NA.7                          &lt;NA&gt;                  NA
-## NA.8                          &lt;NA&gt;                  NA
-## NA.9                          &lt;NA&gt;                  NA
-## NA.10                         &lt;NA&gt;                  NA
-## NA.11                         &lt;NA&gt;                  NA
-## NA.12                         &lt;NA&gt;                  NA
-## NA.13                         &lt;NA&gt;                  NA
-## NA.14                         &lt;NA&gt;                  NA
+##                      flow.name predictive.accuracy
+## 1 mlr.classif.randomForest(30)            0.944551
+## 2        mlr.classif.rpart(37)            0.577719
+## 3        mlr.classif.rpart(24)            0.577719
+## 4        mlr.classif.rpart(24)            0.577719
+## 5        mlr.classif.rpart(37)            0.577719
+## 6        mlr.classif.rpart(24)            0.577719
 ```
 
 ---
 class:inverse
-
 ### *Practical*  
 &lt;!-- [5 minutes, Joaquin] --&gt;
-- Get and study the full list of returned dataset characteristics
-- List all datasets with more that 100000 observations and fewer than 5 features
-- List all regression tasks corresponding to data sets with between 
-  50 and 55 observations.
+- List all datasets having between 100K and 200K observations and &lt;= 5 features
+- List all regression tasks corresponding to data sets having between 50 and 55 observations.
 - Find the data.id for dataset 'GesturePhaseSegmentationRAW'
 - List all `predictive.accuracy` evaluations for task 146567
----
 
-### Downloading 
+---
+class:inverse
+### *Solution*  
+- List all datasets having between 100K and 200K observations and &lt;= 5 features
+
+```r
+datasets = listOMLDataSets(number.of.instances = c(100000, 200000), 
+  number.of.features = c(1, 5))
+str(datasets, list.len = 10)
+```
+
+```
+## 'data.frame':	1 obs. of  16 variables:
+##  $ data.id                                : int 1509
+##  $ name                                   : chr "walking-activity"
+##  $ version                                : int 1
+##  $ status                                 : chr "active"
+##  $ format                                 : chr "ARFF"
+##  $ tags                                   : chr ""
+##  $ majority.class.size                    : int 21991
+##  $ max.nominal.att.distinct.values        : int 22
+##  $ minority.class.size                    : int 911
+##  $ number.of.classes                      : int 22
+##   [list output truncated]
+```
+
+---
+class:inverse
+### *Solution*  
+- List all regression tasks corresponding to data sets having between 50 and 55 observations.
+
+```r
+tasks = listOMLTasks(task.type = "Supervised Regression",
+  number.of.instances = c(50, 55))
+tasks[1:10, 1:5]
+```
+
+```
+##    task.id             task.type data.id               name status
+## 1     2283 Supervised Regression     192           vineyard active
+## 2     2316 Supervised Regression     228            elusage active
+## 3     4979 Supervised Regression     660           rabe_265 active
+## 4     4985 Supervised Regression     668 witmer_census_1980 active
+## 5     5002 Supervised Regression     691      chscase_vine1 active
+## 6     5003 Supervised Regression     692           rabe_131 active
+## 7     5015 Supervised Regression     707    sleuth_case1201 active
+## 8     5032 Supervised Regression    1090      MercuryinBass active
+## 9     5037 Supervised Regression    1096    FacultySalaries active
+## 10    5045 Supervised Regression     192           vineyard active
+```
+
+---
+class:inverse
+### *Solution*  
+- Find the data.id for dataset 'GesturePhaseSegmentationRAW'
+
+```r
+ds = listOMLDataSets(data.name = "GesturePhaseSegmentationRAW")
+str(ds, list.len = 10)
+```
+
+```
+## 'data.frame':	1 obs. of  15 variables:
+##  $ data.id                                : int 4537
+##  $ name                                   : chr "GesturePhaseSegmentationRAW"
+##  $ version                                : int 1
+##  $ status                                 : chr "active"
+##  $ format                                 : chr "ARFF"
+##  $ tags                                   : chr ""
+##  $ majority.class.size                    : int 2950
+##  $ minority.class.size                    : int 1
+##  $ number.of.classes                      : int 6
+##  $ number.of.features                     : int 20
+##   [list output truncated]
+```
+
+---
+class:inverse
+### *Solution*  
+- List all `predictive.accuracy` evaluations for task 146567
+
+```r
+evals = listOMLRunEvaluations(task.id = 146567)
+evals[, c(1:5, 11:14)]
+```
+
+```
+##    run.id task.id setup.id flow.id                    flow.name
+## 1 3893285  146567  1930168    6770 mlr.classif.randomForest(30)
+## 2 3893865  146567   442005    6748        mlr.classif.rpart(37)
+## 3 3963816  146567    24109    4840        mlr.classif.rpart(24)
+## 4 3963925  146567    24109    4840        mlr.classif.rpart(24)
+## 5 3965307  146567   442005    6748        mlr.classif.rpart(37)
+## 6 3978948  146567    24109    4840        mlr.classif.rpart(24)
+##   area.under.roc.curve average.cost f.measure    kappa
+## 1             0.963933            0  0.944283 0.927491
+## 2             0.715748            0  0.525545 0.427405
+## 3             0.715748            0  0.525545 0.427405
+## 4             0.715748            0  0.525545 0.427405
+## 5             0.715748            0  0.525545 0.427405
+## 6             0.715748            0  0.525545 0.427405
+```
+
+
+---
+### Downloading datasets 
 &lt;!-- [10 minutes, Joaquin] --&gt;
-Download dataset:
 
 ```r
 gesture.data = getOMLDataSet(data.id = 4537L)
@@ -374,35 +460,33 @@ gesture.data$desc
 ```
 
 ```r
-head(gesture.data$data)
+gesture.data$data[1:5, c(1:5,20)]
 ```
 
 ```
-##        lhx      lhy      lhz      rhx      rhy      rhz       hx       hy
-## 0 5.347435 4.363681 1.501913 5.258967 4.319263 1.488703 5.037871 1.618295
-## 1 4.869622 4.254210 1.556133 5.240113 4.346338 1.554309 5.037610 1.618370
-## 2 5.357447 4.364039 1.500969 5.238928 4.347924 1.554150 5.037514 1.618298
-## 3 4.942886 4.281878 1.546513 5.111436 4.229660 1.527091 5.037526 1.618612
-## 4 5.003160 4.278530 1.542866 4.985812 4.182155 1.520330 5.037557 1.619226
-## 5 5.064488 4.290401 1.542146 4.955739 4.163175 1.511876 5.037724 1.618397
-##         hz       sx       sy       sz      lwx      lwy      lwz      rwx
-## 0 1.778350 5.062803 4.229656 1.772577 4.972902 4.301065 1.564781 5.553945
-## 1 1.778573 5.061430 4.228504 1.772859 4.974908 4.303656 1.565527 5.423875
-## 2 1.778774 5.059245 4.228004 1.773568 4.981612 4.305363 1.563643 5.332170
-## 3 1.778855 5.056475 4.226891 1.774519 4.987158 4.304063 1.565929 5.311104
-## 4 1.778925 5.052367 4.225485 1.775536 4.983912 4.296833 1.569889 5.193762
-## 5 1.779722 5.045395 4.223284 1.777401 5.000410 4.301358 1.566544 5.164159
-##        rwy      rwz timestamp phase
-## 0 4.370456 1.553521   5702026  Rest
-## 1 4.303708 1.569942   5702058  Rest
-## 2 4.438061 1.572841   5702089  Rest
-## 3 4.396774 1.566368   5702120  Rest
-## 4 4.335417 1.560144   5702167  Rest
-## 5 4.313107 1.552097   5702307  Rest
+##        lhx      lhy      lhz      rhx      rhy phase
+## 0 5.347435 4.363681 1.501913 5.258967 4.319263  Rest
+## 1 4.869622 4.254210 1.556133 5.240113 4.346338  Rest
+## 2 5.357447 4.364039 1.500969 5.238928 4.347924  Rest
+## 3 4.942886 4.281878 1.546513 5.111436 4.229660  Rest
+## 4 5.003160 4.278530 1.542866 4.985812 4.182155  Rest
+```
+
+### Downloading datasets 
+For convenience, you can also download by name
+
+```r
+getOMLDataSet(data.name = "iris")
+```
+
+```
+## 
+## Data Set "iris" :: (Version = 3, OpenML ID = 969)
+##   Default Target Attribute: binaryClass
 ```
 
 ---
-- Download tasks (remember?)
+### Downloading tasks 
 
 ```r
 task = getOMLTask(task.id = 146567L)
@@ -420,7 +504,7 @@ task
 ```
 
 ---
-- Likewise:
+### Downloading flows 
 
 ```r
 flow = getOMLFlow(flow.id = 100L)
@@ -435,6 +519,9 @@ flow
 ## 	Number of Flow Parameters: 12
 ## 	Number of Flow Components: 0
 ```
+
+---
+### Downloading runs
 
 ```r
 run = getOMLRun(run.id = 3893285L)
@@ -451,14 +538,100 @@ run
 ```
 
 ---
-class:inverse
+### Caching
+- The package caches most objects on disk
+- You already configured the directory for that, by default it is in the temp dir
+- You can manually delete folders or use deleti
 
+
+```
+cache/
+├── datasets
+│   ├── 37
+│   │   ├── dataset.arff
+│   │   └── description.xml
+├── flows
+│   ├── 100
+│   │   └── flow.xml
+├── runs
+│   ├── 1815885
+│   │   ├── predictions.arff
+│   │   └── run.xml
+└── tasks
+    ├── 146567
+    │   ├── datasplits.arff
+    │   └── task.xml
+```
+
+---
+### Caching
+
+You can also pre-fill the cache with objects, especially useful on clusters
+
+```r
+populateOMLCache(data.ids = 1:2, task.ids = 11:12)
+```
+
+
+
+---
+class:inverse
 ### *Practical*  
 &lt;!-- [5 minutes, Joaquin] --&gt;
+- Download task with task Id 59
+- Extract the dataset from this task     
+  Hint: read ?OMLTask and look for "input"
 
-- Download task with task ID 146567.
+---
+class:inverse
+### *Practical*  
+- Download task with task Id 59
+
+```r
+task = getOMLTask(task.id = 59)
+task
+```
+
+```
+## 
+## OpenML Task 59 :: (Data ID = 61)
+##   Task Type            : Supervised Classification
+##   Data Set             : iris :: (Version = 1, OpenML ID = 61)
+##   Target Feature(s)    : class
+##   Tags                 : basic, study_1, study_41, study_50, study_7, under100k, under1m
+##   Estimation Procedure : Stratified crossvalidation (1 x 10 folds)
+##   Evaluation Measure(s): predictive_accuracy
+```
+---
+class:inverse
+### *Practical*  
 - Extract the dataset from this task
-- List and get the current runs with tag 'useR17'
+
+```r
+task$input$data
+```
+
+```
+## 
+## Data Set "iris" :: (Version = 1, OpenML ID = 61)
+##   Collection Date         : 1936
+##   Creator(s)              : R.A. Fisher
+##   Default Target Attribute: class
+```
+
+```r
+head(task$input$data$data)
+```
+
+```
+##   sepallength sepalwidth petallength petalwidth       class
+## 0         5.1        3.5         1.4        0.2 Iris-setosa
+## 1         4.9        3.0         1.4        0.2 Iris-setosa
+## 2         4.7        3.2         1.3        0.2 Iris-setosa
+## 3         4.6        3.1         1.5        0.2 Iris-setosa
+## 4         5.0        3.6         1.4        0.2 Iris-setosa
+## 5         5.4        3.9         1.7        0.4 Iris-setosa
+```
 
 ---
 class: inverse
@@ -615,7 +788,7 @@ r
 ## Task: iris
 ## Learner: classif.rpart
 ## Aggr perf: mmce.test.mean=0.0533,ber.test.mean=0.0543
-## Runtime: 0.0196748
+## Runtime: 0.0207891
 ```
 ---
 
@@ -800,15 +973,15 @@ run.mlr
 ## 
 ## $bmr
 ##    task.id           learner.id acc.test.join timetrain.test.sum
-## 1 diabetes classif.randomForest     0.7708333              3.815
+## 1 diabetes classif.randomForest     0.7708333              2.931
 ##   timepredict.test.sum
-## 1                 0.32
+## 1                0.239
 ## 
 ## $flow
 ## 
 ## Flow "mlr.classif.randomForest" :: (Version = NA, Flow ID = NA)
-## 	External Version         : R_3.4.0-v2.f4acf450
-## 	Dependencies             : R_3.4.0, OpenML_1.4, mlr_2.11, randomForest_4.6.12
+## 	External Version         : R_3.3.2-v2.b88a2294
+## 	Dependencies             : R_3.3.2, OpenML_1.4, mlr_2.11, randomForest_4.6.12
 ## 	Number of Flow Parameters: 20
 ## 	Number of Flow Components: 0
 ## 
@@ -828,9 +1001,9 @@ convertOMLMlrRunToBMR(run.mlr)
 
 ```
 ##    task.id           learner.id acc.test.join timetrain.test.sum
-## 1 diabetes classif.randomForest     0.7708333              3.815
+## 1 diabetes classif.randomForest     0.7708333              2.931
 ##   timepredict.test.sum
-## 1                 0.32
+## 1                0.239
 ```
 --&gt;
 
@@ -934,18 +1107,12 @@ listLearners(warn.missing.packages=FALSE)[10:14, c(1,2,4,6)]
 ```
 
 ```
-##               class                                        name package
-## 10      classif.fnn                    Fast k-Nearest Neighbour     FNN
-## 11 classif.gamboost    Gradient boosting with smooth components  mboost
-## 12  classif.gausspr                          Gaussian Processes kernlab
-## 13 classif.glmboost                           Boosting for GLMs  mboost
-## 14   classif.glmnet GLM with Lasso or Elasticnet Regularization  glmnet
-##       type
-## 10 classif
-## 11 classif
-## 12 classif
-## 13 classif
-## 14 classif
+##             class                                 name package    type
+## 10   classif.ksvm              Support Vector Machines kernlab classif
+## 11    classif.lda         Linear Discriminant Analysis    MASS classif
+## 12 classif.logreg                  Logistic Regression   stats classif
+## 13  classif.lssvm Least Squares Support Vector Machine kernlab classif
+## 14   classif.lvq1         Learning Vector Quantization   class classif
 ```
 
 ```r
@@ -1060,7 +1227,7 @@ evals[1:3, c("data.name", "learner.name", "predictive.accuracy")]
 ## 3  haberman classif.randomForest            0.748366
 ```
 
-![](slides_tutorial_files/figure-html/unnamed-chunk-46-1.png)&lt;!-- --&gt;
+![](slides_tutorial_files/figure-html/unnamed-chunk-55-1.png)&lt;!-- --&gt;
 
 
 ---
@@ -1100,7 +1267,7 @@ ggplot(evals, aes(x = setup.id, y = predictive.accuracy,
   facet_grid(~ flow.name, scales = "free")
 ```
 
-![](slides_tutorial_files/figure-html/unnamed-chunk-47-1.png)&lt;!-- --&gt;
+![](slides_tutorial_files/figure-html/unnamed-chunk-56-1.png)&lt;!-- --&gt;
 
 ---
 class:inverse
@@ -1216,7 +1383,7 @@ ggplot(evals, aes(x = type, y = predictive.accuracy,
   facet_grid(~ flow.name, scales = "free")
 ```
 
-![](slides_tutorial_files/figure-html/unnamed-chunk-51-1.png)&lt;!-- --&gt;
+![](slides_tutorial_files/figure-html/unnamed-chunk-60-1.png)&lt;!-- --&gt;
 
 
 
