@@ -392,9 +392,9 @@ perf
 ---
 
 ### mlr - Resample
-- Crossval, subsample, bootstrap, etc with a single command
+- Crossvalidation, subsampling, bootstrapping, etc., with a single command
 - Get a container object with
-    + Mean performances and performances per resampling iters
+    + Mean performances and performances per resampling iteration
     + Predictions
     + Models (if you want that)  
 ```{r}
@@ -425,7 +425,7 @@ r$models
 ### mlr - Benchmarking and Model Comparison
 - Run one command to compare multiple learners on multiple data sets
 - Get a (mergeable) container object with
-    + Mean performances and performances per resampling iters
+    + Mean performances and performances per resampling iteration
     + Predictions
     + Models (if you want that)  
 ```{r}
@@ -435,26 +435,8 @@ learners = makeLearners(c("classif.rpart", "classif.randomForest"))
 br = benchmark(learners, tasks, cv2)
 br # again, you can access container in various ways
 ```
+
 ---
-
-
-<!-- ### mlr - Tuning Example -->
-<!-- ```{r} -->
-<!-- ps = makeParamSet( -->
-<!--   makeNumericParam("C", lower= -5, upper = 5,  -->
-<!--     trafo = function(x) 2^x), -->
-<!--   makeNumericParam("sigma", lower = -5, upper = 5,  -->
-<!--     trafo = function(x) 2^x) -->
-<!-- ) -->
-<!-- ctrl = makeTuneControlRandom(maxit = 3L) -->
-<!-- res = tuneParams("classif.ksvm", task = pid.task, control = ctrl,  -->
-<!--   resampling = cv2, par.set = ps, show.info = FALSE) -->
-<!-- res -->
-<!-- as.data.frame(res$opt.path) -->
-<!-- ``` -->
-<!-- --- -->
-
-
 ### mlr - More features and outlook
 
 Uncovered features
@@ -475,8 +457,9 @@ What will come next
 - Functional data handling
 - Time series forecasting
 - Efficient pipelining
----
 
+
+---
 ### mlr GSOC teaser: Pipelines / composable preproc ops
 
 - You cannot run this with the current release!
@@ -491,14 +474,12 @@ crossval(pipeline1, task)
 - Multiplexing and feature unions are possible!
 - Have a look here if you are curious: 
   https://github.com/mlr-org/mlr/pull/1827 
+
 ---
+# Back to OpenML 
 
-## Back to OpenML 
 
-Let's use mlr now to run stuff on OpenML objects
-and upload to the server!
 ---
-
 ### Running and uploading 
 <!-- [10 minutes, Bernd] -->
 

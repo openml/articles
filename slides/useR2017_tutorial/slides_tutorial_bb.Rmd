@@ -1,0 +1,69 @@
+
+
+
+
+---
+
+class:inverse
+### *Practical*  
+<!-- [25 minutes, Bernd] -->
+
+<!-- TODO: exchange XXX with the task number -->
+- Run your favorite learner/algorithm (from mlr) on task XXX that you already downloaded.
+Hint: You could run `listLearners(task)` to find appropriate learners for that task.
+- Upload your run to OpenML. Add the tag "useR17". 
+  Hint: run.id = uploadOMLRun(run.mlr, tag = "useR17")
+- Check if the upload worked by going to the website. Also check if the tag was
+  added (you can also still add it on the website). 
+- Check performance of the run.  Might take a while for server to compute it.
+
+- If you are fast:
+    + Run a 2nd learner and compare them on the webpage
+    + Add tuning to a learner with an mlr TuneWrapper 
+      (much harder, look at the tutorial for this!)
+
+---
+class:inverse
+### *Practical*  
+
+- Run your favorite learner/algorithm (from mlr) on task XXX that you already downloaded.
+Hint: You could run `listLearners(task)` to find appropriate learners for that task.
+
+```{r, eval = myeval, echo = -c(3:4)}
+# select the learner manually from lrn.list
+lrn.list = listLearners()
+# or ask for appropriate learners
+appropriate.lrn = 
+  listLearners(obj = convertOMLTaskToMlr(task)$mlr.task)
+# run favorite learner
+lrn = makeLearner("classif.rpart", minsplit = 20))
+myrun = runTaskMlr(task, lrn)
+```
+
+- Upload your run to OpenML. Add the tag "useR17". 
+
+```{r, eval = myeval}
+myrun.id = uploadOMLRun(myrun, tags = "useR17")
+myrun.id
+```
+
+---
+class:inverse
+### *Practical*  
+
+- Check if the upload worked by going to the website. Also check if the tag was
+  added (you can also still add it on the website). 
+  
+Use the value from `myrun.id` and go to `r paste0("https://www.openml.org/r/", myrun.id)`.
+
+- Check the predictive performance of the run by looking at several evaluation measures.
+
+   - Go to `r paste0("https://www.openml.org/r/", myrun.id)` 
+   - Scroll down to *Evaluation measures*. 
+
+You can also get the results via
+```{r, eval = FALSE}
+listOMLRunEvaluations(run.id = myrun.id)
+```
+
+
