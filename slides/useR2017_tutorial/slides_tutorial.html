@@ -550,20 +550,20 @@ populateOMLCache(data.ids = 1:2, task.ids = 11:12)
 ```
 cache/
 ├── datasets
-│  ├── 37
-│  │   ├── dataset.arff
-│  │   └── description.xml
+│  └── 37
+│      ├── dataset.arff
+│      └── description.xml
 ├── flows
-│  ├── 100
-│  │   └── flow.xml
+│  └── 100
+│      └── flow.xml
 ├── runs
-│  ├── 1815885
-│  │   ├── predictions.arff
-│  │   └── run.xml
+│  └── 1815885
+│      ├── predictions.arff
+│      └── run.xml
 └── tasks
-    ├── 146567
-    │   ├── datasplits.arff
-    │   └── task.xml
+    └─── 146567
+        ├── datasplits.arff
+        └── task.xml
 ```
 
 
@@ -762,9 +762,9 @@ perf
 ---
 
 ### mlr - Resample
-- Crossval, subsample, bootstrap, etc with a single command
+- Crossvalidation, subsampling, bootstrapping, etc., with a single command
 - Get a container object with
-    + Mean performances and performances per resampling iters
+    + Mean performances and performances per resampling iteration
     + Predictions
     + Models (if you want that)  
 
@@ -845,7 +845,7 @@ r$models
 ### mlr - Benchmarking and Model Comparison
 - Run one command to compare multiple learners on multiple data sets
 - Get a (mergeable) container object with
-    + Mean performances and performances per resampling iters
+    + Mean performances and performances per resampling iteration
     + Predictions
     + Models (if you want that)  
 
@@ -864,26 +864,8 @@ br # again, you can access container in various ways
 ## 3 Sonar-example        classif.rpart     0.30288462
 ## 4 Sonar-example classif.randomForest     0.18750000
 ```
+
 ---
-
-
-&lt;!-- ### mlr - Tuning Example --&gt;
-&lt;!-- ```{r} --&gt;
-&lt;!-- ps = makeParamSet( --&gt;
-&lt;!--   makeNumericParam("C", lower= -5, upper = 5,  --&gt;
-&lt;!--     trafo = function(x) 2^x), --&gt;
-&lt;!--   makeNumericParam("sigma", lower = -5, upper = 5,  --&gt;
-&lt;!--     trafo = function(x) 2^x) --&gt;
-&lt;!-- ) --&gt;
-&lt;!-- ctrl = makeTuneControlRandom(maxit = 3L) --&gt;
-&lt;!-- res = tuneParams("classif.ksvm", task = pid.task, control = ctrl,  --&gt;
-&lt;!--   resampling = cv2, par.set = ps, show.info = FALSE) --&gt;
-&lt;!-- res --&gt;
-&lt;!-- as.data.frame(res$opt.path) --&gt;
-&lt;!-- ``` --&gt;
-&lt;!-- --- --&gt;
-
-
 ### mlr - More features and outlook
 
 Uncovered features
@@ -904,8 +886,9 @@ What will come next
 - Functional data handling
 - Time series forecasting
 - Efficient pipelining
----
 
+
+---
 ### mlr GSOC teaser: Pipelines / composable preproc ops
 
 - You cannot run this with the current release!
@@ -921,14 +904,13 @@ crossval(pipeline1, task)
 - Multiplexing and feature unions are possible!
 - Have a look here if you are curious: 
   https://github.com/mlr-org/mlr/pull/1827 
+
 ---
+class:center,middle
+# Back to OpenML 
 
-## Back to OpenML 
 
-Let's use mlr now to run stuff on OpenML objects
-and upload to the server!
 ---
-
 ### Running and uploading 
 &lt;!-- [10 minutes, Bernd] --&gt;
 
