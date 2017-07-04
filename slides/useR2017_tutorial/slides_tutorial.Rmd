@@ -127,12 +127,6 @@ colnames(datasets)
 datasets[1:15, c(1,2,11,12)] # subset for compact display
 ```
 
----
-### Listing datasets
-Find datasets by name
-```{r}
-str(subset(datasets, name == "eeg-eye-state"))
-```
 
 ---
 ### Listing tasks 
