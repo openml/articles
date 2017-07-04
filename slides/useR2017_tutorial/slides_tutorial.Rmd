@@ -227,16 +227,15 @@ evals[, c("flow.name", "predictive.accuracy")]
 class:inverse
 ### *Practical*  
 <!-- [5 minutes, Joaquin] -->
-- List all datasets between 100.000 and 200.000 observations and fewer than 5 features
-- List all regression tasks corresponding to data sets with between 
-  50 and 55 observations.
+- List all datasets having between 100K and 200K observations and <= 5 features
+- List all regression tasks corresponding to data sets having between 50 and 55 observations.
 - Find the data.id for dataset 'GesturePhaseSegmentationRAW'
 - List all `predictive.accuracy` evaluations for task 146567
 
 ---
 class:inverse
 ### *Solution*  
-- List all datasets with more that 100000 observations and fewer than 5 features
+- List all datasets having between 100K and 200K observations and <= 5 features
 ```{r}
 datasets = listOMLDataSets(number.of.instances = c(100000, 200000), 
   number.of.features = c(1, 5))
@@ -246,12 +245,11 @@ str(datasets, list.len = 10)
 ---
 class:inverse
 ### *Solution*  
-- List all regression tasks corresponding to data sets with between 
-  50 and 55 observations.
+- List all regression tasks corresponding to data sets having between 50 and 55 observations.
 ```{r}
 tasks = listOMLTasks(task.type = "Supervised Regression",
   number.of.instances = c(50, 55))
-str(datasets, list.len = 10)
+tasks[1:10, 1:5]
 ```
 
 ---
@@ -263,32 +261,41 @@ ds = listOMLDataSets(data.name = "GesturePhaseSegmentationRAW")
 str(ds, list.len = 10)
 ```
 
-
+---
+class:inverse
+### *Solution*  
 - List all `predictive.accuracy` evaluations for task 146567
+```{r}
+evals = listOMLRunEvaluations(task.id = 146567)
+evals[, c(1:5, 11:14)]
+```
+
 
 ---
-### Downloading 
+### Downloading datasets 
 <!-- [10 minutes, Joaquin] -->
-Download dataset:
 ```{r}
 gesture.data = getOMLDataSet(data.id = 4537L)
 gesture.data$desc
-head(gesture.data$data)
+gesture.data$data[1:5, c(1:5,20)]
 ```
 
 ---
-- Download tasks (remember?)
+### Downloading tasks 
 ```{r}
 task = getOMLTask(task.id = 146567L)
 task
 ```
 
 ---
-- Likewise:
+### Downloading flows 
 ```{r}
 flow = getOMLFlow(flow.id = 100L)
 flow
 ```
+
+---
+### Downloading runs
 ```{r}
 run = getOMLRun(run.id = 3893285L)
 run
@@ -298,10 +305,26 @@ run
 class:inverse
 ### *Practical*  
 <!-- [5 minutes, Joaquin] -->
+- Download task with task Id 59
+- Extract the dataset from this task     
+  Hint: read ?OMLTask and look for "input"
 
-- Download task with task ID 146567.
+---
+class:inverse
+### *Practical*  
+- Download task with task Id 59
+```{r}
+task = getOMLTask(task.id = 59)
+task
+```
+---
+class:inverse
+### *Practical*  
 - Extract the dataset from this task
-- List and get the current runs with tag 'useR17'
+```{r}
+task$input$data
+head(task$input$data$data)
+```
 
 ---
 class: inverse
