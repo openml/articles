@@ -20,6 +20,7 @@ class: center, middle, inverse, title-slide
 &lt;!-- For this to work, install xaringan (devtools::install_github('yihui/xaringan')) --&gt;
 
 
+## Preliminaries
 
 - If you haven't done so yet, create an account on [OpenML.org](www.openml.org).
 
@@ -35,11 +36,9 @@ library("OpenML")
 ```
 
 
-
-
 - If something is not clear / you have a question / you have a problem, please **let us know**!
 
-- We will have lots of practicals, if you are faster than others, you can 
+- We will have lots of practicals, if you are faster than others, you can
 check out https://www.openml.org/guide or help others.
 
 
@@ -111,12 +110,12 @@ getOMLConfig()
 
 ```
 ## OpenML configuration:
-##   server           : http://www.openml.org/api/v1
-##   cachedir         : /home/bischl/.openml/cache
+##   server           : https://www.openml.org/api/v1
+##   cachedir         : /Users/joa/.openml/cache
 ##   verbosity        : 1
 ##   arff.reader      : farff
 ##   confirm.upload   : FALSE
-##   apikey           : ***************************af579
+##   apikey           : ***************************0acb1
 ```
 
 ---
@@ -781,7 +780,7 @@ r
 ## Task: iris
 ## Learner: classif.rpart
 ## Aggr perf: mmce.test.mean=0.0533,ber.test.mean=0.0543
-## Runtime: 0.0207891
+## Runtime: 0.051779
 ```
 ---
 
@@ -948,15 +947,15 @@ run.mlr
 ## 
 ## $bmr
 ##    task.id           learner.id acc.test.join timetrain.test.sum
-## 1 diabetes classif.randomForest     0.7708333              2.931
+## 1 diabetes classif.randomForest     0.7708333              7.491
 ##   timepredict.test.sum
-## 1                0.239
+## 1                0.337
 ## 
 ## $flow
 ## 
 ## Flow "mlr.classif.randomForest" :: (Version = NA, Flow ID = NA)
 ## 	External Version         : R_3.3.2-v2.b88a2294
-## 	Dependencies             : R_3.3.2, OpenML_1.4, mlr_2.11, randomForest_4.6.12
+## 	Dependencies             : R_3.3.2, OpenML_1.3, mlr_2.11, randomForest_4.6.12
 ## 	Number of Flow Parameters: 20
 ## 	Number of Flow Components: 0
 ## 
@@ -976,9 +975,9 @@ convertOMLMlrRunToBMR(run.mlr)
 
 ```
 ##    task.id           learner.id acc.test.join timetrain.test.sum
-## 1 diabetes classif.randomForest     0.7708333              2.931
+## 1 diabetes classif.randomForest     0.7708333              7.491
 ##   timepredict.test.sum
-## 1                0.239
+## 1                0.337
 ```
 --&gt;
 
@@ -1082,12 +1081,18 @@ listLearners(warn.missing.packages=FALSE)[10:14, c(1,2,4,6)]
 ```
 
 ```
-##             class                                 name package    type
-## 10   classif.ksvm              Support Vector Machines kernlab classif
-## 11    classif.lda         Linear Discriminant Analysis    MASS classif
-## 12 classif.logreg                  Logistic Regression   stats classif
-## 13  classif.lssvm Least Squares Support Vector Machine kernlab classif
-## 14   classif.lvq1         Learning Vector Quantization   class classif
+##                 class                                              name
+## 10      classif.lssvm              Least Squares Support Vector Machine
+## 11       classif.lvq1                      Learning Vector Quantization
+## 12   classif.multinom                            Multinomial Regression
+## 13       classif.nnet                                    Neural Network
+## 14 classif.plsdaCaret Partial Least Squares (PLS) Discriminant Analysis
+##    package    type
+## 10 kernlab classif
+## 11   class classif
+## 12    nnet classif
+## 13    nnet classif
+## 14   caret classif
 ```
 
 ```r
