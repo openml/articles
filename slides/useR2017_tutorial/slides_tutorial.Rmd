@@ -63,29 +63,6 @@ Learning goals:
 
 
 ---
-
-### Motivating example: A small benchmarking study demo 
-<!-- [5 minutes, Joaquin] -->
-
-- What we want to do today: How to run a simple benchmark study
-- E.g. Gesture phase recognition (https://www.openml.org/d/4537)
-- Try to join if you (already) can
-
-```{r}
-library("OpenML")
-library("mlr")
-
-# Download a machine learning task from OpenML
-task = getOMLTask(task.id = 146567L)
-# Build any classifier with mlr
-lrn = makeLearner("classif.rpart")
-# Run the learner on the task
-run.mlr = runTaskMlr(task, lrn)
-# Upload and tag
-run.id = uploadOMLRun(run.mlr, tags = "useR17")
-```
-
----
 ### Installation and configuration 
 <!-- [3 minutes, Joaquin] -->
 
@@ -257,6 +234,12 @@ gesture.data$desc
 gesture.data$data[1:5, c(1:5,20)]
 ```
 
+### Downloading datasets 
+For convenience, you can also download by name
+```{r}
+getOMLDataSet(data.name = "iris")
+```
+
 ---
 ### Downloading tasks 
 ```{r}
@@ -277,6 +260,42 @@ flow
 run = getOMLRun(run.id = 3893285L)
 run
 ```
+
+---
+### Caching
+- The package caches most objects on disk
+- You already configured the directory for that, by default it is in the temp dir
+- You can manually delete folders or use deleti
+
+
+```
+cache/
+├── datasets
+│   ├── 37
+│   │   ├── dataset.arff
+│   │   └── description.xml
+├── flows
+│   ├── 100
+│   │   └── flow.xml
+├── runs
+│   ├── 1815885
+│   │   ├── predictions.arff
+│   │   └── run.xml
+└── tasks
+    ├── 146567
+    │   ├── datasplits.arff
+    │   └── task.xml
+```
+
+---
+### Caching
+
+You can also pre-fill the cache with objects, especially useful on clusters
+```{r, eval = FALSE}
+populateOMLCache(data.ids = 1:2, task.ids = 11:12)
+```
+
+
 
 ---
 class:inverse
