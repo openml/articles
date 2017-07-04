@@ -1,9 +1,9 @@
 ---
 title: "OpenML: Connecting R to the Machine Learning Platform OpenML"
-subtitle: "useR! 2017 tutorial"
+subtitle: "useR! 2017 tutorial -      
+[http://bit.ly/2tcb2b7](http://bit.ly/2tcb2b7)"
 author: "Joaquin Vanschoren, Bernd Bischl, Heidi Seibold"
-date: "- *If you haven't done so yet, create an account on OpenML.org.* \n
-- *If you haven't done so yet, install the OpenML R package and one of the packages farff or RWeka*"
+date: "*If you haven't done so yet, create an account on OpenML.org, and install the OpenML R package and either packages farff or RWeka*"
 output:
   xaringan::moon_reader:
     lib_dir: libs
@@ -11,6 +11,7 @@ output:
       highlightStyle: github
       highlightLines: true
       countIncrementalSlides: false
+      
 ---
 <!-- For this to work, install xaringan (devtools::install_github('yihui/xaringan')) -->
 
@@ -61,32 +62,8 @@ Learning goals:
 - Know about cool OpenML **projects** and how to **get involved**
 
 
-
 ---
-## Intro to openml.org 
-<!-- [15 minutes, Joaquin] -->
 
-> Resources:  
-> [NIPS slides](https://github.com/openml/articles/blob/master/OpenML%20NIPS.pdf)
-
-- Why, what, how, who, for whom
-- Data sets, tasks, flows, runs (all have their own website)
-- vocabulary: features = covariates, number of observations = number of instances, ML = Machine Learing (not maximum likelihood)
-
-
-
----
-## Intro to the OpenML R package
-> Resources:  
-> [Paper](https://bitbucket.org/giuseppec/openml-r-paper/src)  
-> [Tutorial](http://openml.github.io/openml-r/vignettes/OpenML.html)  
-> [Reisensburg talk](https://bitbucket.org/giuseppec/openml-r-paper/src)  
-> [Heidi's departement presentation](https://github.com/openml/articles/tree/master/slides/heidi_hittisau)  
-> [mlr loves OpenML blogpost](http://mlr-org.github.io/mlr-loves-OpenML/)
-
-
-
----
 ### Motivating example: A small benchmarking study demo 
 <!-- [5 minutes, Joaquin] -->
 
