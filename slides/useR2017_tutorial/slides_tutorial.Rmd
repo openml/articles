@@ -499,10 +499,26 @@ run.id
 ---
 
 ### Running and uploading 
-Let's check that we ecan get our run back:
+Let's check that we can get our run back:
 ```{r}
 getOMLRun(run.id)
 ```
+
+---
+###  OpenML <-> mlr converters 
+
+- `convertOMLDataSetToMlr`	
+  Convert an OpenML data set to mlr task.
+- `convertMlrTaskToOMLDataSet`	
+  Converts a mlr task to an OpenML data set.
+- `convertOMLFlowToMlr`	        
+  Converts a flow to a mlr learner.
+- `convertOMLMlrRunToBMR`
+  Convert 'OMLMlrRun's to a 'BenchmarkResult'.
+- `convertOMLRunToBMR`
+  Convert an OpenML run set to a benchmark result for mlr.
+- `convertOMLTaskToMlr`	 
+  Convert an OpenML task to mlr.
 
 ---
 class:inverse
@@ -510,7 +526,8 @@ class:inverse
 <!-- [25 minutes, Bernd] -->
 
 - Run your favorite learner/algorithm (from mlr) on task 146567 that you already downloaded.
-Hint: use `listLearners()` to find appropriate learners for that task.
+    + You can run `listLearners()` to find appropriate learners
+    + Or go to mlr's appendix in the web tutorial to see a table
 
 - Upload your run to OpenML. Add the tag "useR17". Hint: 
 ```{r, eval=FALSE}
@@ -522,21 +539,23 @@ run.id = uploadOMLRun(myrun, tag = "useR17")
   
 - Check the predictive performance of the run 
 (it may take a while before the server has calculated the performance measures $\rightarrow$ give it some time).
+
+For fast solvers:
+- Run a 2nd learner and compare them on the webpage
+- Add tuning to a learner with an mlr TuneWrapper 
+      (much harder, look at the tutorial for this!)
   
 ---
 class:inverse
 ### *Solution*  
 
-- Run your favorite learner/algorithm (from mlr) on task XXX that you already downloaded.
+- Run your favorite learner/algorithm (from mlr) on task 146567 that you already downloaded.
 
-```{r, echo = -c(3:5), eval=FALSE}
-# select the learner manually from lrn.list
-all.lrns = listLearners()
-# or ask for appropriate learners
-appropriate.lrns = 
-  listLearners(obj = convertOMLTaskToMlr(task)$mlr.task)
+```{r}
+# list mlr algos: subset for compact display
+listLearners(warn.missing.packages=FALSE)[10:14, c(1,2,4,6)] 
 # run favorite learner
-lrn = makeLearner("classif.rpart")
+lrn = makeLearner("classif.rpart", minsplit = 5)
 myrun = runTaskMlr(task, lrn)
 ```
 
@@ -560,13 +579,14 @@ class:inverse
 Use the value from `myrun.id` and go to `r paste0("https://www.openml.org/r/", myrun.id)`.
 
 - Check the predictive performance of the run by looking at several evaluation measures.
+- Scroll down to *Evaluation measures*. 
 
-   - Go to `r paste0("https://www.openml.org/r/", myrun.id)` 
-   - Scroll down to *Evaluation measures*. 
-
+---
+class:inverse
+### *Solution*  
 You can also get the results via
-```{r, eval = FALSE}
-listOMLRunEvaluations(run.id = myrun.id)
+```{r}
+str(listOMLRunEvaluations(run.id = myrun.id), list.len = 15)
 ```
 
 
