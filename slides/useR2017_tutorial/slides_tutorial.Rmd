@@ -225,17 +225,48 @@ evals[, c("flow.name", "predictive.accuracy")]
 
 ---
 class:inverse
-
 ### *Practical*  
 <!-- [5 minutes, Joaquin] -->
-- Get and study the full list of returned dataset characteristics
-- List all datasets with more that 100000 observations and fewer than 5 features
+- List all datasets between 100.000 and 200.000 observations and fewer than 5 features
 - List all regression tasks corresponding to data sets with between 
   50 and 55 observations.
 - Find the data.id for dataset 'GesturePhaseSegmentationRAW'
 - List all `predictive.accuracy` evaluations for task 146567
----
 
+---
+class:inverse
+### *Solution*  
+- List all datasets with more that 100000 observations and fewer than 5 features
+```{r}
+datasets = listOMLDataSets(number.of.instances = c(100000, 200000), 
+  number.of.features = c(1, 5))
+str(datasets, list.len = 10)
+```
+
+---
+class:inverse
+### *Solution*  
+- List all regression tasks corresponding to data sets with between 
+  50 and 55 observations.
+```{r}
+tasks = listOMLTasks(task.type = "Supervised Regression",
+  number.of.instances = c(50, 55))
+str(datasets, list.len = 10)
+```
+
+---
+class:inverse
+### *Solution*  
+- Find the data.id for dataset 'GesturePhaseSegmentationRAW'
+```{r}
+ds = listOMLDataSets(data.name = "GesturePhaseSegmentationRAW")
+str(ds, list.len = 10)
+```
+
+
+- List all `predictive.accuracy` evaluations for task 146567
+
+---
 ### Downloading 
 <!-- [10 minutes, Joaquin] -->
 Download dataset:
@@ -265,7 +296,6 @@ run
 
 ---
 class:inverse
-
 ### *Practical*  
 <!-- [5 minutes, Joaquin] -->
 
