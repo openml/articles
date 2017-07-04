@@ -93,7 +93,6 @@ Learning goals:
 - What we want to do today: How to run a simple benchmark study
 - E.g. Gesture phase recognition (https://www.openml.org/d/4537)
 - Try to join if you (already) can
-- Link to batchmark blogpost [TODO?]
 
 ```{r}
 library("OpenML")
@@ -162,58 +161,66 @@ class:inverse
 - Configure OpenML to your liking
 
 ---
-### Listing 
+### Listing datasets
 <!-- [7 minutes, Joaquin] -->
-Listing datasets
 ```{r}
-datasets = listOMLDataSets()  # returns all active data sets
-datasets[1:20, c("data.id", "name", "number.of.instances", 
-                 "number.of.features")]
+datasets = listOMLDataSets() # get first 5K results (LIMIT option) 
+colnames(datasets)
 ```
 
 ---
+### Listing datasets
+```{r}
+datasets[1:15, c(1,2,11,12)] # subset for compact display
+```
+
+---
+### Listing datasets
 Find datasets by name
 ```{r}
 str(subset(datasets, name == "eeg-eye-state"))
 ```
+
 ---
-Idem:
-- List tasks (can take a few minutes)
-```{r, eval=FALSE}
-tasks = listOMLTasks()
-```
-
-Result includes:
-- task.id
-- task.type (e.g. classification)
-- all data properties
-- target.feature
-- estimation.procedure (e.g. 10-fold CV)
-- evaluation.measure (e.g. AUROC)
-
+### Listing tasks 
 ```{r}
-listOMLTasks(data.name = "GesturePhaseSegmentationRAW")[0:8]
+tasks = listOMLTasks() # limits results again
+colnames(tasks)[1:20]
 ```
 
 ---
-Likewise:
-- List flows
+### Listing tasks 
+```{r}
+tasks[1:5, 1:9]
+```
+
+
+---
+### Listing tasks 
+```{r}
+listOMLTasks(data.name = "GesturePhaseSegmentationRAW")[,1:8]
+```
+
+---
+### Listing flows 
 ```{r}
 flows = listOMLFlows()
-flows[56:63, 1:4]
+flows[56:63, c(1,2,6,7)]
 ```
+
 ---
-Runs and evaluations need at least a task.id, flow.id, run.id, uploader.id, tag
-- List runs
+### Listing runs and evaluations
+Runs and evaluations need at least one of: task.id, flow.id, run.id, uploader.id, tag
 ```{r}
 runs = listOMLRuns(task.id = 146567L)
 head(runs)
 ```
+
 ---
-- List evaluations
+### Listing runs and evaluations
 ```{r}
 evals = listOMLRunEvaluations(task.id = 146567L)
-evals[1:20, c("flow.name", "predictive.accuracy")]
+evals[, c("flow.name", "predictive.accuracy")]
 ```
 
 ---
