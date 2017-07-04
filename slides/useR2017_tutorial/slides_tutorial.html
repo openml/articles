@@ -472,6 +472,7 @@ gesture.data$data[1:5, c(1:5,20)]
 ## 4 5.003160 4.278530 1.542866 4.985812 4.182155  Rest
 ```
 
+---
 ### Downloading datasets 
 For convenience, you can also download by name
 
@@ -539,39 +540,31 @@ run
 
 ---
 ### Caching
-- The package caches most objects on disk
-- You already configured the directory for that, by default it is in the temp dir
-- You can manually delete folders or use deleti
-
-
-```
-cache/
-├── datasets
-│   ├── 37
-│   │   ├── dataset.arff
-│   │   └── description.xml
-├── flows
-│   ├── 100
-│   │   └── flow.xml
-├── runs
-│   ├── 1815885
-│   │   ├── predictions.arff
-│   │   └── run.xml
-└── tasks
-    ├── 146567
-    │   ├── datasplits.arff
-    │   └── task.xml
-```
-
----
-### Caching
-
-You can also pre-fill the cache with objects, especially useful on clusters
+- The package caches most objects on disk (cachedir in config)
+- Results of listing calls are cached in memory
+- You can also pre-fill the cache with objects, especially useful on clusters
 
 ```r
 populateOMLCache(data.ids = 1:2, task.ids = 11:12)
 ```
-
+```
+cache/
+├── datasets
+│  ├── 37
+│  │   ├── dataset.arff
+│  │   └── description.xml
+├── flows
+│  ├── 100
+│  │   └── flow.xml
+├── runs
+│  ├── 1815885
+│  │   ├── predictions.arff
+│  │   └── run.xml
+└── tasks
+    ├── 146567
+    │   ├── datasplits.arff
+    │   └── task.xml
+```
 
 
 ---
