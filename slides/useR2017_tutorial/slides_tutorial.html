@@ -95,13 +95,77 @@ Learning goals:
 &lt;!-- [5 minutes, Joaquin] --&gt;
 
 - What we want to do today: How to run a simple benchmark study
-- Link to batchmark blogpost
+- E.g. Gesture phase recognition (https://www.openml.org/d/4537)
+- Try to join if you (already) can
+- Link to batchmark blogpost [TODO?]
 
 
+```r
+library("OpenML")
+library("mlr")
+
+# Download a machine learning task from OpenML
+task = getOMLTask(task.id = 146567L)
+# Build any classifier with mlr
+lrn = makeLearner("classif.rpart")
+# Run the learner on the task
+run.mlr = runTaskMlr(task, lrn)
+# Upload and tag
+run.id = uploadOMLRun(run.mlr, tags = "useR17")
+```
 
 ---
 ### Installation and configuration 
-&lt;!-- [3 minutes, Jouaqin] --&gt;
+&lt;!-- [3 minutes, Joaquin] --&gt;
+
+You need OpenML and an ARFF reader
+
+
+```r
+# install.packages(c("OpenML","farff"))
+library("OpenML")
+```
+
+---
+You also need an OpenML API key to talk to the server
+
+
+```r
+#setOMLConfig(apikey = "c1994bdb7ecb3c6f3c8f3b35f4b47f1f")
+```
+
+- Find your own key in your OpenML profile
+
+![](slides_tutorial_files/screenshot_apikey.png) 
+---
+Permanently save your API disk to you config file (~/.openml/config)
+
+
+```r
+#saveOMLConfig(apikey = "c1994bdb7ecb3c6f3c8f3b35f4b47f1f", overwrite=TRUE)
+```
+
+Other options:
+- 'server': default http://www.openml.org/api/v1
+- 'cachedir': cache directory
+- 'verbosity': 0 (normal) - 2 (debug)
+- 'arff.reader': 'farff' (default) or 'RWeka'
+- 'confirm.upload': default FALSE
+
+
+```r
+getOMLConfig()
+```
+
+```
+## OpenML configuration:
+##   server           : https://www.openml.org/api/v1
+##   cachedir         : /Users/joa/.openml/cache
+##   verbosity        : 1
+##   arff.reader      : farff
+##   confirm.upload   : FALSE
+##   apikey           : ***************************0acb1
+```
 
 ---
 class:inverse
@@ -111,28 +175,194 @@ class:inverse
 
 - Install the OpenML R package (if you haven't done so yet)
 - Add your API-key to your config file
-
-
+- Configure OpenML to your liking
 
 ---
 ### Listing 
 &lt;!-- [7 minutes, Jouaqin] --&gt;
+Listing datasets
+- First time can take a short while, cached aftrwards
+
+```r
+datasets = listOMLDataSets()  # returns active data sets
+datasets[1:20, c("data.id", "name", "number.of.instances", "number.of.features")]
+```
+
+```
+##    data.id                name number.of.instances number.of.features
+## 1        1              anneal                 898                 39
+## 2        2              anneal                 898                 39
+## 3        3            kr-vs-kp                3196                 37
+## 4        4               labor                  57                 17
+## 5        5          arrhythmia                 452                280
+## 6        6              letter               20000                 17
+## 7        7           audiology                 226                 70
+## 8        8     liver-disorders                 345                  7
+## 9        9               autos                 205                 26
+## 10      10               lymph                 148                 19
+## 11      11       balance-scale                 625                  5
+## 12      12       mfeat-factors                2000                217
+## 13      13       breast-cancer                 286                 10
+## 14      14       mfeat-fourier                2000                 77
+## 15      15            breast-w                 699                 10
+## 16      16      mfeat-karhunen                2000                 65
+## 17      18 mfeat-morphological                2000                  7
+## 18      20         mfeat-pixel                2000                241
+## 19      21                 car                1728                  7
+## 20      22       mfeat-zernike                2000                 48
+```
+
+- Find datasets by name
+
+```r
+subset(datasets, name == "eeg-eye-state")
+```
+
+```
+##      data.id          name version status format
+## 1177    1471 eeg-eye-state       1 active   ARFF
+##                             tags majority.class.size
+## 1177 study_14, study_34, study_7                8257
+##      max.nominal.att.distinct.values minority.class.size number.of.classes
+## 1177                              -1                6723                 2
+##      number.of.features number.of.instances
+## 1177                 15               14980
+##      number.of.instances.with.missing.values number.of.missing.values
+## 1177                                       0                        0
+##      number.of.numeric.features number.of.symbolic.features
+## 1177                         14                           1
+```
+---
+Idem:
+- List tasks
+
+```r
+tasks = listOMLTasks()
+eeg_tasks = listOMLTasks(data.name = "eeg-eye-state")
+```
+
+Includes:
+- task.id
+- task.type (e.g. classification)
+- all data properties
+- target.feature
+- estimation.procedure (e.g. 10-fold CV)
+- evaluation.measure (e.g. AUROC)
+
+---
+Likewise:
+- List flows
+
+```r
+flows = listOMLFlows()
+```
+---
+Runs and evaluations need at least a task.id, flow.id, run.id, uploader.id, tag
+- List runs
+
+```r
+runs = listOMLRuns(task.id = 146567L)
+```
+- List evaluations
+
+```r
+runs = listOMLRunEvaluations(task.id = 146567L)
+```
 
 ---
 class:inverse
 
 ### *Practical*  
-&lt;!-- [5 minutes, Jouaqin] --&gt;
-
+&lt;!-- [5 minutes, Joaquin] --&gt;
+- Get and study the full list of returned dataset characteristics
+- List all datasets with more that 100000 observations and fewer than 5 features
 - List all regression tasks corresponding to data sets with between 
   50 and 55 observations.
-
-
+- Find the data.id for dataset 'GesturePhaseSegmentationRAW'
+- List all area_under_roc_curve evaluations for task 146567
 ---
 
 ### Downloading 
 &lt;!-- [10 minutes, Joaquin] --&gt;
+Download dataset:
 
+```r
+gesture.data = getOMLDataSet(data.id = 4537L)
+head(gesture.data$data)
+```
+
+```
+##        lhx      lhy      lhz      rhx      rhy      rhz       hx       hy
+## 0 5.347435 4.363681 1.501913 5.258967 4.319263 1.488703 5.037871 1.618295
+## 1 4.869622 4.254210 1.556133 5.240113 4.346338 1.554309 5.037610 1.618370
+## 2 5.357447 4.364039 1.500969 5.238928 4.347924 1.554150 5.037514 1.618298
+## 3 4.942886 4.281878 1.546513 5.111436 4.229660 1.527091 5.037526 1.618612
+## 4 5.003160 4.278530 1.542866 4.985812 4.182155 1.520330 5.037557 1.619226
+## 5 5.064488 4.290401 1.542146 4.955739 4.163175 1.511876 5.037724 1.618397
+##         hz       sx       sy       sz      lwx      lwy      lwz      rwx
+## 0 1.778350 5.062803 4.229656 1.772577 4.972902 4.301065 1.564781 5.553945
+## 1 1.778573 5.061430 4.228504 1.772859 4.974908 4.303656 1.565527 5.423875
+## 2 1.778774 5.059245 4.228004 1.773568 4.981612 4.305363 1.563643 5.332170
+## 3 1.778855 5.056475 4.226891 1.774519 4.987158 4.304063 1.565929 5.311104
+## 4 1.778925 5.052367 4.225485 1.775536 4.983912 4.296833 1.569889 5.193762
+## 5 1.779722 5.045395 4.223284 1.777401 5.000410 4.301358 1.566544 5.164159
+##        rwy      rwz timestamp phase
+## 0 4.370456 1.553521   5702026  Rest
+## 1 4.303708 1.569942   5702058  Rest
+## 2 4.438061 1.572841   5702089  Rest
+## 3 4.396774 1.566368   5702120  Rest
+## 4 4.335417 1.560144   5702167  Rest
+## 5 4.313107 1.552097   5702307  Rest
+```
+
+---
+- Download tasks (remember?)
+
+```r
+task = getOMLTask(task.id = 146567L)
+task
+```
+
+```
+## 
+## OpenML Task 146567 :: (Data ID = 4537)
+##   Task Type            : Supervised Classification
+##   Data Set             : GesturePhaseSegmentationRAW :: (Version = 1, OpenML ID = 4537)
+##   Target Feature(s)    : phase
+##   Estimation Procedure : Stratified crossvalidation (1 x 10 folds)
+##   Evaluation Measure(s): predictive_accuracy
+```
+
+---
+- Likewise:
+
+```r
+flow = getOMLFlow(flow.id = 100L)
+flow
+```
+
+```
+## 
+## Flow "weka.J48" :: (Version = 2, Flow ID = 100)
+## 	External Version         : Weka_3.7.5_9117
+## 	Dependencies             : Weka_3.7.5
+## 	Number of Flow Parameters: 12
+## 	Number of Flow Components: 0
+```
+
+```r
+run = getOMLRun(run.id = 3893285L)
+run
+```
+
+```
+## 
+## OpenML Run 3893285 :: (Task ID = 146567, Flow ID = 6770)
+## 	User ID  : 2
+## 	Tags     : useR17
+## 	Learner  : mlr.classif.randomForest(30)
+## 	Task type: Supervised Classification
+```
 
 ---
 class:inverse
@@ -140,10 +370,9 @@ class:inverse
 ### *Practical*  
 &lt;!-- [5 minutes, Joaquin] --&gt;
 
-- Download task with task ID XXX.
-
-
-
+- Download task with task ID 146567.
+- Extract the dataset from this task
+- List and get the current runs with tag 'useR17'
 
 ---
 class: inverse
@@ -207,15 +436,15 @@ run.mlr
 ## 
 ## $bmr
 ##    task.id           learner.id acc.test.join timetrain.test.sum
-## 1 diabetes classif.randomForest     0.7708333              3.606
+## 1 diabetes classif.randomForest     0.7708333              7.835
 ##   timepredict.test.sum
-## 1                0.313
+## 1                0.322
 ## 
 ## $flow
 ## 
 ## Flow "mlr.classif.randomForest" :: (Version = NA, Flow ID = NA)
-## 	External Version         : R_3.4.0-v2.f4acf450
-## 	Dependencies             : R_3.4.0, OpenML_1.3, mlr_2.11, randomForest_4.6.12
+## 	External Version         : R_3.3.2-v2.b88a2294
+## 	Dependencies             : R_3.3.2, OpenML_1.3, mlr_2.11, randomForest_4.6.12
 ## 	Number of Flow Parameters: 20
 ## 	Number of Flow Components: 0
 ## 
@@ -235,9 +464,9 @@ convertOMLMlrRunToBMR(run.mlr)
 
 ```
 ##    task.id           learner.id acc.test.join timetrain.test.sum
-## 1 diabetes classif.randomForest     0.7708333              3.606
+## 1 diabetes classif.randomForest     0.7708333              7.835
 ##   timepredict.test.sum
-## 1                0.313
+## 1                0.322
 ```
 --&gt;
 
@@ -397,7 +626,7 @@ evals[1:3, c("data.name", "learner.name", "predictive.accuracy")]
 ## 3  haberman classif.randomForest            0.748366
 ```
 
-![](slides_tutorial_files/figure-html/unnamed-chunk-17-1.png)&lt;!-- --&gt;
+![](slides_tutorial_files/figure-html/unnamed-chunk-32-1.png)&lt;!-- --&gt;
 
 
 ---
@@ -437,7 +666,7 @@ ggplot(evals, aes(x = setup.id, y = predictive.accuracy,
   facet_grid(~ flow.name, scales = "free")
 ```
 
-![](slides_tutorial_files/figure-html/unnamed-chunk-18-1.png)&lt;!-- --&gt;
+![](slides_tutorial_files/figure-html/unnamed-chunk-33-1.png)&lt;!-- --&gt;
 
 ---
 class:inverse
@@ -553,7 +782,7 @@ ggplot(evals, aes(x = type, y = predictive.accuracy,
   facet_grid(~ flow.name, scales = "free")
 ```
 
-![](slides_tutorial_files/figure-html/unnamed-chunk-22-1.png)&lt;!-- --&gt;
+![](slides_tutorial_files/figure-html/unnamed-chunk-37-1.png)&lt;!-- --&gt;
 
 
 

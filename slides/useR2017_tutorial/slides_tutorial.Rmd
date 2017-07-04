@@ -91,13 +91,62 @@ Learning goals:
 <!-- [5 minutes, Joaquin] -->
 
 - What we want to do today: How to run a simple benchmark study
-- Link to batchmark blogpost
+- E.g. Gesture phase recognition (https://www.openml.org/d/4537)
+- Try to join if you (already) can
+- Link to batchmark blogpost [TODO?]
 
+```{r}
+library("OpenML")
+library("mlr")
 
+# Download a machine learning task from OpenML
+task = getOMLTask(task.id = 146567L)
+# Build any classifier with mlr
+lrn = makeLearner("classif.rpart")
+# Run the learner on the task
+run.mlr = runTaskMlr(task, lrn)
+# Upload and tag
+run.id = uploadOMLRun(run.mlr, tags = "useR17")
+```
 
 ---
 ### Installation and configuration 
-<!-- [3 minutes, Jouaqin] -->
+<!-- [3 minutes, Joaquin] -->
+
+You need OpenML and an ARFF reader
+
+```{r}
+# install.packages(c("OpenML","farff"))
+library("OpenML")
+```
+
+---
+You also need an OpenML API key to talk to the server
+
+```{r}
+#setOMLConfig(apikey = "c1994bdb7ecb3c6f3c8f3b35f4b47f1f")
+```
+
+- Find your own key in your OpenML profile
+
+![](slides_tutorial_files/screenshot_apikey.png) 
+---
+Permanently save your API disk to you config file (~/.openml/config)
+
+```{r}
+#saveOMLConfig(apikey = "c1994bdb7ecb3c6f3c8f3b35f4b47f1f", overwrite=TRUE)
+```
+
+Other options:
+- 'server': default http://www.openml.org/api/v1
+- 'cachedir': cache directory
+- 'verbosity': 0 (normal) - 2 (debug)
+- 'arff.reader': 'farff' (default) or 'RWeka'
+- 'confirm.upload': default FALSE
+
+```{r}
+getOMLConfig()
+```
 
 ---
 class:inverse
@@ -107,28 +156,93 @@ class:inverse
 
 - Install the OpenML R package (if you haven't done so yet)
 - Add your API-key to your config file
-
-
+- Configure OpenML to your liking
 
 ---
 ### Listing 
 <!-- [7 minutes, Jouaqin] -->
+Listing datasets
+- First time can take a short while, cached aftrwards
+```{r}
+datasets = listOMLDataSets()  # returns active data sets
+datasets[1:20, c("data.id", "name", "number.of.instances", "number.of.features")]
+```
+
+- Find datasets by name
+```{r}
+subset(datasets, name == "eeg-eye-state")
+```
+---
+Idem:
+- List tasks
+```{r}
+tasks = listOMLTasks()
+eeg_tasks = listOMLTasks(data.name = "eeg-eye-state")
+```
+
+Includes:
+- task.id
+- task.type (e.g. classification)
+- all data properties
+- target.feature
+- estimation.procedure (e.g. 10-fold CV)
+- evaluation.measure (e.g. AUROC)
+
+---
+Likewise:
+- List flows
+```{r}
+flows = listOMLFlows()
+```
+---
+Runs and evaluations need at least a task.id, flow.id, run.id, uploader.id, tag
+- List runs
+```{r}
+runs = listOMLRuns(task.id = 146567L)
+```
+- List evaluations
+```{r}
+runs = listOMLRunEvaluations(task.id = 146567L)
+```
 
 ---
 class:inverse
 
 ### *Practical*  
-<!-- [5 minutes, Jouaqin] -->
-
+<!-- [5 minutes, Joaquin] -->
+- Get and study the full list of returned dataset characteristics
+- List all datasets with more that 100000 observations and fewer than 5 features
 - List all regression tasks corresponding to data sets with between 
   50 and 55 observations.
-
-
+- Find the data.id for dataset 'GesturePhaseSegmentationRAW'
+- List all area_under_roc_curve evaluations for task 146567
 ---
 
 ### Downloading 
 <!-- [10 minutes, Joaquin] -->
+Download dataset:
+```{r}
+gesture.data = getOMLDataSet(data.id = 4537L)
+head(gesture.data$data)
+```
 
+---
+- Download tasks (remember?)
+```{r}
+task = getOMLTask(task.id = 146567L)
+task
+```
+
+---
+- Likewise:
+```{r}
+flow = getOMLFlow(flow.id = 100L)
+flow
+```
+```{r}
+run = getOMLRun(run.id = 3893285L)
+run
+```
 
 ---
 class:inverse
@@ -136,10 +250,9 @@ class:inverse
 ### *Practical*  
 <!-- [5 minutes, Joaquin] -->
 
-- Download task with task ID XXX.
-
-
-
+- Download task with task ID 146567.
+- Extract the dataset from this task
+- List and get the current runs with tag 'useR17'
 
 ---
 class: inverse
