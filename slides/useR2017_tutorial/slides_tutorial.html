@@ -122,7 +122,10 @@ You need OpenML and an ARFF reader
 
 
 ```r
-# install.packages(c("OpenML","farff"))
+install.packages(c("OpenML","farff"))
+```
+
+```r
 library("OpenML")
 ```
 
@@ -131,27 +134,28 @@ You also need an OpenML API key to talk to the server
 
 
 ```r
-#setOMLConfig(apikey = "c1994bdb7ecb3c6f3c8f3b35f4b47f1f")
+setOMLConfig(apikey = "c1994bdb7ecb3c6f3c8f3b35f4b47f1f")
 ```
 
 - Find your own key in your OpenML profile
 
 ![](slides_tutorial_files/screenshot_apikey.png) 
 ---
-Permanently save your API disk to you config file (~/.openml/config)
+Permanently save your API disk to your config file (~/.openml/config)
 
 
 ```r
-#saveOMLConfig(apikey = "c1994bdb7ecb3c6f3c8f3b35f4b47f1f", overwrite=TRUE)
+saveOMLConfig(apikey = "c1994...47f1f", overwrite=TRUE)
 ```
 
-Other options:
-- 'server': default http://www.openml.org/api/v1
-- 'cachedir': cache directory
-- 'verbosity': 0 (normal) - 2 (debug)
-- 'arff.reader': 'farff' (default) or 'RWeka'
-- 'confirm.upload': default FALSE
+Other configuration options:
+- `server`: default https://www.openml.org/api/v1
+- `cachedir`: cache directory
+- `verbosity`: 0 (normal) - 2 (debug)
+- `arff.reader`: 'farff' (default) or 'RWeka'
+- `confirm.upload`: default FALSE
 
+View your configuration
 
 ```r
 getOMLConfig()
@@ -160,18 +164,18 @@ getOMLConfig()
 ```
 ## OpenML configuration:
 ##   server           : https://www.openml.org/api/v1
-##   cachedir         : /Users/joa/.openml/cache
+##   cachedir         : /tmp/Rtmp6Ygsyz/cache
 ##   verbosity        : 1
 ##   arff.reader      : farff
 ##   confirm.upload   : FALSE
-##   apikey           : ***************************0acb1
+##   apikey           : ***************************a89ce
 ```
 
 ---
 class:inverse
 
 ### *Practical*  
-&lt;!-- [5 minutes, Jouaqin] --&gt;
+&lt;!-- [5 minutes, Joaquin] --&gt;
 
 - Install the OpenML R package (if you haven't done so yet)
 - Add your API-key to your config file
@@ -179,13 +183,13 @@ class:inverse
 
 ---
 ### Listing 
-&lt;!-- [7 minutes, Jouaqin] --&gt;
+&lt;!-- [7 minutes, Joaquin] --&gt;
 Listing datasets
-- First time can take a short while, cached aftrwards
 
 ```r
-datasets = listOMLDataSets()  # returns active data sets
-datasets[1:20, c("data.id", "name", "number.of.instances", "number.of.features")]
+datasets = listOMLDataSets()  # returns all active data sets
+datasets[1:20, c("data.id", "name", "number.of.instances", 
+                 "number.of.features")]
 ```
 
 ```
@@ -212,36 +216,41 @@ datasets[1:20, c("data.id", "name", "number.of.instances", "number.of.features")
 ## 20      22       mfeat-zernike                2000                 48
 ```
 
-- Find datasets by name
+---
+Find datasets by name
 
 ```r
-subset(datasets, name == "eeg-eye-state")
+str(subset(datasets, name == "eeg-eye-state"))
 ```
 
 ```
-##      data.id          name version status format
-## 1177    1471 eeg-eye-state       1 active   ARFF
-##                             tags majority.class.size
-## 1177 study_14, study_34, study_7                8257
-##      max.nominal.att.distinct.values minority.class.size number.of.classes
-## 1177                              -1                6723                 2
-##      number.of.features number.of.instances
-## 1177                 15               14980
-##      number.of.instances.with.missing.values number.of.missing.values
-## 1177                                       0                        0
-##      number.of.numeric.features number.of.symbolic.features
-## 1177                         14                           1
+## 'data.frame':	1 obs. of  16 variables:
+##  $ data.id                                : int 1471
+##  $ name                                   : chr "eeg-eye-state"
+##  $ version                                : int 1
+##  $ status                                 : chr "active"
+##  $ format                                 : chr "ARFF"
+##  $ tags                                   : chr "study_14, study_34, study_7"
+##  $ majority.class.size                    : int 8257
+##  $ max.nominal.att.distinct.values        : int -1
+##  $ minority.class.size                    : int 6723
+##  $ number.of.classes                      : int 2
+##  $ number.of.features                     : int 15
+##  $ number.of.instances                    : int 14980
+##  $ number.of.instances.with.missing.values: int 0
+##  $ number.of.missing.values               : int 0
+##  $ number.of.numeric.features             : int 14
+##  $ number.of.symbolic.features            : int 1
 ```
 ---
 Idem:
-- List tasks
+- List tasks (can take a few minutes)
 
 ```r
 tasks = listOMLTasks()
-eeg_tasks = listOMLTasks(data.name = "eeg-eye-state")
 ```
 
-Includes:
+Result includes:
 - task.id
 - task.type (e.g. classification)
 - all data properties
@@ -249,12 +258,41 @@ Includes:
 - estimation.procedure (e.g. 10-fold CV)
 - evaluation.measure (e.g. AUROC)
 
+
+```r
+listOMLTasks(data.name = "GesturePhaseSegmentationRAW")[0:8]
+```
+
+```
+##   task.id                 task.type data.id                        name
+## 1  128503                Clustering    4537 GesturePhaseSegmentationRAW
+## 2  145676 Supervised Classification    4537 GesturePhaseSegmentationRAW
+## 3  146567 Supervised Classification    4537 GesturePhaseSegmentationRAW
+##   status format    estimation.procedure  evaluation.measures
+## 1 active   ARFF     50 times Clustering                 &lt;NA&gt;
+## 2 active   ARFF 10-fold Crossvalidation area_under_roc_curve
+## 3 active   ARFF 10-fold Crossvalidation  predictive_accuracy
+```
+
 ---
 Likewise:
 - List flows
 
 ```r
 flows = listOMLFlows()
+flows[56:63, 1:4]
+```
+
+```
+##    flow.id             full.name               name version
+## 56      56         weka.ZeroR(1)         weka.ZeroR       1
+## 57      57          weka.OneR(1)          weka.OneR       1
+## 58      58    weka.NaiveBayes(1)    weka.NaiveBayes       1
+## 59      59          weka.JRip(1)          weka.JRip       1
+## 60      60           weka.J48(1)           weka.J48       1
+## 61      61       weka.REPTree(1)       weka.REPTree       1
+## 62      62 weka.DecisionStump(1) weka.DecisionStump       1
+## 63      63 weka.HoeffdingTree(1) weka.HoeffdingTree       1
 ```
 ---
 Runs and evaluations need at least a task.id, flow.id, run.id, uploader.id, tag
@@ -262,11 +300,48 @@ Runs and evaluations need at least a task.id, flow.id, run.id, uploader.id, tag
 
 ```r
 runs = listOMLRuns(task.id = 146567L)
+head(runs)
 ```
+
+```
+##    run.id task.id setup.id flow.id uploader error.message   tags
+## 1 3893285  146567  1930168    6770        2          &lt;NA&gt; useR17
+## 2 3893865  146567   442005    6748        2          &lt;NA&gt; useR17
+## 3 3902928  146567    24109    4840        2          &lt;NA&gt; useR17
+## 4 3930588  146567    24109    4840       27          &lt;NA&gt; useR17
+## 5 3963816  146567    24109    4840       27          &lt;NA&gt; useR17
+## 6 3963925  146567    24109    4840       27          &lt;NA&gt; useR17
+```
+---
 - List evaluations
 
 ```r
-runs = listOMLRunEvaluations(task.id = 146567L)
+evals = listOMLRunEvaluations(task.id = 146567L)
+evals[1:20, c("flow.name", "predictive.accuracy")]
+```
+
+```
+##                          flow.name predictive.accuracy
+## 1     mlr.classif.randomForest(30)            0.944551
+## 2            mlr.classif.rpart(37)            0.577719
+## 3            mlr.classif.rpart(24)            0.577719
+## 4            mlr.classif.rpart(24)            0.577719
+## 5            mlr.classif.rpart(37)            0.577719
+## NA                            &lt;NA&gt;                  NA
+## NA.1                          &lt;NA&gt;                  NA
+## NA.2                          &lt;NA&gt;                  NA
+## NA.3                          &lt;NA&gt;                  NA
+## NA.4                          &lt;NA&gt;                  NA
+## NA.5                          &lt;NA&gt;                  NA
+## NA.6                          &lt;NA&gt;                  NA
+## NA.7                          &lt;NA&gt;                  NA
+## NA.8                          &lt;NA&gt;                  NA
+## NA.9                          &lt;NA&gt;                  NA
+## NA.10                         &lt;NA&gt;                  NA
+## NA.11                         &lt;NA&gt;                  NA
+## NA.12                         &lt;NA&gt;                  NA
+## NA.13                         &lt;NA&gt;                  NA
+## NA.14                         &lt;NA&gt;                  NA
 ```
 
 ---
@@ -279,7 +354,7 @@ class:inverse
 - List all regression tasks corresponding to data sets with between 
   50 and 55 observations.
 - Find the data.id for dataset 'GesturePhaseSegmentationRAW'
-- List all area_under_roc_curve evaluations for task 146567
+- List all `predictive.accuracy` evaluations for task 146567
 ---
 
 ### Downloading 
@@ -288,6 +363,17 @@ Download dataset:
 
 ```r
 gesture.data = getOMLDataSet(data.id = 4537L)
+gesture.data$desc
+```
+
+```
+## 
+## Data Set "GesturePhaseSegmentationRAW" :: (Version = 1, OpenML ID = 4537)
+##   Creator(s)              : Renata Cristina Barros Madeo (Madeo; R. C. B.)  Priscilla Koch Wagner (Wagner; P. K.)  Sarajane Marques Peres (Peres; S. M.)  {renata.si; priscilla.wagner; sarajane} at usp.br  http://each.uspnet.usp.br/sarajane/
+##   Default Target Attribute: phase
+```
+
+```r
 head(gesture.data$data)
 ```
 
@@ -390,19 +476,293 @@ Image credit: [Dave Dugdale](https://flic.kr/p/7NQLaj)
 ## Intro to mlr 
 &lt;!-- [15 minutes, Bernd] --&gt;
 
-mlr = standardized interface for machine learning algorithms in R
 
-![](slides_tutorial_files/mlr.jpg) 
+mlr = General umbrella package for ML in R with standardized interface
 
-`\(\rightarrow\)` exactly what is needed for OpenML!
+&lt;img src="slides_tutorial_files/mlr.jpg" width="800px" /&gt;
+- Project home page: https://github.com/mlr-org/mlr
+- 8-10 main developers, quite a few contributors
+- Extensive online tutorial available, look there first
+- Can ask questions in the github issue tracker
 
-???
-Image can be changed here if needed:
-https://docs.google.com/drawings/d/1DRWxUC-fmxM-wzLZeihXcjieu1A6UKnaKj6D5lNDphA/edit?usp=sharing
+Install for the following examples:
 
-
+```r
+install.packages(c("randomForest", "kernlab"))
+```
+`mlr` is atomatically installed when installing `OpenML`
 
 ---
+
+## Intro to mlr 
+- Classification, regression, survival, clustering, cost-sensitive, multilabel
+- Includes &gt; 160 basic learning algorithms
+- Unified interface for the basic building blocks: 
+  tasks, learners, resampling, hyperparameters
+- Reflections: nearly all objects are queryable, i.e. you can ask for their properties and program on them
+- Programmed in an OO fashion in S3 (everything is an object)
+- Makes extensions and generic algorithms easy
+&lt;img src="slides_tutorial_files/ml_abstraction-crop.png" width="500px" /&gt;
+
+---
+
+
+### mlr - Train, predict, performance
+
+```r
+task = makeClassifTask(data = iris, target = "Species")
+print(task)
+```
+
+```
+## Supervised task: iris
+## Type: classif
+## Target: Species
+## Observations: 150
+## Features:
+## numerics  factors  ordered 
+##        4        0        0 
+## Missings: FALSE
+## Has weights: FALSE
+## Has blocking: FALSE
+## Classes: 3
+##     setosa versicolor  virginica 
+##         50         50         50 
+## Positive class: NA
+```
+---
+
+### mlr - Train, predict, performance
+
+```r
+lrn = makeLearner("classif.rpart", minsplit = 5)
+lrn
+```
+
+```
+## Learner classif.rpart from package rpart
+## Type: classif
+## Name: Decision Tree; Short name: rpart
+## Class: classif.rpart
+## Properties: twoclass,multiclass,missings,numerics,factors,ordered,prob,weights,featimp
+## Predict-Type: response
+## Hyperparameters: xval=0,minsplit=5
+```
+
+```r
+model = train(lrn, task, subset = seq(1, 150, by = 2))
+model
+```
+
+```
+## Model for learner.id=classif.rpart; learner.class=classif.rpart
+## Trained on: task.id = iris; obs = 75; features = 4
+## Hyperparameters: xval=0,minsplit=5
+```
+---
+
+
+### mlr - Train, predict, performance
+
+```r
+pred = predict(model, task, subset = seq(2, 150, by = 2))
+pred
+```
+
+```
+## Prediction: 75 observations
+## predict.type: response
+## threshold: 
+## time: 0.00
+##    id  truth response
+## 2   2 setosa   setosa
+## 4   4 setosa   setosa
+## 6   6 setosa   setosa
+## 8   8 setosa   setosa
+## 10 10 setosa   setosa
+## 12 12 setosa   setosa
+## ... (75 rows, 3 cols)
+```
+
+```r
+perf = performance(pred, measures = list(mmce, ber))
+perf
+```
+
+```
+##       mmce        ber 
+## 0.05333333 0.05333333
+```
+---
+
+### mlr - Resample
+- Crossval, subsample, bootstrap, etc with a single command
+- Get a container object with
+    + Mean performances and performances per resampling iters
+    + Predictions
+    + Models (if you want that)  
+
+```r
+lrn = makeLearner("classif.rpart", minsplit = 5)
+rdesc = makeResampleDesc("CV", iters = 2) # or use "cv2" object
+r = resample(lrn, task, rdesc, 
+  measures = list(mmce, ber), models = TRUE) 
+r
+```
+
+```
+## Resample Result
+## Task: iris
+## Learner: classif.rpart
+## Aggr perf: mmce.test.mean=0.0533,ber.test.mean=0.0543
+## Runtime: 0.0196748
+```
+---
+
+
+### mlr - Resample
+
+```r
+r$aggr
+```
+
+```
+## mmce.test.mean  ber.test.mean 
+##     0.05333333     0.05429987
+```
+
+```r
+r$measures.test
+```
+
+```
+##   iter       mmce        ber
+## 1    1 0.06666667 0.06547619
+## 2    2 0.04000000 0.04312354
+```
+---
+
+### mlr - Resample
+
+```r
+head(as.data.frame(r$pred))
+```
+
+```
+##   id  truth response iter  set
+## 1  3 setosa   setosa    1 test
+## 2  6 setosa   setosa    1 test
+## 3  7 setosa   setosa    1 test
+## 4  8 setosa   setosa    1 test
+## 5 10 setosa   setosa    1 test
+## 6 11 setosa   setosa    1 test
+```
+
+```r
+r$models
+```
+
+```
+## [[1]]
+## Model for learner.id=classif.rpart; learner.class=classif.rpart
+## Trained on: task.id = iris; obs = 75; features = 4
+## Hyperparameters: xval=0,minsplit=5
+## 
+## [[2]]
+## Model for learner.id=classif.rpart; learner.class=classif.rpart
+## Trained on: task.id = iris; obs = 75; features = 4
+## Hyperparameters: xval=0,minsplit=5
+```
+---
+
+
+### mlr - Benchmarking and Model Comparison
+- Run one command to compare multiple learners on multiple data sets
+- Get a (mergeable) container object with
+    + Mean performances and performances per resampling iters
+    + Predictions
+    + Models (if you want that)  
+
+```r
+# these are predefined in mlr for toying around:
+tasks = list(iris.task, sonar.task)
+learners = makeLearners(c("classif.rpart", "classif.randomForest"))
+br = benchmark(learners, tasks, cv2)
+br # again, you can access container in various ways
+```
+
+```
+##         task.id           learner.id mmce.test.mean
+## 1  iris-example        classif.rpart     0.06000000
+## 2  iris-example classif.randomForest     0.04666667
+## 3 Sonar-example        classif.rpart     0.30288462
+## 4 Sonar-example classif.randomForest     0.18750000
+```
+---
+
+
+&lt;!-- ### mlr - Tuning Example --&gt;
+&lt;!-- ```{r} --&gt;
+&lt;!-- ps = makeParamSet( --&gt;
+&lt;!--   makeNumericParam("C", lower= -5, upper = 5,  --&gt;
+&lt;!--     trafo = function(x) 2^x), --&gt;
+&lt;!--   makeNumericParam("sigma", lower = -5, upper = 5,  --&gt;
+&lt;!--     trafo = function(x) 2^x) --&gt;
+&lt;!-- ) --&gt;
+&lt;!-- ctrl = makeTuneControlRandom(maxit = 3L) --&gt;
+&lt;!-- res = tuneParams("classif.ksvm", task = pid.task, control = ctrl,  --&gt;
+&lt;!--   resampling = cv2, par.set = ps, show.info = FALSE) --&gt;
+&lt;!-- res --&gt;
+&lt;!-- as.data.frame(res$opt.path) --&gt;
+&lt;!-- ``` --&gt;
+&lt;!-- --- --&gt;
+
+
+### mlr - More features and outlook
+
+Uncovered features
+
+- Many different NA imputation techniques
+- Many feature filters
+- Imbalancy correction (e.g SMOTE) 
+- Use wrappers to extend learner functionality
+- Simple nested resampling  
+- Efficient tuning: 
+  Bayesian optimization with mlrMBO and iterated F-racing with irace
+- Multi-criteria optimization
+- Feature selection through wrappers (forward, backward)
+- Ensembles, generic bagging and stacking
+
+What will come next
+- Anomaly detection / one-class Classification
+- Functional data handling
+- Time series forecasting
+- Efficient pipelining
+---
+
+### mlr GSOC teaser: Pipelines / composable preproc ops
+
+- You cannot run this with the current release!
+- Will be finished in Oct 2017 (after GSOC)
+
+```r
+pipeline1 = cpoImputeMedian() %&gt;&gt;% cpoDropConstanst() %&gt;&gt;% 
+  cpoPca() %&gt;&gt;% cpoFilterGainRatio()
+pipeline2 = pipeline1 %&gt;&gt;% makeLearner("classif.rpart")
+crossval(pipeline1, task)
+```
+- Pipelines can be tuned as normal learners!
+- Multiplexing and feature unions are possible!
+- Have a look here if you are curious: 
+  https://github.com/mlr-org/mlr/pull/1827 
+---
+
+## Back to OpenML 
+
+Let's use mlr now to run stuff on OpenML objects
+and upload to the server!
+---
+
 ### Running and uploading 
 &lt;!-- [10 minutes, Bernd] --&gt;
 
@@ -415,14 +775,18 @@ Create a run:
 ```r
 # create a randomForest learner
 lrn = makeLearner("classif.randomForest", mtry = 2)
-# download a task
+# download a task (or get from cache)
 task = getOMLTask(task.id = 37)
-# create the run
+# runs the learner locally, uses benchmark internally
 run.mlr = runTaskMlr(task, lrn)
 ```
-
-
+- The `run.mlr` object contains three slots
+    + `run`: contains the information of the run, i.e., the hyperparameter values and the learner predictions.
+    + `bmr`: the `BenchmarkResult` object containing the results of the learner that is applied on the task.
+    + `flow`: contains information about the algorithm.
 ---
+
+
 ### Running and uploading
 
 ```r
@@ -436,15 +800,15 @@ run.mlr
 ## 
 ## $bmr
 ##    task.id           learner.id acc.test.join timetrain.test.sum
-## 1 diabetes classif.randomForest     0.7708333              7.835
+## 1 diabetes classif.randomForest     0.7708333              3.815
 ##   timepredict.test.sum
-## 1                0.322
+## 1                 0.32
 ## 
 ## $flow
 ## 
 ## Flow "mlr.classif.randomForest" :: (Version = NA, Flow ID = NA)
-## 	External Version         : R_3.3.2-v2.b88a2294
-## 	Dependencies             : R_3.3.2, OpenML_1.3, mlr_2.11, randomForest_4.6.12
+## 	External Version         : R_3.4.0-v2.f4acf450
+## 	Dependencies             : R_3.4.0, OpenML_1.4, mlr_2.11, randomForest_4.6.12
 ## 	Number of Flow Parameters: 20
 ## 	Number of Flow Components: 0
 ## 
@@ -464,19 +828,13 @@ convertOMLMlrRunToBMR(run.mlr)
 
 ```
 ##    task.id           learner.id acc.test.join timetrain.test.sum
-## 1 diabetes classif.randomForest     0.7708333              7.835
+## 1 diabetes classif.randomForest     0.7708333              3.815
 ##   timepredict.test.sum
-## 1                0.322
+## 1                 0.32
 ```
 --&gt;
 
 
-&lt;!--
-- The `run.mlr` object contains three slots
-  - `run`: contains the information of the run, i.e., the hyperparameter values and the learner predictions.
-  - `bmr`: the `BenchmarkResult` object containing the results of the learner that is applied on the task.
-  - `flow`: contains information about the algorithm.
---&gt;
 ---
 ### Running and uploading 
 
@@ -500,19 +858,51 @@ run.id
   - download the run: `getOMLRun(run.id)`, or
   - look up the run online on https://www.openml.org/r/3828647.
   
-- The server automatically computes evaluation measures     
-`\(\rightarrow\)`https://www.openml.org/r/3828647.
+- Server auto-computes many evaluation measures from predictions
 
 &lt;!-- - It is also possible to upload runs with specific tags using the `tags` argument, so that finding the run with a specific tag becomes easier. --&gt;
+---
+
+### Running and uploading 
+Let's check that we can get our run back:
+
+```r
+getOMLRun(run.id)
+```
+
+```
+## 
+## OpenML Run 3828647 :: (Task ID = 37, Flow ID = 6770)
+## 	User ID  : 970
+## 	Tags     : useR17
+## 	Learner  : mlr.classif.randomForest(30)
+## 	Task type: Supervised Classification
+```
+
+---
+###  OpenML &lt;-&gt; mlr converters 
+
+- `convertOMLDataSetToMlr`	
+  Convert an OpenML data set to mlr task.
+- `convertMlrTaskToOMLDataSet`	
+  Converts a mlr task to an OpenML data set.
+- `convertOMLFlowToMlr`	        
+  Converts a flow to a mlr learner.
+- `convertOMLMlrRunToBMR`
+  Convert 'OMLMlrRun's to a 'BenchmarkResult'.
+- `convertOMLRunToBMR`
+  Convert an OpenML run set to a benchmark result for mlr.
+- `convertOMLTaskToMlr`	 
+  Convert an OpenML task to mlr.
 
 ---
 class:inverse
 ### *Practical*  
 &lt;!-- [25 minutes, Bernd] --&gt;
 
-&lt;!-- TODO: exchange XXX with the task number --&gt;
-- Run your favorite learner/algorithm (from mlr) on task XXX that you already downloaded.
-Hint: use `listLearners()` to find appropriate learners for that task.
+- Run your favorite learner/algorithm (from mlr) on task 146567 that you already downloaded.
+    + You can run `listLearners()` to find appropriate learners
+    + Or go to mlr's appendix in the web tutorial to see a table
 
 - Upload your run to OpenML. Add the tag "useR17". Hint: 
 
@@ -525,19 +915,42 @@ run.id = uploadOMLRun(myrun, tag = "useR17")
   
 - Check the predictive performance of the run 
 (it may take a while before the server has calculated the performance measures `\(\rightarrow\)` give it some time).
+
+For fast solvers:
+- Run a 2nd learner and compare them on the webpage
+- Add tuning to a learner with an mlr TuneWrapper 
+      (much harder, look at the tutorial for this!)
   
 ---
 class:inverse
 ### *Solution*  
 
-- Run your favorite learner/algorithm (from mlr) on task XXX that you already downloaded.
+- Run your favorite learner/algorithm (from mlr) on task 146567 that you already downloaded.
 
 
 ```r
-# select the learner manually from lrn.list
-all.lrns = listLearners()
+# list mlr algos: subset for compact display
+listLearners(warn.missing.packages=FALSE)[10:14, c(1,2,4,6)] 
+```
+
+```
+##               class                                        name package
+## 10      classif.fnn                    Fast k-Nearest Neighbour     FNN
+## 11 classif.gamboost    Gradient boosting with smooth components  mboost
+## 12  classif.gausspr                          Gaussian Processes kernlab
+## 13 classif.glmboost                           Boosting for GLMs  mboost
+## 14   classif.glmnet GLM with Lasso or Elasticnet Regularization  glmnet
+##       type
+## 10 classif
+## 11 classif
+## 12 classif
+## 13 classif
+## 14 classif
+```
+
+```r
 # run favorite learner
-lrn = makeLearner("classif.rpart")
+lrn = makeLearner("classif.rpart", minsplit = 5)
 myrun = runTaskMlr(task, lrn)
 ```
 
@@ -560,14 +973,35 @@ class:inverse
 Use the value from `myrun.id` and go to https://www.openml.org/r/3829199.
 
 - Check the predictive performance of the run by looking at several evaluation measures.
+- Scroll down to *Evaluation measures*. 
 
-   - Go to https://www.openml.org/r/3829199 
-   - Scroll down to *Evaluation measures*. 
-
+---
+class:inverse
+### *Solution*  
 You can also get the results via
 
 ```r
-listOMLRunEvaluations(run.id = myrun.id)
+str(listOMLRunEvaluations(run.id = myrun.id), list.len = 15)
+```
+
+```
+## 'data.frame':	1 obs. of  30 variables:
+##  $ run.id                       : int 3829199
+##  $ task.id                      : int 37
+##  $ setup.id                     : int 442005
+##  $ flow.id                      : int 6748
+##  $ flow.name                    : chr "mlr.classif.rpart(37)"
+##  $ flow.version                 : chr "37"
+##  $ flow.source                  : chr "mlr"
+##  $ learner.name                 : chr "classif.rpart"
+##  $ data.name                    : chr "diabetes"
+##  $ upload.time                  : chr "2017-07-03 18:44:05"
+##  $ area.under.roc.curve         : num 0.698
+##  $ average.cost                 : num 0
+##  $ f.measure                    : num 0.734
+##  $ kappa                        : num 0.407
+##  $ kb.relative.information.score: num 308
+##   [list output truncated]
 ```
 
 
@@ -626,7 +1060,7 @@ evals[1:3, c("data.name", "learner.name", "predictive.accuracy")]
 ## 3  haberman classif.randomForest            0.748366
 ```
 
-![](slides_tutorial_files/figure-html/unnamed-chunk-32-1.png)&lt;!-- --&gt;
+![](slides_tutorial_files/figure-html/unnamed-chunk-46-1.png)&lt;!-- --&gt;
 
 
 ---
@@ -666,7 +1100,7 @@ ggplot(evals, aes(x = setup.id, y = predictive.accuracy,
   facet_grid(~ flow.name, scales = "free")
 ```
 
-![](slides_tutorial_files/figure-html/unnamed-chunk-33-1.png)&lt;!-- --&gt;
+![](slides_tutorial_files/figure-html/unnamed-chunk-47-1.png)&lt;!-- --&gt;
 
 ---
 class:inverse
@@ -782,7 +1216,7 @@ ggplot(evals, aes(x = type, y = predictive.accuracy,
   facet_grid(~ flow.name, scales = "free")
 ```
 
-![](slides_tutorial_files/figure-html/unnamed-chunk-37-1.png)&lt;!-- --&gt;
+![](slides_tutorial_files/figure-html/unnamed-chunk-51-1.png)&lt;!-- --&gt;
 
 
 

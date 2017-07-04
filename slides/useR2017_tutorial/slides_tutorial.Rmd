@@ -289,14 +289,16 @@ mlr = General umbrella package for ML in R with standardized interface
 knitr::include_graphics("slides_tutorial_files/mlr.jpg")
 ```
 - Project home page: https://github.com/mlr-org/mlr
-- 8-10 main developers, quite a few contributors, 
+- 8-10 main developers, quite a few contributors
 - Extensive online tutorial available, look there first
 - Can ask questions in the github issue tracker
 
-Install these now for the following examples:
+Install for the following examples:
 ```{r eval = FALSE}
-install.packages(c("mlr", "randomForest", "kernlab"))
+install.packages(c("randomForest", "kernlab"))
 ```
+`mlr` is atomatically installed when installing `OpenML`
+
 ---
 
 ## Intro to mlr 
@@ -310,6 +312,7 @@ install.packages(c("mlr", "randomForest", "kernlab"))
 ```{r, out.width = "500px", echo = FALSE}
 knitr::include_graphics("slides_tutorial_files/ml_abstraction-crop.png")
 ```
+
 ---
 
 
@@ -323,9 +326,9 @@ print(task)
 ### mlr - Train, predict, performance
 ```{r}
 lrn = makeLearner("classif.rpart", minsplit = 5)
-print(lrn)
+lrn
 model = train(lrn, task, subset = seq(1, 150, by = 2))
-print(model)
+model
 ```
 ---
 
@@ -333,9 +336,9 @@ print(model)
 ### mlr - Train, predict, performance
 ```{r}
 pred = predict(model, task, subset = seq(2, 150, by = 2))
-print(pred)
+pred
 perf = performance(pred, measures = list(mmce, ber))
-print(perf)
+perf
 ```
 ---
 
@@ -350,22 +353,22 @@ lrn = makeLearner("classif.rpart", minsplit = 5)
 rdesc = makeResampleDesc("CV", iters = 2) # or use "cv2" object
 r = resample(lrn, task, rdesc, 
   measures = list(mmce, ber), models = TRUE) 
-print(r) 
+r
 ```
 ---
 
 
 ### mlr - Resample
 ```{r}
-print(r$aggr)
-print(r$measures.test)
+r$aggr
+r$measures.test
 ```
 ---
 
 ### mlr - Resample
 ```{r}
 head(as.data.frame(r$pred))
-print(r$models)
+r$models
 ```
 ---
 
@@ -381,26 +384,26 @@ print(r$models)
 tasks = list(iris.task, sonar.task)
 learners = makeLearners(c("classif.rpart", "classif.randomForest"))
 br = benchmark(learners, tasks, cv2)
-print(br) # again, you can access container in various ways
+br # again, you can access container in various ways
 ```
 ---
 
 
-### mlr - Tuning Example
-```{r}
-ps = makeParamSet(
-  makeNumericParam("C", lower= -5, upper = 5, 
-    trafo = function(x) 2^x),
-  makeNumericParam("sigma", lower = -5, upper = 5, 
-    trafo = function(x) 2^x)
-)
-ctrl = makeTuneControlRandom(maxit = 3L)
-res = tuneParams("classif.ksvm", task = pid.task, control = ctrl, 
-  resampling = cv2, par.set = ps, show.info = FALSE)
-print(res)
-print(as.data.frame(res$opt.path))
-```
----
+<!-- ### mlr - Tuning Example -->
+<!-- ```{r} -->
+<!-- ps = makeParamSet( -->
+<!--   makeNumericParam("C", lower= -5, upper = 5,  -->
+<!--     trafo = function(x) 2^x), -->
+<!--   makeNumericParam("sigma", lower = -5, upper = 5,  -->
+<!--     trafo = function(x) 2^x) -->
+<!-- ) -->
+<!-- ctrl = makeTuneControlRandom(maxit = 3L) -->
+<!-- res = tuneParams("classif.ksvm", task = pid.task, control = ctrl,  -->
+<!--   resampling = cv2, par.set = ps, show.info = FALSE) -->
+<!-- res -->
+<!-- as.data.frame(res$opt.path) -->
+<!-- ``` -->
+<!-- --- -->
 
 
 ### mlr - More features and outlook
