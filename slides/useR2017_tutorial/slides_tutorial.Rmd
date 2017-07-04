@@ -270,19 +270,171 @@ Image credit: [Dave Dugdale](https://flic.kr/p/7NQLaj)
 ## Intro to mlr 
 <!-- [15 minutes, Bernd] -->
 
-mlr = standardized interface for machine learning algorithms in R
 
-![](slides_tutorial_files/mlr.jpg) 
+mlr = General umbrella package for ML in R with standardized interface
 
-$\rightarrow$ exactly what is needed for OpenML!
+```{r, out.width = "800px", echo = FALSE}
+knitr::include_graphics("slides_tutorial_files/mlr.jpg")
+```
+- Project home page: https://github.com/mlr-org/mlr
+- 8-10 main developers, quite a few contributors, 
+- Extensive online tutorial available, look there first
+- Can ask questions in the github issue tracker
 
-???
-Image can be changed here if needed:
-https://docs.google.com/drawings/d/1DRWxUC-fmxM-wzLZeihXcjieu1A6UKnaKj6D5lNDphA/edit?usp=sharing
-
-
-
+Install these now for the following examples:
+```{r eval = FALSE}
+install.packages(c("mlr", "randomForest", "kernlab"))
+```
 ---
+
+## Intro to mlr 
+- Classification, regression, survival, clustering, cost-sensitive, multilabel
+- Includes > 160 basic learning algorithms
+- Unified interface for the basic building blocks: 
+  tasks, learners, resampling, hyperparameters
+- Reflections: nearly all objects are queryable, i.e. you can ask for their properties and program on them
+- Programmed in an OO fashion in S3 (everything is an object)
+- Makes extensions and generic algorithms easy
+```{r, out.width = "500px", echo = FALSE}
+knitr::include_graphics("slides_tutorial_files/ml_abstraction-crop.png")
+```
+---
+
+
+### mlr - Train, predict, performance
+```{r}
+task = makeClassifTask(data = iris, target = "Species")
+print(task)
+```
+---
+
+### mlr - Train, predict, performance
+```{r}
+lrn = makeLearner("classif.rpart", minsplit = 5)
+print(lrn)
+model = train(lrn, task, subset = seq(1, 150, by = 2))
+print(model)
+```
+---
+
+
+### mlr - Train, predict, performance
+```{r}
+pred = predict(model, task, subset = seq(2, 150, by = 2))
+print(pred)
+perf = performance(pred, measures = list(mmce, ber))
+print(perf)
+```
+---
+
+### mlr - Resample
+- Crossval, subsample, bootstrap, etc with a single command
+- Get a container object with
+    + Mean performances and performances per resampling iters
+    + Predictions
+    + Models (if you want that)  
+```{r}
+lrn = makeLearner("classif.rpart", minsplit = 5)
+rdesc = makeResampleDesc("CV", iters = 2) # or use "cv2" object
+r = resample(lrn, task, rdesc, 
+  measures = list(mmce, ber), models = TRUE) 
+print(r) 
+```
+---
+
+
+### mlr - Resample
+```{r}
+print(r$aggr)
+print(r$measures.test)
+```
+---
+
+### mlr - Resample
+```{r}
+head(as.data.frame(r$pred))
+print(r$models)
+```
+---
+
+
+### mlr - Benchmarking and Model Comparison
+- Run one command to compare multiple learners on multiple data sets
+- Get a (mergeable) container object with
+    + Mean performances and performances per resampling iters
+    + Predictions
+    + Models (if you want that)  
+```{r}
+# these are predefined in mlr for toying around:
+tasks = list(iris.task, sonar.task)
+learners = makeLearners(c("classif.rpart", "classif.randomForest"))
+br = benchmark(learners, tasks, cv2)
+print(br) # again, you can access container in various ways
+```
+---
+
+
+### mlr - Tuning Example
+```{r}
+ps = makeParamSet(
+  makeNumericParam("C", lower= -5, upper = 5, 
+    trafo = function(x) 2^x),
+  makeNumericParam("sigma", lower = -5, upper = 5, 
+    trafo = function(x) 2^x)
+)
+ctrl = makeTuneControlRandom(maxit = 3L)
+res = tuneParams("classif.ksvm", task = pid.task, control = ctrl, 
+  resampling = cv2, par.set = ps, show.info = FALSE)
+print(res)
+print(as.data.frame(res$opt.path))
+```
+---
+
+
+### mlr - More features and outlook
+
+Uncovered features
+
+- Many different NA imputation techniques
+- Many feature filters
+- Imbalancy correction (e.g SMOTE) 
+- Use wrappers to extend learner functionality
+- Simple nested resampling  
+- Efficient tuning: 
+  Bayesian optimization with mlrMBO and iterated F-racing with irace
+- Multi-criteria optimization
+- Feature selection through wrappers (forward, backward)
+- Ensembles, generic bagging and stacking
+
+What will come next
+- Anomaly detection / one-class Classification
+- Functional data handling
+- Time series forecasting
+- Efficient pipelining
+---
+
+### mlr GSOC teaser: Pipelines / composable preproc ops
+
+- You cannot run this with the current release!
+- Will be finished in Oct 2017 (after GSOC)
+```{r, eval = FALSE}
+pipeline1 = cpoImputeMedian() %>>% cpoDropConstanst() %>>% 
+  cpoPca() %>>% cpoFilterGainRatio()
+pipeline2 = pipeline1 %>>% makeLearner("classif.rpart")
+crossval(pipeline1, task)
+```
+- Pipelines can be tuned as normal learners!
+- Multiplexing and feature unions are possible!
+- Have a look here if you are curious: 
+  https://github.com/mlr-org/mlr/pull/1827 
+---
+
+## Back to OpenML 
+
+Let's use mlr now to run stuff on OpenML objects
+and upload to the server!
+---
+
 ### Running and uploading 
 <!-- [10 minutes, Bernd] -->
 
@@ -294,14 +446,18 @@ Create a run:
 ```{r}
 # create a randomForest learner
 lrn = makeLearner("classif.randomForest", mtry = 2)
-# download a task
+# download a task (or get from cache)
 task = getOMLTask(task.id = 37)
-# create the run
+# runs the learner locally, uses benchmark internally
 run.mlr = runTaskMlr(task, lrn)
 ```
-
-
+- The `run.mlr` object contains three slots
+    + `run`: contains the information of the run, i.e., the hyperparameter values and the learner predictions.
+    + `bmr`: the `BenchmarkResult` object containing the results of the learner that is applied on the task.
+    + `flow`: contains information about the algorithm.
 ---
+
+
 ### Running and uploading
 ```{r}
 run.mlr
@@ -318,12 +474,6 @@ convertOMLMlrRunToBMR(run.mlr)
 -->
 
 
-<!--
-- The `run.mlr` object contains three slots
-  - `run`: contains the information of the run, i.e., the hyperparameter values and the learner predictions.
-  - `bmr`: the `BenchmarkResult` object containing the results of the learner that is applied on the task.
-  - `flow`: contains information about the algorithm.
--->
 ---
 ### Running and uploading 
 
@@ -343,18 +493,23 @@ run.id
   - download the run: `getOMLRun(run.id)`, or
   - look up the run online on `r paste0("https://www.openml.org/r/", run.id)`.
   
-- The server automatically computes evaluation measures     
-$\rightarrow$`r paste0("https://www.openml.org/r/", run.id)`.
+- Server auto-computes many evaluation measures from predictions
 
 <!-- - It is also possible to upload runs with specific tags using the `tags` argument, so that finding the run with a specific tag becomes easier. -->
+---
+
+### Running and uploading 
+Let's check that we ecan get our run back:
+```{r}
+getOMLRun(run.id)
+```
 
 ---
 class:inverse
 ### *Practical*  
 <!-- [25 minutes, Bernd] -->
 
-<!-- TODO: exchange XXX with the task number -->
-- Run your favorite learner/algorithm (from mlr) on task XXX that you already downloaded.
+- Run your favorite learner/algorithm (from mlr) on task 146567 that you already downloaded.
 Hint: use `listLearners()` to find appropriate learners for that task.
 
 - Upload your run to OpenML. Add the tag "useR17". Hint: 
