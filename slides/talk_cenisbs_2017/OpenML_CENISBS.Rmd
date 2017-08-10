@@ -1,39 +1,47 @@
 ---
 title: "OpenML"
 author: "Heidi Seibold"
-date: "Hittisau Retreat January 16/17, 2017"
-output: 
-  ioslides_presentation:
-    widescreen: true
-  # smaller: true
+date: ""
+output:
+  ioslides_presentation: default
+  beamer_presentation: null
+  slidy_presentation: null
 ---
 ```{r setup, include=FALSE}
 library("knitr")
-opts_chunk$set(message = FALSE, cache = TRUE, eval = FALSE)
+opts_chunk$set(message = FALSE, cache = TRUE, eval = TRUE)
 library("OpenML")
+library("ggplot2")
 ```
 
 
 ---
 
 [openml.org](http://www.openml.org/)
-![](screenshot.png)
+
+```{r, out.width = "800px", eval=TRUE, echo = FALSE}
+knitr::include_graphics("screenshot.png")
+```
+
 
 ---
 
-![](overview.png)
+```{r, out.width = "800px", eval=TRUE, echo = FALSE}
+knitr::include_graphics("overview.png")
+```
+
 
 
 ---
 
-```{r, out.width = "1000px", eval=TRUE, echo = FALSE}
+```{r, out.width = "800px", eval=TRUE, echo = FALSE}
 knitr::include_graphics("task_wilt.png")
 ```
 
 
 ---
 
-```{r, out.width = "1000px", eval=TRUE, echo = FALSE}
+```{r, out.width = "800px", eval=TRUE, echo = FALSE}
 knitr::include_graphics("task_wilt_leaderboard.png")
 ```
 
@@ -48,113 +56,32 @@ knitr::include_graphics("task_wilt_leaderboard.png")
 - ...
 
 
-# A use case: a benchmark study with ctree
-
-
-## Study the behaviour of different parameter settings of ctree
-
-Check performance with respect to **predictive accurancy**
-(percentage of instances that are classified correctly)
-
-
-## Steps
-- Create the flow
-- Download the tasks
-- Create runs (run flows on tasks)
-- Upload runs
-- Collect all information
-- Visualise
-
-## Which learners to use
-```{r}
-lrn.list <- list(makeLearner("regr.ctree", testtype = "Bonferroni"),
-                 makeLearner("regr.ctree", testtype = "Univariate"),
-                 makeLearner("regr.ctree", testtype = "Teststatistic"))
-```
-
-
-
-## Download the relevant tasks
-- Select relevant tasks
-```{r}
-taskinfo_all <- listOMLTasks(task.type = "Supervised Regression",
-                          number.of.instances = c(80, 10^6),
-                          number.of.features = c(3, 50),
-                          evaluation.measures = "mean_absolute_error",
-                          estimation.procedure = "10-fold Crossvalidation")
-
-set.seed(2017)
-taskinfo <- taskinfo_all[sample(1:NROW(taskinfo_all), 5), ]
-```
-- Download tasks
-```{r}
-tid <- taskinfo$task.id
-tasks <- lapply(tid, getOMLTask)
-names(tasks) <- tid
-```
-
-----
-```{r, echo=FALSE}
-kable(taskinfo[, c("name", "number.of.instances", "number.of.features", 
-                   "number.of.missing.values")], row.names = FALSE)
-```
-
-
-
-## Create runs (run flows on tasks)
-- Set up grid to run each learner on each task
-```{r}
-grid <- expand.grid(task.id = as.character(taskinfo$task.id), 
-                    lrn.ind = seq_along(lrn.list))
-```
-- Run learners on tasks
+## OpenML with R
 ```{r, eval=FALSE}
-run_lt <- function(i) {
-  runTaskMlr(task = tasks[[grid$task.id[i]]],
-             learner = lrn.list[[grid$lrn.ind[i]]])
-}
-
-runs <- lapply(1:NROW(grid), run_lt)
+library("OpenML")
+tsk.id <- 10
+tsk <- getOMLTask(tsk.id)
+lrn <- makeLearner("classif.cforest", ntree = 1000, mtry = 4)
+run <- runTaskMlr(task = tsk, learner = lrn)
+rid <- uploadOMLRun(run, confirm.upload = FALSE)
 ```
 
-
-
-## Upload runs
-```{r, eval=FALSE}
-run.id <- lapply(runs, uploadOMLRun, tags = "study_65", confirm.upload = FALSE)
-grid$run.id <- unlist(run.id)
-save(grid, file = "grid_splittest.rda") 
-```
 ```{r, echo=FALSE}
-load(file = "grid_splittest.rda")
-```
-```{r}
-grid
+tsk.id <- 10
+rid <- 6067862
 ```
 
-## Collect all information
 ```{r}
-runeval <- cbind(grid,
-                 listOMLRunEvaluations(run.id = grid$run.id))
-names(runeval)
+evals <- listOMLRunEvaluations(task.id = tsk.id)
 ```
 
-## Visualise
-```{r, fig.height=3, fig.width=7, out.width='900px'}
-ggplot(runeval, aes(x = splittest, y = predictive.accuracy, 
-                    color = data.name, group = data.name)) +
-  geom_point() + geom_line()
-```
-Similar visualisation can be found on 
-[openml.org/f/5434](http://www.openml.org/f/5434)
 
----
-Why does the heart-switzerland data behave the way it does?
-```{r}
-tasks[["9948"]]
+## OpenML with R
+```{r, fig.height=4}
+mlrevals <- evals[grep("mlr", evals$flow.name), ]
+ggplot(mlrevals, aes(x = predictive.accuracy, y = flow.name)) + 
+  geom_point()
 ```
-Let's take a closer look at the data set:
-[openml.org/d/1513](http://www.openml.org/d/1513)
 
 
 
@@ -177,6 +104,122 @@ Vanschoren, J., Van Rijn, J. N., Bischl, B., Torgo, L. (2014).
 *ACM SIGKDD Explorations Newsletter*, 15(2), 49-60, 
 [doi:10.1145/2641190.2641198](https://doi.org/10.1145/2641190.2641198).
 
+
+
+
+<!-- # A use case: a benchmark study with ctree -->
+
+
+<!-- ## Study the behaviour of different parameter settings of ctree -->
+
+<!-- Check performance with respect to **predictive accurancy** -->
+<!-- (percentage of instances that are classified correctly) -->
+
+
+<!-- ## Steps -->
+<!-- - Create the flow -->
+<!-- - Download the tasks -->
+<!-- - Create runs (run flows on tasks) -->
+<!-- - Upload runs -->
+<!-- - Collect all information -->
+<!-- - Visualise -->
+
+<!-- ## Which learners to use -->
+<!-- ```{r} -->
+<!-- lrn.list <- list( -->
+<!--   makeLearner("regr.ctree", testtype = "Bonferroni"), -->
+<!--   makeLearner("regr.ctree", testtype = "Univariate"), -->
+<!--   makeLearner("regr.ctree", testtype = "Teststatistic") -->
+<!-- ) -->
+<!-- ``` -->
+
+
+
+<!-- ## Download the relevant tasks -->
+<!-- - Select relevant tasks -->
+<!-- ```{r} -->
+<!-- taskinfo_all <- listOMLTasks( -->
+<!--   task.type = "Supervised Regression", -->
+<!--   number.of.instances = c(80, 10^6), -->
+<!--   number.of.features = c(3, 50), -->
+<!--   evaluation.measures = "mean_absolute_error", -->
+<!--   estimation.procedure = "10-fold Crossvalidation" -->
+<!-- ) -->
+
+<!-- set.seed(2017) -->
+<!-- taskinfo <- taskinfo_all[sample(1:NROW(taskinfo_all), 5), ] -->
+<!-- ``` -->
+<!-- - Download tasks -->
+<!-- ```{r} -->
+<!-- tid <- taskinfo$task.id -->
+<!-- tasks <- lapply(tid, getOMLTask) -->
+<!-- names(tasks) <- tid -->
+<!-- ``` -->
+
+<!-- ---- -->
+
+<!-- ```{r, echo=FALSE} -->
+<!-- kable(taskinfo[, c("name", "number.of.instances", "number.of.features",  -->
+<!--                    "number.of.missing.values")], row.names = FALSE) -->
+<!-- ``` -->
+
+
+
+<!-- ## Create runs (run flows on tasks) -->
+<!-- - Set up grid to run each learner on each task -->
+<!-- ```{r} -->
+<!-- grid <- expand.grid(task.id = taskinfo$task.id,  -->
+<!--                     lrn.ind = seq_along(lrn.list)) -->
+<!-- ``` -->
+<!-- - Run learners on tasks -->
+<!-- ```{r, eval=FALSE} -->
+<!-- run_lt <- function(gr) { -->
+<!--   tid <- gr["task.id"] -->
+<!--   lid <- gr["lrn.ind"] -->
+<!--   runTaskMlr(task = tasks[[as.character(tid)]], -->
+<!--              learner = lrn.list[[lid]]) -->
+<!-- } -->
+<!-- runs <- apply(grid, 1, run_lt) -->
+<!-- ``` -->
+
+
+
+<!-- ## Upload runs -->
+<!-- ```{r, eval=FALSE} -->
+<!-- run.id <- lapply(runs, uploadOMLRun, tags = "study_65",  -->
+<!--                  confirm.upload = FALSE) -->
+<!-- grid$run.id <- unlist(run.id) -->
+<!-- save(grid, file = "grid_splittest.rda")  -->
+<!-- ``` -->
+<!-- ```{r, echo=FALSE} -->
+<!-- load(file = "grid_splittest.rda") -->
+<!-- ``` -->
+<!-- ```{r} -->
+<!-- grid -->
+<!-- ``` -->
+
+<!-- ## Collect all information -->
+<!-- ```{r} -->
+<!-- runeval <- cbind(grid, listOMLRunEvaluations(run.id = grid$run.id)) -->
+<!-- names(runeval) -->
+<!-- ``` -->
+
+<!-- ## Visualise -->
+<!-- ```{r, fig.height=3, fig.width=7, out.width='900px'} -->
+<!-- ggplot(runeval, aes(x = splittest, y = predictive.accuracy,  -->
+<!--                     color = data.name, group = data.name)) + -->
+<!--   geom_point() + geom_line() -->
+<!-- ``` -->
+<!-- Similar visualisation can be found on  -->
+<!-- [openml.org/f/5434](http://www.openml.org/f/5434) -->
+
+<!-- --- -->
+<!-- Why does the heart-switzerland data behave the way it does? -->
+<!-- ```{r} -->
+<!-- tasks[["9948"]] -->
+<!-- ``` -->
+<!-- Let's take a closer look at the data set: -->
+<!-- [openml.org/d/1513](http://www.openml.org/d/1513) -->
 
 
 
