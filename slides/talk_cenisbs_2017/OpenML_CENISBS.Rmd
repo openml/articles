@@ -63,48 +63,50 @@ tsk <- getOMLTask(tsk.id)
 
 lrn <- makeLearner("classif.cforest", ntree = 1000, mtry = 4)
 run <- runTaskMlr(task = tsk, learner = lrn)
-rid <- uploadOMLRun(run, confirm.upload = FALSE)
+rn.id <- uploadOMLRun(run, confirm.upload = FALSE)
 ```
 
 ```{r, echo=FALSE}
 tsk.id <- 10
-rid <- 6067862
+rn.id <- 6067862
 ```
 
 ```{r}
 evals <- listOMLRunEvaluations(task.id = tsk.id)
 ```
 
+---
 
-## OpenML with R
 ```{r, fig.height=4}
 mlrevals <- evals[grep("mlr", evals$flow.name), ]
-ggplot(mlrevals, aes(x = predictive.accuracy, y = flow.name)) + 
+mlrevals$my.run <- mlrevals$run.id == rn.id
+ggplot(mlrevals, aes(x = predictive.accuracy, 
+                     y = flow.name, 
+                     color = my.run)) + 
   geom_point()
 ```
 
 
 
-## OpenML is...
-- Online
-- Open
-- Collaborative
-- Rewarding
-- Easy (to use and to contribute)
+---
+
+```{r, out.width = "800px", eval=TRUE, echo = FALSE}
+knitr::include_graphics("../useR2017_tutorial/slides_tutorial_files/cool_stuff.png")
+```
 
 
 ## Papers
 
-Casalicchio, G., Bossek, J., Lang, M., Kirchhoff, D., Kerschke, P., Hofner, B., Seibold, H., Vanschoren, J., Bischl, B. (2017).   
-**OpenML: An R Package to Connect to the Networked Machine Learning Platform OpenML.**   
-*ArXiv e-prints*, [arxiv.org/abs/1701.01293](https://arxiv.org/abs/1701.01293).
- 
-Vanschoren, J., Van Rijn, J. N., Bischl, B., Torgo, L. (2014).    
-**OpenML: networked science in machine learning.**   
-*ACM SIGKDD Explorations Newsletter*, 15(2), 49-60, 
-[doi:10.1145/2641190.2641198](https://doi.org/10.1145/2641190.2641198).
+Giuseppe Casalicchio, Jakob Bossek, Michel Lang, Dominik Kirchhoff, Pascal Kerschke, Benjamin
+Hofner, Heidi Seibold, Joaquin Vanschoren, and Bernd Bischl.    
+**OpenML: An R package to connect to the machine learning platform OpenML.**   
+*Computational Statistics, 2017.*    
+doi: 10.1007/s00180-017-0742-2.
 
-
+Joaquin Vanschoren, Jan N. van Rijn, Bernd Bischl, and Luis Torgo.    
+**OpenML: Networked science in machine learning.**   
+*SIGKDD Explorations, 15(2):49–60, 2014.*    
+doi: 10.1145/2641190.2641198.
 
 
 <!-- # A use case: a benchmark study with ctree -->
