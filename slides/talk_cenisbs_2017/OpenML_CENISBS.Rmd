@@ -58,9 +58,9 @@ knitr::include_graphics("task_wilt_leaderboard.png")
 
 ## OpenML with R
 ```{r, eval=FALSE}
-library("OpenML")
 tsk.id <- 10
 tsk <- getOMLTask(tsk.id)
+
 lrn <- makeLearner("classif.cforest", ntree = 1000, mtry = 4)
 run <- runTaskMlr(task = tsk, learner = lrn)
 rid <- uploadOMLRun(run, confirm.upload = FALSE)

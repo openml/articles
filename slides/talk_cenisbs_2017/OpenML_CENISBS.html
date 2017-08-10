@@ -127,9 +127,9 @@
 
 </article></slide><slide class=''><hgroup><h2>OpenML with R</h2></hgroup><article  id="openml-with-r">
 
-<pre class = 'prettyprint lang-r'>library(&quot;OpenML&quot;)
-tsk.id &lt;- 10
+<pre class = 'prettyprint lang-r'>tsk.id &lt;- 10
 tsk &lt;- getOMLTask(tsk.id)
+
 lrn &lt;- makeLearner(&quot;classif.cforest&quot;, ntree = 1000, mtry = 4)
 run &lt;- runTaskMlr(task = tsk, learner = lrn)
 rid &lt;- uploadOMLRun(run, confirm.upload = FALSE)</pre>
