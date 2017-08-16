@@ -88,25 +88,45 @@ ggplot(mlrevals, aes(x = predictive.accuracy,
 
 
 ---
+
 #### Cool stuff people are already doing with OpenML
 ```{r, out.width = "700px", eval=TRUE, echo = FALSE}
 knitr::include_graphics("../useR2017_tutorial/slides_tutorial_files/cool_stuff_text.png")
 ```
 
 
+
+
 ## Papers
 
-Giuseppe Casalicchio, Jakob Bossek, Michel Lang, Dominik Kirchhoff, Pascal Kerschke, Benjamin
-Hofner, Heidi Seibold, Joaquin Vanschoren, and Bernd Bischl.    
+G. Casalicchio, J. Bossek, M. Lang, D. Kirchhoff, P. Kerschke, B.
+Hofner, H. Seibold, J. Vanschoren, and B. Bischl.    
 **OpenML: An R package to connect to the machine learning platform OpenML.**   
 *Computational Statistics, 2017.*    
 doi: 10.1007/s00180-017-0742-2.
 
-Joaquin Vanschoren, Jan N. van Rijn, Bernd Bischl, and Luis Torgo.    
+J. Vanschoren, J. N. van Rijn, B. Bischl, and L. Torgo.    
 **OpenML: Networked science in machine learning.**   
 *SIGKDD Explorations, 15(2):49–60, 2014.*    
 doi: 10.1145/2641190.2641198.
 
+
+## Resources
+
+General:
+
+- [OpenML bootcamp](https://www.openml.org/guide/bootcamp)
+- [Overview APIs + links to further resources](https://www.openml.org/guide/api)
+- [Overview integrations + links to further resources](https://www.openml.org/guide/integrations)
+- [Benchmarking with OpenML](https://www.openml.org/guide/benchmark)
+- [Blog post on basic components](https://medium.com/open-machine-learning/basic-components-of-openml-a5745634c664)
+- [Blog post on my first impression](http://heidiseibold.github.io/r/2016/05/02/OpenML/)
+
+R:
+
+- [These slides](http://openml.github.io/articles/slides/talk_cenisbs_2017/OpenML_CENISBS.html)
+- [Tutorial at useR! 2017](http://openml.github.io/articles/slides/useR2017_tutorial/)
+- [Blog post on parallel benchmarking](http://mlr-org.github.io/Parallel_benchmarking_with_OpenML_and_mlr/)
 
 <!-- # A use case: a benchmark study with ctree -->
 
