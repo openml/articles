@@ -87,11 +87,10 @@ ggplot(mlrevals, aes(x = predictive.accuracy,
 ```
 
 
-
 ---
-
-```{r, out.width = "800px", eval=TRUE, echo = FALSE}
-knitr::include_graphics("../useR2017_tutorial/slides_tutorial_files/cool_stuff.png")
+#### Cool stuff people are already doing with OpenML
+```{r, out.width = "700px", eval=TRUE, echo = FALSE}
+knitr::include_graphics("../useR2017_tutorial/slides_tutorial_files/cool_stuff_text.png")
 ```
 
 
