@@ -1,7 +1,7 @@
 ---
 title: "OpenML"
-author: "Heidi Seibold"
-date: ""
+author: "Heidi Seibold, University of Zurich"
+date: "CEN ISBS 2017"
 output:
   ioslides_presentation: default
   beamer_presentation: null
@@ -57,6 +57,8 @@ knitr::include_graphics("task_wilt_leaderboard.png")
 
 
 ## OpenML with R
+
+Run cforest on task 10 (https://www.openml.org/t/10)
 ```{r, eval=FALSE}
 tsk.id <- 10
 tsk <- getOMLTask(tsk.id)
@@ -87,13 +89,37 @@ ggplot(mlrevals, aes(x = predictive.accuracy,
 ```
 
 
----
 
-#### Cool stuff people are already doing with OpenML
-```{r, out.width = "700px", eval=TRUE, echo = FALSE}
-knitr::include_graphics("../useR2017_tutorial/slides_tutorial_files/cool_stuff_text.png")
+
+## Checking a new algorithm
+```{r, echo=FALSE}
+load(file = "results_classif_batchtools.rda")
+load(file = "tr_eval.rda")
+
+eval_classif <- listOMLRunEvaluations(run.id = res_classif$run.id)
+runeval_classif <- cbind(res_classif, eval_classif)
+
+ttsk <- unique(runeval_classif$task.id)[c(1:4,6:7)]
+revc <- runeval_classif[runeval_classif$task.id %in% ttsk, ]
+revt <- reval[reval$task.id %in% ttsk, ]
 ```
 
+```{r, fig.height=5, fig.with=7, out.width = "800px", echo=FALSE}
+p_classif <- ggplot(revc, 
+                    aes(x = interaction(splittest, lookahead, intersplit, nmax), 
+                        group = interaction(data.name, flow.name), 
+                        linetype = flow.name)) +
+  geom_point(aes(y = predictive.accuracy)) + 
+  geom_line(aes(y = predictive.accuracy)) + 
+  facet_grid(task.id ~ ., scales = "free_y")
+
+p_classif_c <- p_classif + 
+  geom_hline(data = revt, aes(yintercept = predictive.accuracy,
+                               color = flow.name), alpha = 0.7) +
+  theme_classic() + theme(axis.text.x=element_text(angle = -10, hjust = 0))
+
+p_classif_c
+```
 
 
 
@@ -108,8 +134,28 @@ doi: 10.1007/s00180-017-0742-2.
 J. Vanschoren, J. N. van Rijn, B. Bischl, and L. Torgo.    
 **OpenML: Networked science in machine learning.**   
 *SIGKDD Explorations, 15(2):49–60, 2014.*    
-doi: 10.1145/2641190.2641198.
+doi: 10.1145/2641190.2641198.     
 
+   
+`r emo::ji("email")` openmachinelearning@gmail.com, [\@open_ml](https://twitter.com/open_ml)
+
+
+
+# Backup slides
+
+## ctree control parameters
+
+**splittest**	   
+a logical changing linear (the default FALSE) to maximally selected statistics for variable selection. Currently needs testtype = "MonteCarlo".
+
+**lookahead**	   
+a logical determining whether a split is implemented only after checking if tests in both daughter nodes can be performed.
+
+**intersplit**    
+a logical indicating if splits in numeric variables are simply x <= a (the default) or interpolated x <= (a + b) / 2. The latter feature is experimental, see Galili and Meilijson (2016).
+
+**nmax**	    
+an integer defining the number of bins each variable is divided into prior to tree building. The default Inf does not apply any binning. Highly experimental, use at your own risk.
 
 ## Resources
 
@@ -128,119 +174,7 @@ R:
 - [Tutorial at useR! 2017](http://openml.github.io/articles/slides/useR2017_tutorial/)
 - [Blog post on parallel benchmarking](http://mlr-org.github.io/Parallel_benchmarking_with_OpenML_and_mlr/)
 
-<!-- # A use case: a benchmark study with ctree -->
 
-
-<!-- ## Study the behaviour of different parameter settings of ctree -->
-
-<!-- Check performance with respect to **predictive accurancy** -->
-<!-- (percentage of instances that are classified correctly) -->
-
-
-<!-- ## Steps -->
-<!-- - Create the flow -->
-<!-- - Download the tasks -->
-<!-- - Create runs (run flows on tasks) -->
-<!-- - Upload runs -->
-<!-- - Collect all information -->
-<!-- - Visualise -->
-
-<!-- ## Which learners to use -->
-<!-- ```{r} -->
-<!-- lrn.list <- list( -->
-<!--   makeLearner("regr.ctree", testtype = "Bonferroni"), -->
-<!--   makeLearner("regr.ctree", testtype = "Univariate"), -->
-<!--   makeLearner("regr.ctree", testtype = "Teststatistic") -->
-<!-- ) -->
-<!-- ``` -->
-
-
-
-<!-- ## Download the relevant tasks -->
-<!-- - Select relevant tasks -->
-<!-- ```{r} -->
-<!-- taskinfo_all <- listOMLTasks( -->
-<!--   task.type = "Supervised Regression", -->
-<!--   number.of.instances = c(80, 10^6), -->
-<!--   number.of.features = c(3, 50), -->
-<!--   evaluation.measures = "mean_absolute_error", -->
-<!--   estimation.procedure = "10-fold Crossvalidation" -->
-<!-- ) -->
-
-<!-- set.seed(2017) -->
-<!-- taskinfo <- taskinfo_all[sample(1:NROW(taskinfo_all), 5), ] -->
-<!-- ``` -->
-<!-- - Download tasks -->
-<!-- ```{r} -->
-<!-- tid <- taskinfo$task.id -->
-<!-- tasks <- lapply(tid, getOMLTask) -->
-<!-- names(tasks) <- tid -->
-<!-- ``` -->
-
-<!-- ---- -->
-
-<!-- ```{r, echo=FALSE} -->
-<!-- kable(taskinfo[, c("name", "number.of.instances", "number.of.features",  -->
-<!--                    "number.of.missing.values")], row.names = FALSE) -->
-<!-- ``` -->
-
-
-
-<!-- ## Create runs (run flows on tasks) -->
-<!-- - Set up grid to run each learner on each task -->
-<!-- ```{r} -->
-<!-- grid <- expand.grid(task.id = taskinfo$task.id,  -->
-<!--                     lrn.ind = seq_along(lrn.list)) -->
-<!-- ``` -->
-<!-- - Run learners on tasks -->
-<!-- ```{r, eval=FALSE} -->
-<!-- run_lt <- function(gr) { -->
-<!--   tid <- gr["task.id"] -->
-<!--   lid <- gr["lrn.ind"] -->
-<!--   runTaskMlr(task = tasks[[as.character(tid)]], -->
-<!--              learner = lrn.list[[lid]]) -->
-<!-- } -->
-<!-- runs <- apply(grid, 1, run_lt) -->
-<!-- ``` -->
-
-
-
-<!-- ## Upload runs -->
-<!-- ```{r, eval=FALSE} -->
-<!-- run.id <- lapply(runs, uploadOMLRun, tags = "study_65",  -->
-<!--                  confirm.upload = FALSE) -->
-<!-- grid$run.id <- unlist(run.id) -->
-<!-- save(grid, file = "grid_splittest.rda")  -->
-<!-- ``` -->
-<!-- ```{r, echo=FALSE} -->
-<!-- load(file = "grid_splittest.rda") -->
-<!-- ``` -->
-<!-- ```{r} -->
-<!-- grid -->
-<!-- ``` -->
-
-<!-- ## Collect all information -->
-<!-- ```{r} -->
-<!-- runeval <- cbind(grid, listOMLRunEvaluations(run.id = grid$run.id)) -->
-<!-- names(runeval) -->
-<!-- ``` -->
-
-<!-- ## Visualise -->
-<!-- ```{r, fig.height=3, fig.width=7, out.width='900px'} -->
-<!-- ggplot(runeval, aes(x = splittest, y = predictive.accuracy,  -->
-<!--                     color = data.name, group = data.name)) + -->
-<!--   geom_point() + geom_line() -->
-<!-- ``` -->
-<!-- Similar visualisation can be found on  -->
-<!-- [openml.org/f/5434](http://www.openml.org/f/5434) -->
-
-<!-- --- -->
-<!-- Why does the heart-switzerland data behave the way it does? -->
-<!-- ```{r} -->
-<!-- tasks[["9948"]] -->
-<!-- ``` -->
-<!-- Let's take a closer look at the data set: -->
-<!-- [openml.org/d/1513](http://www.openml.org/d/1513) -->
 
 
 
