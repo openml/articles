@@ -122,7 +122,6 @@ p_classif_c
 ```
 
 
-
 ## Papers
 
 G. Casalicchio, J. Bossek, M. Lang, D. Kirchhoff, P. Kerschke, B.
@@ -134,10 +133,21 @@ doi: 10.1007/s00180-017-0742-2.
 J. Vanschoren, J. N. van Rijn, B. Bischl, and L. Torgo.    
 **OpenML: Networked science in machine learning.**   
 *SIGKDD Explorations, 15(2):49–60, 2014.*    
-doi: 10.1145/2641190.2641198.     
+doi: 10.1145/2641190.2641198.  
 
-   
-`r emo::ji("email")` openmachinelearning@gmail.com, [\@open_ml](https://twitter.com/open_ml)
+
+
+#
+
+```{r, out.width = "620px", eval=TRUE, echo = FALSE}
+knitr::include_graphics("../useR2017_tutorial/slides_tutorial_files/OpenML_heart_OS.png")
+```
+
+### Next OpenML workshop: 9 Oct -- 13 Oct 2017
+
+### Get in touch:    
+openmachinelearning@gmail.com, [\@open_ml](https://twitter.com/open_ml)
+
 
 
 
