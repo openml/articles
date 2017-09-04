@@ -1,7 +1,7 @@
 ---
 title: "OpenML"
 author: "Heidi Seibold, University of Zurich"
-date: "CEN ISBS 2017"
+date: "R User Group Meetup, September 2017"
 output:
   ioslides_presentation: default
   beamer_presentation: null
