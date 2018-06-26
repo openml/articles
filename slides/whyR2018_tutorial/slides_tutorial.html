@@ -12,7 +12,7 @@
 class: center, middle, inverse, title-slide
 
 # OpenML: Connecting R to the Machine Learning Platform OpenML
-## whyR? 2018 tutorial - <a href="http://bit.ly/2tcb2b7" class="uri">http://bit.ly/2tcb2b7</a>
+## whyR? 2018 tutorial - <a href="https://tiny.cc/whyR2018" class="uri">https://tiny.cc/whyR2018</a>
 ### Giuseppe Casalicchio, Bernd Bischl, Heidi Seibold, Joaquin Vanschoren
 ### <em>If you haven’t done so yet, create an account on OpenML.org, and install the OpenML R package and either packages farff or RWeka</em>
 
@@ -49,7 +49,7 @@ Help
 ![](slides_tutorial_files/openml-cheatsheet.jpg)
 
 ---
-## OpenML useR! Tutorial
+## OpenML whyR? Tutorial
 
 Learning goals:
 
@@ -269,7 +269,7 @@ Runs and evaluations need at least one of: task.id, flow.id, run.id, uploader.id
 
 ```r
 runs = listOMLRuns(task.id = 146567L)
-head(runs)
+runs[1:3, ]
 ```
 
 ```
@@ -277,100 +277,19 @@ head(runs)
 ## 1 3893285  146567  1930168    6770        2          &lt;NA&gt;
 ## 2 3893865  146567   442005    6748        2          &lt;NA&gt;
 ## 3 3902928  146567    24109    4840        2          &lt;NA&gt;
-## 4 3930588  146567    24109    4840       27          &lt;NA&gt;
-## 5 3963816  146567    24109    4840       27          &lt;NA&gt;
-## 6 3963925  146567    24109    4840       27          &lt;NA&gt;
 ```
 
----
-### Listing runs and evaluations
 
 ```r
 evals = listOMLRunEvaluations(task.id = 146567L)
-evals[, c("flow.name", "predictive.accuracy")]
+evals[1:3, c("flow.name", "predictive.accuracy", "usercpu.time.millis")]
 ```
 
 ```
-##                                                                                flow.name
-## 1                                                           mlr.classif.randomForest(30)
-## 2                                                                  mlr.classif.rpart(37)
-## 3                                                                  mlr.classif.rpart(24)
-## 4                                                                  mlr.classif.rpart(24)
-## 5                                                                  mlr.classif.rpart(24)
-## 6                                                                  mlr.classif.rpart(24)
-## 7                                                                  mlr.classif.rpart(37)
-## 8                                                                  mlr.classif.rpart(24)
-## 9                               weka.kf.ReplaceMissingValues-PKIDiscretize-NaiveBayes(1)
-## 10                             weka.kf.AttributeSelection-BestFirst-CfsSubsetEval-SMO(1)
-## 11                                                         weka.kf.Bagging-NaiveBayes(1)
-## 12                                                   weka.kf.ReplaceMissingValues-J48(1)
-## 13                                     weka.kf.AttributeSelection-Ranker-InfoGain-SMO(1)
-## 14                                                               weka.kf.RandomForest(1)
-## 15                                weka.kf.ReplaceMissingValues-Standardize-NaiveBayes(1)
-## 16                                                            weka.kf.Standardize-J48(1)
-## 17          weka.kf.AttributeSelection-Ranker-ReliefF-ReplaceMissingValues-NaiveBayes(1)
-## 18                                      weka.kf.AttributeSelection-Ranker-ReliefF-SMO(1)
-## 19                                                             weka.kf.AdaBoostM1-SMO(1)
-## 20                        weka.kf.AttributeSelection-Ranker-InfoGain-Standardize-IBk5(1)
-## 21                         weka.kf.AttributeSelection-Ranker-ReliefF-Standardize-IBk5(1)
-## 22                weka.kf.AttributeSelection-BestFirst-CfsSubsetEval-Standardize-IBk5(1)
-## 23                                                                      weka.kf.ZeroR(1)
-## 24                                                             weka.kf.RandomSubspace(1)
-## 25                                                                weka.kf.Bagging-J48(1)
-## 26         weka.kf.AttributeSelection-Ranker-InfoGain-ReplaceMissingValues-NaiveBayes(1)
-## 27 weka.kf.AttributeSelection-BestFirst-CfsSubsetEval-ReplaceMissingValues-NaiveBayes(1)
-## 28                                                               weka.kf.Bagging-IBk5(1)
-## 29                                                                weka.kf.Bagging-SMO(1)
-## 30                                                      weka.kf.AdaBoostM1-NaiveBayes(1)
-## 31                                    weka.kf.AttributeSelection-Ranker-ReliefF-KStar(1)
-## 32                                                             weka.kf.AdaBoostM1-J48(1)
-## 33                           weka.kf.AttributeSelection-BestFirst-CfsSubsetEval-KStar(1)
-## 34                                                            weka.kf.AdaBoostM1-IBk5(1)
-## 35                                                              weka.kf.HoeffdingTree(1)
-## 36                                                      weka.kf.Bagging-HoeffdingTree(1)
-## 37                                                   weka.kf.AdaBoostM1-HoeffdingTree(1)
-## 38                                                               weka.kf.Bagging-JRip(1)
-## 39                                                                       weka.kf.JRip(1)
-##    predictive.accuracy
-## 1            0.9445510
-## 2            0.5777190
-## 3            0.5777190
-## 4            0.5777190
-## 5            0.5777190
-## 6            0.5777190
-## 7            0.5777190
-## 8            0.5777190
-## 9            0.7096250
-## 10           0.3414810
-## 11           0.4192510
-## 12           0.8975860
-## 13           0.5550950
-## 14           0.9450560
-## 15           0.4206650
-## 16           0.8970810
-## 17           0.4260180
-## 18           0.4777300
-## 19           0.5547920
-## 20           0.8782950
-## 21           0.8498130
-## 22           0.9574790
-## 23           0.2979500
-## 24           0.9184930
-## 25           0.9253610
-## 26           0.4206650
-## 27           0.3372390
-## 28           0.8764770
-## 29           0.5559030
-## 30           0.4206650
-## 31           0.8801130
-## 32           0.9459650
-## 33           0.9564690
-## 34           0.8955660
-## 35           0.4205640
-## 36           0.4192510
-## 37           0.4205640
-## 38           0.9091000
-## 39           0.8480962
+##                      flow.name predictive.accuracy usercpu.time.millis
+## 1 mlr.classif.randomForest(30)            0.944551             127.623
+## 2        mlr.classif.rpart(37)            0.577719               1.747
+## 3        mlr.classif.rpart(24)            0.577719               3.409
 ```
 
 ---
@@ -464,131 +383,24 @@ class:inverse
 - List all `predictive.accuracy` evaluations for task 146567
 
 ```r
-evals = listOMLRunEvaluations(task.id = 146567)
-evals[, c(1:5, 11:14)]
+evals = listOMLRunEvaluations(task.id = 146567, 
+  evaluation.measure = "predictive_accuracy")
+str(evals, vec.len = 1)
 ```
 
 ```
-##     run.id task.id setup.id flow.id
-## 1  3893285  146567  1930168    6770
-## 2  3893865  146567   442005    6748
-## 3  3902928  146567    24109    4840
-## 4  3930588  146567    24109    4840
-## 5  3963816  146567    24109    4840
-## 6  3963925  146567    24109    4840
-## 7  3965307  146567   442005    6748
-## 8  3978948  146567    24109    4840
-## 9  8866631  146567  6833237    7792
-## 10 8866636  146567  6833242    7782
-## 11 8866642  146567  6833238    7789
-## 12 8866646  146567  6833241    7791
-## 13 8866711  146567  6833244    7784
-## 14 8866817  146567  6833245    7790
-## 15 8869172  146567  6833248    7793
-## 16 8869293  146567  6833249    7794
-## 17 8869467  146567  6833236    7786
-## 18 8869551  146567  6833246    7787
-## 19 8869767  146567  6833247    7781
-## 20 8871263  146567  6833272    7800
-## 21 8871650  146567  6833273    7801
-## 22 8872231  146567  6833271    7799
-## 23 8874869  146567  6833434    7849
-## 24 8875204  146567  6833437    7850
-## 25 8876531  146567  6833435    7845
-## 26 8876971  146567  6833442    7842
-## 27 8878131  146567  6833444    7840
-## 28 8879948  146567  6833440    7844
-## 29 8881169  146567  6833439    7847
-## 30 8881559  146567  6833449    7838
-## 31 8882332  146567  6833441    7843
-## 32 8884054  146567  6833701    7836
-## 33 8884519  146567  6833445    7839
-## 34 8885376  146567  6833707    7835
-## 35 8888905  146567  6835536    8311
-## 36 8889886  146567  6835538    8308
-## 37 8893202  146567  6835583    8299
-## 38 8897574  146567  6835537    8309
-## 39 9190168  146567  6835539    8312
-##                                                                                flow.name
-## 1                                                           mlr.classif.randomForest(30)
-## 2                                                                  mlr.classif.rpart(37)
-## 3                                                                  mlr.classif.rpart(24)
-## 4                                                                  mlr.classif.rpart(24)
-## 5                                                                  mlr.classif.rpart(24)
-## 6                                                                  mlr.classif.rpart(24)
-## 7                                                                  mlr.classif.rpart(37)
-## 8                                                                  mlr.classif.rpart(24)
-## 9                               weka.kf.ReplaceMissingValues-PKIDiscretize-NaiveBayes(1)
-## 10                             weka.kf.AttributeSelection-BestFirst-CfsSubsetEval-SMO(1)
-## 11                                                         weka.kf.Bagging-NaiveBayes(1)
-## 12                                                   weka.kf.ReplaceMissingValues-J48(1)
-## 13                                     weka.kf.AttributeSelection-Ranker-InfoGain-SMO(1)
-## 14                                                               weka.kf.RandomForest(1)
-## 15                                weka.kf.ReplaceMissingValues-Standardize-NaiveBayes(1)
-## 16                                                            weka.kf.Standardize-J48(1)
-## 17          weka.kf.AttributeSelection-Ranker-ReliefF-ReplaceMissingValues-NaiveBayes(1)
-## 18                                      weka.kf.AttributeSelection-Ranker-ReliefF-SMO(1)
-## 19                                                             weka.kf.AdaBoostM1-SMO(1)
-## 20                        weka.kf.AttributeSelection-Ranker-InfoGain-Standardize-IBk5(1)
-## 21                         weka.kf.AttributeSelection-Ranker-ReliefF-Standardize-IBk5(1)
-## 22                weka.kf.AttributeSelection-BestFirst-CfsSubsetEval-Standardize-IBk5(1)
-## 23                                                                      weka.kf.ZeroR(1)
-## 24                                                             weka.kf.RandomSubspace(1)
-## 25                                                                weka.kf.Bagging-J48(1)
-## 26         weka.kf.AttributeSelection-Ranker-InfoGain-ReplaceMissingValues-NaiveBayes(1)
-## 27 weka.kf.AttributeSelection-BestFirst-CfsSubsetEval-ReplaceMissingValues-NaiveBayes(1)
-## 28                                                               weka.kf.Bagging-IBk5(1)
-## 29                                                                weka.kf.Bagging-SMO(1)
-## 30                                                      weka.kf.AdaBoostM1-NaiveBayes(1)
-## 31                                    weka.kf.AttributeSelection-Ranker-ReliefF-KStar(1)
-## 32                                                             weka.kf.AdaBoostM1-J48(1)
-## 33                           weka.kf.AttributeSelection-BestFirst-CfsSubsetEval-KStar(1)
-## 34                                                            weka.kf.AdaBoostM1-IBk5(1)
-## 35                                                              weka.kf.HoeffdingTree(1)
-## 36                                                      weka.kf.Bagging-HoeffdingTree(1)
-## 37                                                   weka.kf.AdaBoostM1-HoeffdingTree(1)
-## 38                                                               weka.kf.Bagging-JRip(1)
-## 39                                                                       weka.kf.JRip(1)
-##    area.under.roc.curve average.cost f.measure     kappa
-## 1             0.9639330            0 0.9442830 0.9274910
-## 2             0.7157480            0 0.5255450 0.4274050
-## 3             0.7157480            0 0.5255450 0.4274050
-## 4             0.7157480            0 0.5255450 0.4274050
-## 5             0.7157480            0 0.5255450 0.4274050
-## 6             0.7157480            0 0.5255450 0.4274050
-## 7             0.7157480            0 0.5255450 0.4274050
-## 8             0.7157480            0 0.5255450 0.4274050
-## 9             0.9189250            0 0.7111970 0.6233550
-## 10            0.5632190            0 0.2186310 0.1070610
-## 11            0.7011430            0 0.4084210 0.2468550
-## 12            0.9467490            0 0.8973880 0.8662780
-## 13            0.7549650            0 0.4880650 0.3918260
-## 14            0.9969700            0 0.9447840 0.9281350
-## 15            0.7005330            0 0.4093840 0.2479830
-## 16            0.9467870            0 0.8968840 0.8656490
-## 17            0.6689520            0 0.3848630 0.2326050
-## 18            0.6689500            0 0.3858240 0.2742990
-## 19            0.7053250            0 0.4877800 0.3914160
-## 20            0.9822190            0 0.8762500 0.8410480
-## 21            0.9701240            0 0.8464210 0.8037670
-## 22            0.9978950            0 0.9574640 0.9445010
-## 23            0.4994870            0 0.1367910 0.0000000
-## 24            0.9910000            0 0.9173980 0.8931750
-## 25            0.9911660            0 0.9248270 0.9023600
-## 26            0.7005350            0 0.4093840 0.2479830
-## 27            0.5745910            0 0.2371300 0.1004630
-## 28            0.9843330            0 0.8738850 0.8385390
-## 29            0.7678410            0 0.4887880 0.3929790
-## 30            0.7005350            0 0.4093840 0.2479830
-## 31            0.9835400            0 0.8774450 0.8430460
-## 32            0.9871430            0 0.9458080 0.9294090
-## 33            0.9984050            0 0.9564410 0.9431670
-## 34            0.9672250            0 0.8951110 0.8637430
-## 35            0.7004910            0 0.4092870 0.2478620
-## 36            0.7010910            0 0.4084140 0.2468480
-## 37            0.7004910            0 0.4092870 0.2478620
-## 38            0.9877220            0 0.9077620 0.8803450
-## 39            0.9304538            0 0.8465396 0.8001436
+## 'data.frame':	39 obs. of  11 variables:
+##  $ run.id             : int  3893285 3893865 ...
+##  $ task.id            : int  146567 146567 ...
+##  $ setup.id           : int  1930168 442005 ...
+##  $ flow.id            : int  6770 6748 ...
+##  $ flow.name          : chr  "mlr.classif.randomForest(30)" ...
+##  $ flow.version       : chr  "30" ...
+##  $ flow.source        : chr  "mlr" ...
+##  $ learner.name       : chr  "classif.randomForest" ...
+##  $ data.name          : chr  "GesturePhaseSegmentationRAW" ...
+##  $ upload.time        : chr  "2017-07-04 02:13:14" ...
+##  $ predictive.accuracy: num  0.945 ...
 ```
 
 
@@ -763,7 +575,7 @@ task$input$data
 ```
 
 ```r
-head(task$input$data$data)
+head(as.data.frame(task))
 ```
 
 ```
@@ -777,15 +589,8 @@ head(task$input$data$data)
 ```
 
 ---
-class: inverse
-&lt;!-- background-image: url(https://c1.staticflickr.com/5/4049/4468213356_07ffffd287_z.jpg) --&gt;
-background-image: url(slides_tutorial_files/cat.jpg)
-background-size: cover
-
-# BREAK TIME
-
-???
-Image credit: [Dave Dugdale](https://flic.kr/p/7NQLaj)
+class:center,middle
+# Intro to mlr  
 
 ---
 
@@ -937,60 +742,19 @@ r
 ---
 
 
-### mlr - Resample
+&lt;!-- ### mlr - Resample --&gt;
+&lt;!-- ```{r} --&gt;
+&lt;!-- r$aggr --&gt;
+&lt;!-- r$measures.test --&gt;
+&lt;!-- ``` --&gt;
+&lt;!-- --- --&gt;
 
-```r
-r$aggr
-```
-
-```
-## mmce.test.mean  ber.test.mean 
-##     0.04000000     0.04121965
-```
-
-```r
-r$measures.test
-```
-
-```
-##   iter       mmce        ber
-## 1    1 0.02666667 0.02380952
-## 2    2 0.05333333 0.05862978
-```
----
-
-### mlr - Resample
-
-```r
-head(as.data.frame(r$pred))
-```
-
-```
-##   id  truth response iter  set
-## 1  3 setosa   setosa    1 test
-## 2  6 setosa   setosa    1 test
-## 3  7 setosa   setosa    1 test
-## 4  9 setosa   setosa    1 test
-## 5 10 setosa   setosa    1 test
-## 6 17 setosa   setosa    1 test
-```
-
-```r
-r$models
-```
-
-```
-## [[1]]
-## Model for learner.id=classif.rpart; learner.class=classif.rpart
-## Trained on: task.id = iris; obs = 75; features = 4
-## Hyperparameters: xval=0,minsplit=5
-## 
-## [[2]]
-## Model for learner.id=classif.rpart; learner.class=classif.rpart
-## Trained on: task.id = iris; obs = 75; features = 4
-## Hyperparameters: xval=0,minsplit=5
-```
----
+&lt;!-- ### mlr - Resample --&gt;
+&lt;!-- ```{r} --&gt;
+&lt;!-- head(as.data.frame(r$pred)) --&gt;
+&lt;!-- r$models --&gt;
+&lt;!-- ``` --&gt;
+&lt;!-- --- --&gt;
 
 
 ### mlr - Benchmarking and Model Comparison
@@ -1036,25 +800,7 @@ What will come next
 - Anomaly detection / one-class Classification
 - Functional data handling
 - Time series forecasting
-- Efficient pipelining
-
-
----
-### mlr GSOC teaser: Pipelines / composable preproc ops
-
-- You cannot run this with the current release!
-- Will be finished in Oct 2017 (after GSOC)
-
-```r
-pipeline1 = cpoImputeMedian() %&gt;&gt;% cpoDropConstanst() %&gt;&gt;% 
-  cpoPca() %&gt;&gt;% cpoFilterGainRatio()
-pipeline2 = pipeline1 %&gt;&gt;% makeLearner("classif.rpart")
-crossval(pipeline1, task)
-```
-- Pipelines can be tuned as normal learners!
-- Multiplexing and feature unions are possible!
-- Have a look here if you are curious: 
-  https://github.com/mlr-org/mlr/pull/1827 
+- Efficient pipelining (https://github.com/mlr-org/mlrCPO)
 
 ---
 class:center,middle
@@ -1099,9 +845,9 @@ run.mlr
 ## 
 ## $bmr
 ##    task.id           learner.id acc.test.join timetrain.test.sum
-## 1 diabetes classif.randomForest     0.7708333               3.97
+## 1 diabetes classif.randomForest     0.7708333               3.53
 ##   timepredict.test.sum
-## 1                  0.3
+## 1                 0.25
 ## 
 ## $flow
 ## 
@@ -1127,9 +873,9 @@ convertOMLMlrRunToBMR(run.mlr)
 
 ```
 ##    task.id           learner.id acc.test.join timetrain.test.sum
-## 1 diabetes classif.randomForest     0.7708333               3.97
+## 1 diabetes classif.randomForest     0.7708333               3.53
 ##   timepredict.test.sum
-## 1                  0.3
+## 1                 0.25
 ```
 --&gt;
 
@@ -1203,10 +949,10 @@ class:inverse
     + You can run `listLearners()` to find appropriate learners
     + Or go to mlr's appendix in the web tutorial to see a table
 
-- Upload your run to OpenML. Add the tag "useR17". Hint: 
+- Upload your run to OpenML. Add the tag "whyR2018". Hint: 
 
 ```r
-run.id = uploadOMLRun(myrun, tag = "useR17")
+run.id = uploadOMLRun(myrun, tag = "whyR2018")
 ```
 
 - Check if the upload worked by going to the website. Check if the tag was
@@ -1259,11 +1005,11 @@ lrn = makeLearner("classif.rpart", minsplit = 5)
 myrun = runTaskMlr(task, lrn)
 ```
 
-- Upload your run to OpenML. Add the tag "useR17". 
+- Upload your run to OpenML. Add the tag "whyR2018". 
 
 
 ```r
-myrun.id = uploadOMLRun(myrun, tags = "useR17")
+myrun.id = uploadOMLRun(myrun, tags = "whyR2018")
 ```
 
 
@@ -1365,7 +1111,7 @@ evals[1:3, c("data.name", "learner.name", "predictive.accuracy")]
 ## 3  haberman classif.randomForest            0.748366
 ```
 
-![](slides_tutorial_files/figure-html/unnamed-chunk-54-1.png)&lt;!-- --&gt;
+![](slides_tutorial_files/figure-html/unnamed-chunk-51-1.png)&lt;!-- --&gt;
 
 
 ---
@@ -1405,7 +1151,7 @@ ggplot(evals, aes(x = setup.id, y = predictive.accuracy,
   facet_grid(~ flow.name, scales = "free")
 ```
 
-![](slides_tutorial_files/figure-html/unnamed-chunk-55-1.png)&lt;!-- --&gt;
+![](slides_tutorial_files/figure-html/unnamed-chunk-52-1.png)&lt;!-- --&gt;
 
 ---
 class:inverse
@@ -1521,7 +1267,7 @@ ggplot(evals, aes(x = type, y = predictive.accuracy,
   facet_grid(~ flow.name, scales = "free")
 ```
 
-![](slides_tutorial_files/figure-html/unnamed-chunk-59-1.png)&lt;!-- --&gt;
+![](slides_tutorial_files/figure-html/unnamed-chunk-56-1.png)&lt;!-- --&gt;
 
 
 

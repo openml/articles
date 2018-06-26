@@ -1,7 +1,7 @@
 ---
 title: "OpenML: Connecting R to the Machine Learning Platform OpenML"
 subtitle: "whyR? 2018 tutorial -
-[http://bit.ly/2tcb2b7](http://bit.ly/2tcb2b7)"
+[https://tiny.cc/whyR2018](https://tiny.cc/whyR2018)"
 author: "Giuseppe Casalicchio, Bernd Bischl, Heidi Seibold, Joaquin Vanschoren"
 date: "*If you haven't done so yet, create an account on OpenML.org, and install the OpenML R package and either packages farff or RWeka*"
 output:
@@ -48,7 +48,7 @@ Help
 ![](slides_tutorial_files/openml-cheatsheet.jpg)
 
 ---
-## OpenML useR! Tutorial
+## OpenML whyR? Tutorial
 
 Learning goals:
 
@@ -160,14 +160,12 @@ flows[5768:5770, c(1, 3, 4, 6)]
 Runs and evaluations need at least one of: task.id, flow.id, run.id, uploader.id, tag
 ```{r}
 runs = listOMLRuns(task.id = 146567L)
-head(runs)
+runs[1:3, ]
 ```
 
----
-### Listing runs and evaluations
 ```{r}
 evals = listOMLRunEvaluations(task.id = 146567L)
-evals[, c("flow.name", "predictive.accuracy")]
+evals[1:3, c("flow.name", "predictive.accuracy", "usercpu.time.millis")]
 ```
 
 ---
@@ -213,8 +211,9 @@ class:inverse
 ### *Solution*  
 - List all `predictive.accuracy` evaluations for task 146567
 ```{r}
-evals = listOMLRunEvaluations(task.id = 146567)
-evals[, c(1:5, 11:14)]
+evals = listOMLRunEvaluations(task.id = 146567, 
+  evaluation.measure = "predictive_accuracy")
+str(evals, vec.len = 1)
 ```
 
 
@@ -305,19 +304,12 @@ class:inverse
 - Extract the dataset from this task
 ```{r}
 task$input$data
-head(task$input$data$data)
+head(as.data.frame(task))
 ```
 
 ---
-class: inverse
-<!-- background-image: url(https://c1.staticflickr.com/5/4049/4468213356_07ffffd287_z.jpg) -->
-background-image: url(slides_tutorial_files/cat.jpg)
-background-size: cover
-
-# BREAK TIME
-
-???
-Image credit: [Dave Dugdale](https://flic.kr/p/7NQLaj)
+class:center,middle
+# Intro to mlr  
 
 ---
 
@@ -400,19 +392,19 @@ r
 ---
 
 
-### mlr - Resample
-```{r}
-r$aggr
-r$measures.test
-```
----
+<!-- ### mlr - Resample -->
+<!-- ```{r} -->
+<!-- r$aggr -->
+<!-- r$measures.test -->
+<!-- ``` -->
+<!-- --- -->
 
-### mlr - Resample
-```{r}
-head(as.data.frame(r$pred))
-r$models
-```
----
+<!-- ### mlr - Resample -->
+<!-- ```{r} -->
+<!-- head(as.data.frame(r$pred)) -->
+<!-- r$models -->
+<!-- ``` -->
+<!-- --- -->
 
 
 ### mlr - Benchmarking and Model Comparison
@@ -449,24 +441,7 @@ What will come next
 - Anomaly detection / one-class Classification
 - Functional data handling
 - Time series forecasting
-- Efficient pipelining
-
-
----
-### mlr GSOC teaser: Pipelines / composable preproc ops
-
-- You cannot run this with the current release!
-- Will be finished in Oct 2017 (after GSOC)
-```{r, eval = FALSE}
-pipeline1 = cpoImputeMedian() %>>% cpoDropConstanst() %>>% 
-  cpoPca() %>>% cpoFilterGainRatio()
-pipeline2 = pipeline1 %>>% makeLearner("classif.rpart")
-crossval(pipeline1, task)
-```
-- Pipelines can be tuned as normal learners!
-- Multiplexing and feature unions are possible!
-- Have a look here if you are curious: 
-  https://github.com/mlr-org/mlr/pull/1827 
+- Efficient pipelining (https://github.com/mlr-org/mlrCPO)
 
 ---
 class:center,middle
@@ -568,9 +543,9 @@ class:inverse
     + You can run `listLearners()` to find appropriate learners
     + Or go to mlr's appendix in the web tutorial to see a table
 
-- Upload your run to OpenML. Add the tag "useR17". Hint: 
+- Upload your run to OpenML. Add the tag "whyR2018". Hint: 
 ```{r, eval=FALSE}
-run.id = uploadOMLRun(myrun, tag = "useR17")
+run.id = uploadOMLRun(myrun, tag = "whyR2018")
 ```
 
 - Check if the upload worked by going to the website. Check if the tag was
@@ -598,10 +573,10 @@ lrn = makeLearner("classif.rpart", minsplit = 5)
 myrun = runTaskMlr(task, lrn)
 ```
 
-- Upload your run to OpenML. Add the tag "useR17". 
+- Upload your run to OpenML. Add the tag "whyR2018". 
 
 ```{r, eval=FALSE}
-myrun.id = uploadOMLRun(myrun, tags = "useR17")
+myrun.id = uploadOMLRun(myrun, tags = "whyR2018")
 ```
 ```{r, echo=FALSE}
 myrun.id = 3829199 # we do not want to upload this every time we generate the slides
