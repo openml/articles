@@ -161,27 +161,18 @@ colnames(datasets)
 ### Listing datasets
 
 ```r
-datasets[1:15, c(1,2,11,12)] # subset for compact display
+datasets[1:5, c(1,2,11,12)] # subset for compact display
 ```
 
 ```
-##    data.id            name number.of.features number.of.instances
-## 1        2          anneal                 39                 898
-## 2        3        kr-vs-kp                 37                3196
-## 3        4           labor                 17                  57
-## 4        5      arrhythmia                280                 452
-## 5        6          letter                 17               20000
-## 6        7       audiology                 70                 226
-## 7        8 liver-disorders                  7                 345
-## 8        9           autos                 26                 205
-## 9       10           lymph                 19                 148
-## 10      11   balance-scale                  5                 625
-## 11      12   mfeat-factors                217                2000
-## 12      13   breast-cancer                 10                 286
-## 13      14   mfeat-fourier                 77                2000
-## 14      15        breast-w                 10                 699
-## 15      16  mfeat-karhunen                 65                2000
+##   data.id       name number.of.features number.of.instances
+## 1       2     anneal                 39                 898
+## 2       3   kr-vs-kp                 37                3196
+## 3       4      labor                 17                  57
+## 4       5 arrhythmia                280                 452
+## 5       6     letter                 17               20000
 ```
+
 
 
 ---
@@ -232,20 +223,20 @@ tasks[1:5, 1:9]
 ### Listing tasks 
 
 ```r
-listOMLTasks(data.name = "GesturePhaseSegmentationRAW")[,1:8]
+listOMLTasks(data.name = "sonar")[1:4, 1:8]
 ```
 
 ```
-##   task.id                 task.type data.id                        name
-## 1  128503                Clustering    4537 GesturePhaseSegmentationRAW
-## 2  145676 Supervised Classification    4537 GesturePhaseSegmentationRAW
-## 3  146567 Supervised Classification    4537 GesturePhaseSegmentationRAW
-## 4  149363                Clustering    4537 GesturePhaseSegmentationRAW
-##   status format    estimation.procedure  evaluation.measures
-## 1 active   ARFF     50 times Clustering                 &lt;NA&gt;
-## 2 active   ARFF 10-fold Crossvalidation area_under_roc_curve
-## 3 active   ARFF 10-fold Crossvalidation  predictive_accuracy
-## 4 active   ARFF                    &lt;NA&gt;                 &lt;NA&gt;
+##   task.id                 task.type data.id  name status format
+## 1      39 Supervised Classification      40 sonar active   ARFF
+## 2      98            Learning Curve      40 sonar active   ARFF
+## 3     269 Supervised Classification      40 sonar active   ARFF
+## 4    1738            Learning Curve      40 sonar active   ARFF
+##              estimation.procedure evaluation.measures
+## 1         10-fold Crossvalidation predictive_accuracy
+## 2 10 times 10-fold Learning Curve predictive_accuracy
+## 3                 33% Holdout set predictive_accuracy
+## 4          10-fold Learning Curve predictive_accuracy
 ```
 
 ---
@@ -268,28 +259,28 @@ flows[5768:5770, c(1, 3, 4, 6)]
 Runs and evaluations need at least one of: task.id, flow.id, run.id, uploader.id, tag
 
 ```r
-runs = listOMLRuns(task.id = 146567L)
+runs = listOMLRuns(task.id = 39)
 runs[1:3, ]
 ```
 
 ```
-##    run.id task.id setup.id flow.id uploader error.message
-## 1 3893285  146567  1930168    6770        2          &lt;NA&gt;
-## 2 3893865  146567   442005    6748        2          &lt;NA&gt;
-## 3 3902928  146567    24109    4840        2          &lt;NA&gt;
+##   run.id task.id setup.id flow.id uploader error.message
+## 1     12      39        2      57        1          &lt;NA&gt;
+## 2     27      39       14      72        1          &lt;NA&gt;
+## 3     60      39        8      63        1          &lt;NA&gt;
 ```
 
 
 ```r
-evals = listOMLRunEvaluations(task.id = 146567L)
+evals = listOMLRunEvaluations(task.id = 39)
 evals[1:3, c("flow.name", "predictive.accuracy", "usercpu.time.millis")]
 ```
 
 ```
-##                      flow.name predictive.accuracy usercpu.time.millis
-## 1 mlr.classif.randomForest(30)            0.944551             127.623
-## 2        mlr.classif.rpart(37)            0.577719               1.747
-## 3        mlr.classif.rpart(24)            0.577719               3.409
+##               flow.name predictive.accuracy usercpu.time.millis
+## 1          weka.OneR(1)            0.634615                  NA
+## 2 weka.SMO_RBFKernel(1)            0.692308                  NA
+## 3 weka.HoeffdingTree(1)            0.677885                  NA
 ```
 
 ---
@@ -298,8 +289,8 @@ class:inverse
 &lt;!-- [5 minutes, Joaquin] --&gt;
 - List all datasets having between 100K and 200K observations and &lt;= 5 features
 - List all regression tasks corresponding to data sets having between 50 and 55 observations.
-- Find the data.id for dataset 'GesturePhaseSegmentationRAW'
-- List all `predictive.accuracy` evaluations for task 146567
+- Find the data.id for dataset 'sonar'
+- List all `predictive.accuracy` evaluations for task 39
 
 ---
 class:inverse
@@ -355,52 +346,52 @@ tasks[1:10, 1:5]
 ---
 class:inverse
 ### *Solution*  
-- Find the data.id for dataset 'GesturePhaseSegmentationRAW'
+- Find the data.id for dataset 'sonar'
 
 ```r
-ds = listOMLDataSets(data.name = "GesturePhaseSegmentationRAW")
+ds = listOMLDataSets(data.name = "sonar")
 str(ds, list.len = 10)
 ```
 
 ```
-## 'data.frame':	1 obs. of  15 variables:
-##  $ data.id                                : int 4537
-##  $ name                                   : chr "GesturePhaseSegmentationRAW"
+## 'data.frame':	1 obs. of  16 variables:
+##  $ data.id                                : int 40
+##  $ name                                   : chr "sonar"
 ##  $ version                                : int 1
 ##  $ status                                 : chr "active"
 ##  $ format                                 : chr "ARFF"
 ##  $ tags                                   : chr ""
-##  $ majority.class.size                    : int 2950
-##  $ minority.class.size                    : int 1
-##  $ number.of.classes                      : int 6
-##  $ number.of.features                     : int 20
+##  $ majority.class.size                    : int 111
+##  $ max.nominal.att.distinct.values        : int -1
+##  $ minority.class.size                    : int 97
+##  $ number.of.classes                      : int 2
 ##   [list output truncated]
 ```
 
 ---
 class:inverse
 ### *Solution*  
-- List all `predictive.accuracy` evaluations for task 146567
+- List all `predictive.accuracy` evaluations for task 39
 
 ```r
-evals = listOMLRunEvaluations(task.id = 146567, 
+evals = listOMLRunEvaluations(task.id = 39, 
   evaluation.measure = "predictive_accuracy")
 str(evals, vec.len = 1)
 ```
 
 ```
-## 'data.frame':	39 obs. of  11 variables:
-##  $ run.id             : int  3893285 3893865 ...
-##  $ task.id            : int  146567 146567 ...
-##  $ setup.id           : int  1930168 442005 ...
-##  $ flow.id            : int  6770 6748 ...
-##  $ flow.name          : chr  "mlr.classif.randomForest(30)" ...
-##  $ flow.version       : chr  "30" ...
-##  $ flow.source        : chr  "mlr" ...
-##  $ learner.name       : chr  "classif.randomForest" ...
-##  $ data.name          : chr  "GesturePhaseSegmentationRAW" ...
-##  $ upload.time        : chr  "2017-07-04 02:13:14" ...
-##  $ predictive.accuracy: num  0.945 ...
+## 'data.frame':	870 obs. of  11 variables:
+##  $ run.id             : int  12 27 ...
+##  $ task.id            : int  39 39 ...
+##  $ setup.id           : int  2 14 ...
+##  $ flow.id            : int  57 72 ...
+##  $ flow.name          : chr  "weka.OneR(1)" ...
+##  $ flow.version       : chr  "1" ...
+##  $ flow.source        : chr  "weka" ...
+##  $ learner.name       : chr  "OneR" ...
+##  $ data.name          : chr  "sonar" ...
+##  $ upload.time        : chr  "2014-04-06 23:42:09" ...
+##  $ predictive.accuracy: num  0.635 ...
 ```
 
 
@@ -409,68 +400,82 @@ str(evals, vec.len = 1)
 &lt;!-- [10 minutes, Joaquin] --&gt;
 
 ```r
-gesture.data = getOMLDataSet(data.id = 4537L)
-gesture.data$desc
+sonar = getOMLDataSet(data.id = 40)
+sonar
 ```
 
 ```
 ## 
-## Data Set 'GesturePhaseSegmentationRAW' :: (Version = 1, OpenML ID = 4537)
-##   Creator(s)              : Renata Cristina Barros Madeo (Madeo; R. C. B.)  Priscilla Koch Wagner (Wagner; P. K.)  Sarajane Marques Peres (Peres; S. M.)  {renata.si; priscilla.wagner; sarajane} at usp.br  http://each.uspnet.usp.br/sarajane/
-##   Default Target Attribute: phase
+## Data Set 'sonar' :: (Version = 1, OpenML ID = 40)
+##   Default Target Attribute: Class
 ```
+
+Extract the `data.frame` from the `OMLDataSet` object:
 
 ```r
-gesture.data$data[1:5, c(1:5,20)]
+sonar$data[1:5, 1:5] # or as.data.frame(sonar)[1:5, 1:5] 
 ```
 
 ```
-##        lhx      lhy      lhz      rhx      rhy phase
-## 0 5.347435 4.363681 1.501913 5.258967 4.319263  Rest
-## 1 4.869622 4.254210 1.556133 5.240113 4.346338  Rest
-## 2 5.357447 4.364039 1.500969 5.238928 4.347924  Rest
-## 3 4.942886 4.281878 1.546513 5.111436 4.229660  Rest
-## 4 5.003160 4.278530 1.542866 4.985812 4.182155  Rest
+##   attribute_1 attribute_2 attribute_3 attribute_4 attribute_5
+## 0      0.0200      0.0371      0.0428      0.0207      0.0954
+## 1      0.0453      0.0523      0.0843      0.0689      0.1183
+## 2      0.0262      0.0582      0.1099      0.1083      0.0974
+## 3      0.0100      0.0171      0.0623      0.0205      0.0205
+## 4      0.0762      0.0666      0.0481      0.0394      0.0590
 ```
 
 ---
 ### Downloading datasets 
-For convenience, you can also download by name
+For convenience, you can also download the dataset by its name
 
 ```r
-getOMLDataSet(data.name = "iris")
+getOMLDataSet(data.name = "sonar")
 ```
 
 ```
 ## 
-## Data Set 'iris' :: (Version = 3, OpenML ID = 969)
-##   Default Target Attribute: binaryClass
+## Data Set 'sonar' :: (Version = 1, OpenML ID = 40)
+##   Default Target Attribute: Class
 ```
 
 ---
 ### Downloading tasks 
 
 ```r
-task = getOMLTask(task.id = 146567L)
+task = getOMLTask(task.id = 39)
 task
 ```
 
 ```
 ## 
-## OpenML Task 146567 :: (Data ID = 4537)
+## OpenML Task 39 :: (Data ID = 40)
 ##   Task Type            : Supervised Classification
-##   Data Set             : GesturePhaseSegmentationRAW :: (Version = 1, OpenML ID = 4537)
-##   Target Feature(s)    : phase
-##   Tags                 : study_107
+##   Data Set             : sonar :: (Version = 1, OpenML ID = 40)
+##   Target Feature(s)    : Class
+##   Tags                 : basic, mythbusting, mythbusting_1, study_1, study_107, study_123, study_15, s...
 ##   Estimation Procedure : Stratified crossvalidation (1 x 10 folds)
 ##   Evaluation Measure(s): predictive_accuracy
+```
+
+Extract the `data.frame` from the `OMLTask` object:
+
+```r
+task$input$data.set$data[1:3, 1:5] # or as.data.frame(task)[1:3, 1:5] 
+```
+
+```
+##   attribute_1 attribute_2 attribute_3 attribute_4 attribute_5
+## 0      0.0200      0.0371      0.0428      0.0207      0.0954
+## 1      0.0453      0.0523      0.0843      0.0689      0.1183
+## 2      0.0262      0.0582      0.1099      0.1083      0.0974
 ```
 
 ---
 ### Downloading flows 
 
 ```r
-flow = getOMLFlow(flow.id = 100L)
+flow = getOMLFlow(flow.id = 100)
 flow
 ```
 
@@ -487,16 +492,15 @@ flow
 ### Downloading runs
 
 ```r
-run = getOMLRun(run.id = 3893285L)
+run = getOMLRun(run.id = 9203978)
 run
 ```
 
 ```
 ## 
-## OpenML Run 3893285 :: (Task ID = 146567, Flow ID = 6770)
-## 	User ID  : 2
-## 	Tags     : useR17
-## 	Learner  : mlr.classif.randomForest(30)
+## OpenML Run 9203978 :: (Task ID = 39, Flow ID = 8611)
+## 	User ID  : 348
+## 	Learner  : mlr.classif.rpart(52)
 ## 	Task type: Supervised Classification
 ```
 
@@ -512,18 +516,18 @@ populateOMLCache(data.ids = 1:2, task.ids = 11:12)
 ```
 cache/
 ├── datasets
-│  └── 37
+│  └── 40
 │      ├── dataset.arff
 │      └── description.xml
 ├── flows
 │  └── 100
 │      └── flow.xml
 ├── runs
-│  └── 1815885
+│  └── 9203978
 │      ├── predictions.arff
 │      └── run.xml
 └── tasks
-    └─── 146567
+    └─── 39
         ├── datasplits.arff
         └── task.xml
 ```
@@ -589,225 +593,6 @@ head(as.data.frame(task))
 ```
 
 ---
-class:center,middle
-# Intro to mlr  
-
----
-
-## Intro to mlr 
-&lt;!-- [15 minutes, Bernd] --&gt;
-
-
-mlr = General umbrella package for ML in R with standardized interface
-
-&lt;img src="slides_tutorial_files/mlr.jpg" width="800px" /&gt;
-- Project home page: https://github.com/mlr-org/mlr
-- 8-10 main developers, quite a few contributors
-- Extensive online tutorial available, look there first
-- Can ask questions in the github issue tracker
-
-Install for the following examples:
-
-```r
-install.packages(c("randomForest", "kernlab"))
-```
-`mlr` is atomatically installed when installing `OpenML`
-
----
-
-## Intro to mlr 
-- Classification, regression, survival, clustering, cost-sensitive, multilabel
-- Includes &gt; 160 basic learning algorithms
-- Unified interface for the basic building blocks: 
-  tasks, learners, resampling, hyperparameters
-- Reflections: nearly all objects are queryable, i.e. you can ask for their properties and program on them
-- Programmed in an OO fashion in S3 (everything is an object)
-- Makes extensions and generic algorithms easy
-&lt;img src="slides_tutorial_files/ml_abstraction-crop.png" width="500px" /&gt;
-
----
-
-
-### mlr - Train, predict, performance
-
-```r
-task = makeClassifTask(data = iris, target = "Species")
-print(task)
-```
-
-```
-## Supervised task: iris
-## Type: classif
-## Target: Species
-## Observations: 150
-## Features:
-##    numerics     factors     ordered functionals 
-##           4           0           0           0 
-## Missings: FALSE
-## Has weights: FALSE
-## Has blocking: FALSE
-## Has coordinates: FALSE
-## Classes: 3
-##     setosa versicolor  virginica 
-##         50         50         50 
-## Positive class: NA
-```
----
-
-### mlr - Train, predict, performance
-
-```r
-lrn = makeLearner("classif.rpart", minsplit = 5)
-lrn
-```
-
-```
-## Learner classif.rpart from package rpart
-## Type: classif
-## Name: Decision Tree; Short name: rpart
-## Class: classif.rpart
-## Properties: twoclass,multiclass,missings,numerics,factors,ordered,prob,weights,featimp
-## Predict-Type: response
-## Hyperparameters: xval=0,minsplit=5
-```
-
-```r
-model = train(lrn, task, subset = seq(1, 150, by = 2))
-model
-```
-
-```
-## Model for learner.id=classif.rpart; learner.class=classif.rpart
-## Trained on: task.id = iris; obs = 75; features = 4
-## Hyperparameters: xval=0,minsplit=5
-```
----
-
-
-### mlr - Train, predict, performance
-
-```r
-pred = predict(model, task, subset = seq(2, 150, by = 2))
-pred
-```
-
-```
-## Prediction: 75 observations
-## predict.type: response
-## threshold: 
-## time: 0.00
-##    id  truth response
-## 2   2 setosa   setosa
-## 4   4 setosa   setosa
-## 6   6 setosa   setosa
-## 8   8 setosa   setosa
-## 10 10 setosa   setosa
-## 12 12 setosa   setosa
-## ... (#rows: 75, #cols: 3)
-```
-
-```r
-perf = performance(pred, measures = list(mmce, ber))
-perf
-```
-
-```
-##       mmce        ber 
-## 0.05333333 0.05333333
-```
----
-
-### mlr - Resample
-- Crossvalidation, subsampling, bootstrapping, etc., with a single command
-- Get a container object with
-    + Mean performances and performances per resampling iteration
-    + Predictions
-    + Models (if you want that)  
-
-```r
-lrn = makeLearner("classif.rpart", minsplit = 5)
-rdesc = makeResampleDesc("CV", iters = 2) # or use "cv2" object
-r = resample(lrn, task, rdesc, 
-  measures = list(mmce, ber), models = TRUE) 
-r
-```
-
-```
-## Resample Result
-## Task: iris
-## Learner: classif.rpart
-## Aggr perf: mmce.test.mean=0.0400000,ber.test.mean=0.0412196
-## Runtime: 0.0270019
-```
----
-
-
-&lt;!-- ### mlr - Resample --&gt;
-&lt;!-- ```{r} --&gt;
-&lt;!-- r$aggr --&gt;
-&lt;!-- r$measures.test --&gt;
-&lt;!-- ``` --&gt;
-&lt;!-- --- --&gt;
-
-&lt;!-- ### mlr - Resample --&gt;
-&lt;!-- ```{r} --&gt;
-&lt;!-- head(as.data.frame(r$pred)) --&gt;
-&lt;!-- r$models --&gt;
-&lt;!-- ``` --&gt;
-&lt;!-- --- --&gt;
-
-
-### mlr - Benchmarking and Model Comparison
-- Run one command to compare multiple learners on multiple data sets
-- Get a (mergeable) container object with
-    + Mean performances and performances per resampling iteration
-    + Predictions
-    + Models (if you want that)  
-
-```r
-# these are predefined in mlr for toying around:
-tasks = list(iris.task, sonar.task)
-learners = makeLearners(c("classif.rpart", "classif.randomForest"))
-br = benchmark(learners, tasks, cv2)
-br # again, you can access container in various ways
-```
-
-```
-##         task.id           learner.id mmce.test.mean
-## 1  iris-example        classif.rpart     0.06000000
-## 2  iris-example classif.randomForest     0.04666667
-## 3 Sonar-example        classif.rpart     0.27403846
-## 4 Sonar-example classif.randomForest     0.18750000
-```
-
----
-### mlr - More features and outlook
-
-Uncovered features
-
-- Many different NA imputation techniques
-- Many feature filters
-- Imbalancy correction (e.g SMOTE) 
-- Use wrappers to extend learner functionality
-- Simple nested resampling  
-- Efficient tuning: 
-  Bayesian optimization with mlrMBO and iterated F-racing with irace
-- Multi-criteria optimization
-- Feature selection through wrappers (forward, backward)
-- Ensembles, generic bagging and stacking
-
-What will come next
-- Anomaly detection / one-class Classification
-- Functional data handling
-- Time series forecasting
-- Efficient pipelining (https://github.com/mlr-org/mlrCPO)
-
----
-class:center,middle
-# Back to OpenML 
-
-
----
 ### Running and uploading 
 &lt;!-- [10 minutes, Bernd] --&gt;
 
@@ -821,7 +606,7 @@ Create a run:
 # create a randomForest learner
 lrn = makeLearner("classif.randomForest", mtry = 2)
 # download a task (or get from cache)
-task = getOMLTask(task.id = 37)
+task = getOMLTask(task.id = 39)
 # runs the learner locally, uses benchmark internally
 run.mlr = runTaskMlr(task, lrn)
 ```
@@ -841,13 +626,13 @@ run.mlr
 ```
 ## $run
 ## 
-## OpenML Run NA :: (Task ID = 37, Flow ID = NA)
+## OpenML Run NA :: (Task ID = 39, Flow ID = NA)
 ## 
 ## $bmr
-##    task.id           learner.id acc.test.join timetrain.test.sum
-## 1 diabetes classif.randomForest     0.7708333               3.53
+##   task.id           learner.id acc.test.join timetrain.test.sum
+## 1   sonar classif.randomForest     0.8605769               2.82
 ##   timepredict.test.sum
-## 1                 0.25
+## 1                 0.12
 ## 
 ## $flow
 ## 
@@ -872,10 +657,10 @@ convertOMLMlrRunToBMR(run.mlr)
 ```
 
 ```
-##    task.id           learner.id acc.test.join timetrain.test.sum
-## 1 diabetes classif.randomForest     0.7708333               3.53
+##   task.id           learner.id acc.test.join timetrain.test.sum
+## 1   sonar classif.randomForest     0.8605769               2.82
 ##   timepredict.test.sum
-## 1                 0.25
+## 1                 0.12
 ```
 --&gt;
 
@@ -895,13 +680,13 @@ run.id
 ```
 
 ```
-## [1] 3828647
+## [1] 9203978
 ```
 
 - The server assigns a `run.id` which can be used to
 
   - download the run: `getOMLRun(run.id)`, or
-  - look up the run online on https://www.openml.org/r/3828647.
+  - look up the run online on https://www.openml.org/r/9203978.
   
 - Server auto-computes many evaluation measures from predictions
 
@@ -917,10 +702,9 @@ getOMLRun(run.id)
 
 ```
 ## 
-## OpenML Run 3828647 :: (Task ID = 37, Flow ID = 6770)
-## 	User ID  : 970
-## 	Tags     : useR17
-## 	Learner  : mlr.classif.randomForest(30)
+## OpenML Run 9203978 :: (Task ID = 39, Flow ID = 8611)
+## 	User ID  : 348
+## 	Learner  : mlr.classif.rpart(52)
 ## 	Task type: Supervised Classification
 ```
 
@@ -945,9 +729,10 @@ class:inverse
 ### *Practical*  
 &lt;!-- [25 minutes, Bernd] --&gt;
 
-- Run your favorite learner/algorithm (from mlr) on task 146567 that you already downloaded.
-    + You can run `listLearners()` to find appropriate learners
-    + Or go to mlr's appendix in the web tutorial to see a table
+- Run your favorite learner/algorithm (from mlr) on task 39 that you already downloaded.
+    + Convert the `OMLTask` to an `mlr` task object.
+    + Run `listLearners()` to find appropriate learners for that task.
+    + Or go to mlr's appendix in the web tutorial to see a table of implemented learners.
 
 - Upload your run to OpenML. Add the tag "whyR2018". Hint: 
 
@@ -958,45 +743,28 @@ run.id = uploadOMLRun(myrun, tag = "whyR2018")
 - Check if the upload worked by going to the website. Check if the tag was
   added (you can still add it on the website if you forgot during the upload). 
   
-- Check the predictive performance of the run 
+- Check the predictive performance of the run online
 (it may take a while before the server has calculated the performance measures `\(\rightarrow\)` give it some time).
 
-For fast solvers:
-- Run a 2nd learner and compare them on the webpage
-- Add tuning to a learner with an mlr TuneWrapper 
-      (much harder, look at the tutorial for this!)
-  
 ---
 class:inverse
 ### *Solution*  
 
-- Run your favorite learner/algorithm (from mlr) on task 146567 that you already downloaded.
+- Run your favorite learner/algorithm (from mlr) on task 39 that you already downloaded.
 
 
 ```r
 # list mlr algos: subset for compact display
-listLearners(warn.missing.packages=FALSE)[10:14, c(1,2,4,6)] 
+mlr.task = convertOMLTaskToMlr(task)
+listLearners(mlr.task, warn.missing.packages = FALSE)[1:4, c(1,2,4)] 
 ```
 
 ```
-##                 class
-## 10 classif.clusterSVM
-## 11      classif.ctree
-## 12   classif.cvglmnet
-## 13     classif.dbnDNN
-## 14      classif.dcSVM
-##                                                                    name
-## 10                                    Clustered Support Vector Machines
-## 11                                          Conditional Inference Trees
-## 12 GLM with Lasso or Elasticnet Regularization (Cross Validated Lambda)
-## 13                  Deep neural network with weights initialized by DBN
-## 14                              Divided-Conquer Support Vector Machines
-##               package    type
-## 10 SwarmSVM,LiblineaR classif
-## 11              party classif
-## 12             glmnet classif
-## 13            deepnet classif
-## 14     SwarmSVM,e1071 classif
+##                 class                               name     package
+## 1         classif.ada                       ada Boosting   ada,rpart
+## 2  classif.adaboostm1                    ada Boosting M1       RWeka
+## 3 classif.bartMachine Bayesian Additive Regression Trees bartMachine
+## 4    classif.binomial                Binomial Regression       stats
 ```
 
 ```r
@@ -1111,165 +879,7 @@ evals[1:3, c("data.name", "learner.name", "predictive.accuracy")]
 ## 3  haberman classif.randomForest            0.748366
 ```
 
-![](slides_tutorial_files/figure-html/unnamed-chunk-51-1.png)&lt;!-- --&gt;
-
-
----
-class:inverse
-
-### *Practical*  
-&lt;!-- [10 minutes, Heidi] --&gt;
-
-- List the names of all data sets in study_27 
-- Summarize the performance results of study_27 (look at predictive accuracy)
-
-&gt; Predictive accuracy is the percentage of instances that are classified correctly.   
-&gt; (Information like this can be found on [openml.org/a](https://www.openml.org/a))
-
-- Bonus questions for fast solvers: 
-  + What are the two different versions of ksvm?
-  + What do the different setup.id s mean?
-
----
-class:inverse
-
-### *Solution*  
-&lt;!-- [10 minutes, Heidi] --&gt;
-
-- List the names of all data sets in study_27
-- Summarize the performance results of study_27
-
-
-```r
-*evals = listOMLRunEvaluations(tag = "study_27")
-evals$setup.id = as.factor(evals$setup.id)
-
-library("ggplot2")
-ggplot(evals, aes(x = setup.id, y = predictive.accuracy, 
-                  color = data.name, group = data.name)) + 
-  geom_point() + geom_line() + 
-  facet_grid(~ flow.name, scales = "free")
-```
-
-![](slides_tutorial_files/figure-html/unnamed-chunk-52-1.png)&lt;!-- --&gt;
-
----
-class:inverse
-Why are there two different versions of the flow?
-
-```r
-fids = unique(evals$flow.id)
-flws = lapply(fids, getOMLFlow)
-flws
-```
-
-```
-## [[1]]
-## 
-## Flow 'mlr.classif.ksvm' :: (Version = 4, Flow ID = 4704)
-## 	External Version         : R_3.3.1-v2.bf0ac616
-## 	Dependencies             : R_3.3.1, OpenML_1.0, mlr_2.9, kernlab_0.9.24
-## 	Number of Flow Parameters: 19
-## 	Number of Flow Components: 0
-## 
-## [[2]]
-## 
-## Flow 'mlr.classif.ksvm' :: (Version = 5, Flow ID = 4705)
-## 	External Version         : R_3.2.2-v2.f878bda4
-## 	Dependencies             : R_3.2.2, OpenML_1.0, mlr_2.10, kernlab_0.9.24
-## 	Number of Flow Parameters: 19
-## 	Number of Flow Components: 0
-```
-
----
-class:inverse
-What are the different setup IDs?
-
-```r
-rids = evals$run.id
-runs = lapply(rids, getOMLRun)
-params = lapply(runs, getOMLRunParList)
-params[[1]]
-```
-
-```
-## This is a 'OMLRunParList' with the following parameters:
-##    name value component
-## 1:  fit FALSE      4704
-```
-
-```r
-params[[5]]
-```
-
-```
-## This is a 'OMLRunParList' with the following parameters:
-##    name   value component
-## 1: type kbb-svc      4704
-## 2:  fit   FALSE      4704
-```
-
-```r
-params[[19]]
-```
-
-```
-## This is a 'OMLRunParList' with the following parameters:
-##    name    value component
-## 1: type spoc-svc      4705
-## 2:  fit    FALSE      4705
-```
-The difference seems to be the type.
-
----
-class:inverse
-Let's add the type info to the evals data frame.
-
-```r
-evals$type = sapply(params, 
-                     function(x) ifelse(is.null(x$type$value), 
-                                        NA, x$type$value))
-evals$type
-```
-
-```
-##  [1] NA         NA         NA         "kbb-svc"  "kbb-svc"  "kbb-svc" 
-##  [7] "spoc-svc" "spoc-svc" "spoc-svc" NA         NA         NA        
-## [13] NA         "kbb-svc"  "kbb-svc"  "kbb-svc"  "spoc-svc" "spoc-svc"
-## [19] "spoc-svc"
-```
-
-```r
-evals$type[is.na(evals$type)] = getDefaults( 
-  getParamSet( 
-*  convertOMLFlowToMlr(flws[[1]])
-  ) 
-)$type
-
-evals$type
-```
-
-```
-##  [1] "C-svc"    "C-svc"    "C-svc"    "kbb-svc"  "kbb-svc"  "kbb-svc" 
-##  [7] "spoc-svc" "spoc-svc" "spoc-svc" "C-svc"    "C-svc"    "C-svc"   
-## [13] "C-svc"    "kbb-svc"  "kbb-svc"  "kbb-svc"  "spoc-svc" "spoc-svc"
-## [19] "spoc-svc"
-```
-
----
-class:inverse
-Now we can make a more understandable plot.
-
-```r
-ggplot(evals, aes(x = type, y = predictive.accuracy, 
-                  color = data.name, group = data.name)) + 
-  geom_point() + geom_line() + 
-  facet_grid(~ flow.name, scales = "free")
-```
-
-![](slides_tutorial_files/figure-html/unnamed-chunk-56-1.png)&lt;!-- --&gt;
-
-
+![](slides_tutorial_files/figure-html/unnamed-chunk-46-1.png)&lt;!-- --&gt;
 
 ---
 background-image: url(slides_tutorial_files/cool_stuff_text.png)

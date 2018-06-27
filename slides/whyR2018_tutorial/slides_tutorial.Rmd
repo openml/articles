@@ -124,9 +124,15 @@ colnames(datasets)
 ---
 ### Listing datasets
 ```{r}
-datasets[1:15, c(1,2,11,12)] # subset for compact display
+datasets[1:5, c(1,2,11,12)] # subset for compact display
 ```
 
+```{r, eval = FALSE, echo = FALSE}
+# library(DT)
+# dt = datatable(datasets, extensions = "Buttons",
+#   options = list(pageLength = 5, scrollX = TRUE, dom = 'Bfrtip', buttons = I('colvis')))
+# formatStyle(dt, columns = TRUE, fontSize = '50%')
+```
 
 ---
 ### Listing tasks 
@@ -145,7 +151,7 @@ tasks[1:5, 1:9]
 ---
 ### Listing tasks 
 ```{r}
-listOMLTasks(data.name = "GesturePhaseSegmentationRAW")[,1:8]
+listOMLTasks(data.name = "sonar")[1:4, 1:8]
 ```
 
 ---
@@ -159,12 +165,12 @@ flows[5768:5770, c(1, 3, 4, 6)]
 ### Listing runs and evaluations
 Runs and evaluations need at least one of: task.id, flow.id, run.id, uploader.id, tag
 ```{r}
-runs = listOMLRuns(task.id = 146567L)
+runs = listOMLRuns(task.id = 39)
 runs[1:3, ]
 ```
 
 ```{r}
-evals = listOMLRunEvaluations(task.id = 146567L)
+evals = listOMLRunEvaluations(task.id = 39)
 evals[1:3, c("flow.name", "predictive.accuracy", "usercpu.time.millis")]
 ```
 
@@ -174,8 +180,8 @@ class:inverse
 <!-- [5 minutes, Joaquin] -->
 - List all datasets having between 100K and 200K observations and <= 5 features
 - List all regression tasks corresponding to data sets having between 50 and 55 observations.
-- Find the data.id for dataset 'GesturePhaseSegmentationRAW'
-- List all `predictive.accuracy` evaluations for task 146567
+- Find the data.id for dataset 'sonar'
+- List all `predictive.accuracy` evaluations for task 39
 
 ---
 class:inverse
@@ -200,18 +206,18 @@ tasks[1:10, 1:5]
 ---
 class:inverse
 ### *Solution*  
-- Find the data.id for dataset 'GesturePhaseSegmentationRAW'
+- Find the data.id for dataset 'sonar'
 ```{r}
-ds = listOMLDataSets(data.name = "GesturePhaseSegmentationRAW")
+ds = listOMLDataSets(data.name = "sonar")
 str(ds, list.len = 10)
 ```
 
 ---
 class:inverse
 ### *Solution*  
-- List all `predictive.accuracy` evaluations for task 146567
+- List all `predictive.accuracy` evaluations for task 39
 ```{r}
-evals = listOMLRunEvaluations(task.id = 146567, 
+evals = listOMLRunEvaluations(task.id = 39, 
   evaluation.measure = "predictive_accuracy")
 str(evals, vec.len = 1)
 ```
@@ -221,36 +227,45 @@ str(evals, vec.len = 1)
 ### Downloading datasets 
 <!-- [10 minutes, Joaquin] -->
 ```{r}
-gesture.data = getOMLDataSet(data.id = 4537L)
-gesture.data$desc
-gesture.data$data[1:5, c(1:5,20)]
+sonar = getOMLDataSet(data.id = 40)
+sonar
+```
+
+Extract the `data.frame` from the `OMLDataSet` object:
+```{r}
+sonar$data[1:5, 1:5] # or as.data.frame(sonar)[1:5, 1:5] 
 ```
 
 ---
 ### Downloading datasets 
-For convenience, you can also download by name
+For convenience, you can also download the dataset by its name
 ```{r}
-getOMLDataSet(data.name = "iris")
+getOMLDataSet(data.name = "sonar")
 ```
 
 ---
 ### Downloading tasks 
 ```{r}
-task = getOMLTask(task.id = 146567L)
+task = getOMLTask(task.id = 39)
 task
+```
+
+Extract the `data.frame` from the `OMLTask` object:
+```{r}
+task$input$data.set$data[1:3, 1:5] # or as.data.frame(task)[1:3, 1:5] 
 ```
 
 ---
 ### Downloading flows 
 ```{r}
-flow = getOMLFlow(flow.id = 100L)
+flow = getOMLFlow(flow.id = 100)
 flow
 ```
 
 ---
 ### Downloading runs
 ```{r}
-run = getOMLRun(run.id = 3893285L)
+run = getOMLRun(run.id = 9203978)
 run
 ```
 
@@ -265,18 +280,18 @@ populateOMLCache(data.ids = 1:2, task.ids = 11:12)
 ```
 cache/
 ├── datasets
-│  └── 37
+│  └── 40
 │      ├── dataset.arff
 │      └── description.xml
 ├── flows
 │  └── 100
 │      └── flow.xml
 ├── runs
-│  └── 1815885
+│  └── 9203978
 │      ├── predictions.arff
 │      └── run.xml
 └── tasks
-    └─── 146567
+    └─── 39
         ├── datasplits.arff
         └── task.xml
 ```
@@ -308,147 +323,6 @@ head(as.data.frame(task))
 ```
 
 ---
-class:center,middle
-# Intro to mlr  
-
----
-
-## Intro to mlr 
-<!-- [15 minutes, Bernd] -->
-
-
-mlr = General umbrella package for ML in R with standardized interface
-
-```{r, out.width = "800px", echo = FALSE}
-knitr::include_graphics("slides_tutorial_files/mlr.jpg")
-```
-- Project home page: https://github.com/mlr-org/mlr
-- 8-10 main developers, quite a few contributors
-- Extensive online tutorial available, look there first
-- Can ask questions in the github issue tracker
-
-Install for the following examples:
-```{r eval = FALSE}
-install.packages(c("randomForest", "kernlab"))
-```
-`mlr` is atomatically installed when installing `OpenML`
-
----
-
-## Intro to mlr 
-- Classification, regression, survival, clustering, cost-sensitive, multilabel
-- Includes > 160 basic learning algorithms
-- Unified interface for the basic building blocks: 
-  tasks, learners, resampling, hyperparameters
-- Reflections: nearly all objects are queryable, i.e. you can ask for their properties and program on them
-- Programmed in an OO fashion in S3 (everything is an object)
-- Makes extensions and generic algorithms easy
-```{r, out.width = "500px", echo = FALSE}
-knitr::include_graphics("slides_tutorial_files/ml_abstraction-crop.png")
-```
-
----
-
-
-### mlr - Train, predict, performance
-```{r}
-task = makeClassifTask(data = iris, target = "Species")
-print(task)
-```
----
-
-### mlr - Train, predict, performance
-```{r}
-lrn = makeLearner("classif.rpart", minsplit = 5)
-lrn
-model = train(lrn, task, subset = seq(1, 150, by = 2))
-model
-```
----
-
-
-### mlr - Train, predict, performance
-```{r}
-pred = predict(model, task, subset = seq(2, 150, by = 2))
-pred
-perf = performance(pred, measures = list(mmce, ber))
-perf
-```
----
-
-### mlr - Resample
-- Crossvalidation, subsampling, bootstrapping, etc., with a single command
-- Get a container object with
-    + Mean performances and performances per resampling iteration
-    + Predictions
-    + Models (if you want that)  
-```{r}
-lrn = makeLearner("classif.rpart", minsplit = 5)
-rdesc = makeResampleDesc("CV", iters = 2) # or use "cv2" object
-r = resample(lrn, task, rdesc, 
-  measures = list(mmce, ber), models = TRUE) 
-r
-```
----
-
-
-<!-- ### mlr - Resample -->
-<!-- ```{r} -->
-<!-- r$aggr -->
-<!-- r$measures.test -->
-<!-- ``` -->
-<!-- --- -->
-
-<!-- ### mlr - Resample -->
-<!-- ```{r} -->
-<!-- head(as.data.frame(r$pred)) -->
-<!-- r$models -->
-<!-- ``` -->
-<!-- --- -->
-
-
-### mlr - Benchmarking and Model Comparison
-- Run one command to compare multiple learners on multiple data sets
-- Get a (mergeable) container object with
-    + Mean performances and performances per resampling iteration
-    + Predictions
-    + Models (if you want that)  
-```{r}
-# these are predefined in mlr for toying around:
-tasks = list(iris.task, sonar.task)
-learners = makeLearners(c("classif.rpart", "classif.randomForest"))
-br = benchmark(learners, tasks, cv2)
-br # again, you can access container in various ways
-```
-
----
-### mlr - More features and outlook
-
-Uncovered features
-
-- Many different NA imputation techniques
-- Many feature filters
-- Imbalancy correction (e.g SMOTE) 
-- Use wrappers to extend learner functionality
-- Simple nested resampling  
-- Efficient tuning: 
-  Bayesian optimization with mlrMBO and iterated F-racing with irace
-- Multi-criteria optimization
-- Feature selection through wrappers (forward, backward)
-- Ensembles, generic bagging and stacking
-
-What will come next
-- Anomaly detection / one-class Classification
-- Functional data handling
-- Time series forecasting
-- Efficient pipelining (https://github.com/mlr-org/mlrCPO)
-
----
-class:center,middle
-# Back to OpenML 
-
-
----
 ### Running and uploading 
 <!-- [10 minutes, Bernd] -->
 
@@ -461,7 +335,7 @@ Create a run:
 # create a randomForest learner
 lrn = makeLearner("classif.randomForest", mtry = 2)
 # download a task (or get from cache)
-task = getOMLTask(task.id = 37)
+task = getOMLTask(task.id = 39)
 # runs the learner locally, uses benchmark internally
 run.mlr = runTaskMlr(task, lrn)
 ```
@@ -496,7 +370,7 @@ Upload run to OpenML server:
 run.id = uploadOMLRun(run.mlr)
 ```
 ```{r, echo=FALSE}
-run.id = 3828647 # so we don't actually have to upload anything 
+run.id = 9203978 # so we don't actually have to upload anything 
 ```
 ```{r}
 run.id
@@ -539,9 +413,10 @@ class:inverse
 ### *Practical*  
 <!-- [25 minutes, Bernd] -->
 
-- Run your favorite learner/algorithm (from mlr) on task 146567 that you already downloaded.
-    + You can run `listLearners()` to find appropriate learners
-    + Or go to mlr's appendix in the web tutorial to see a table
+- Run your favorite learner/algorithm (from mlr) on task 39 that you already downloaded.
+    + Convert the `OMLTask` to an `mlr` task object.
+    + Run `listLearners()` to find appropriate learners for that task.
+    + Or go to mlr's appendix in the web tutorial to see a table of implemented learners.
 
 - Upload your run to OpenML. Add the tag "whyR2018". Hint: 
 ```{r, eval=FALSE}
@@ -551,23 +426,19 @@ run.id = uploadOMLRun(myrun, tag = "whyR2018")
 - Check if the upload worked by going to the website. Check if the tag was
   added (you can still add it on the website if you forgot during the upload). 
   
-- Check the predictive performance of the run 
+- Check the predictive performance of the run online
 (it may take a while before the server has calculated the performance measures $\rightarrow$ give it some time).
 
-For fast solvers:
-- Run a 2nd learner and compare them on the webpage
-- Add tuning to a learner with an mlr TuneWrapper 
-      (much harder, look at the tutorial for this!)
-  
 ---
 class:inverse
 ### *Solution*  
 
-- Run your favorite learner/algorithm (from mlr) on task 146567 that you already downloaded.
+- Run your favorite learner/algorithm (from mlr) on task 39 that you already downloaded.
 
-```{r}
+```{r, warning=FALSE}
 # list mlr algos: subset for compact display
-listLearners(warn.missing.packages=FALSE)[10:14, c(1,2,4,6)] 
+mlr.task = convertOMLTaskToMlr(task)
+listLearners(mlr.task, warn.missing.packages = FALSE)[1:4, c(1,2,4)] 
 # run favorite learner
 lrn = makeLearner("classif.rpart", minsplit = 5)
 myrun = runTaskMlr(task, lrn)
@@ -655,100 +526,10 @@ evals$task.id = as.factor(evals$task.id)
 
 library("ggplot2")
 ggplot(evals, aes(x = data.name, y = predictive.accuracy, colour = learner.name,
-                  group = learner.name, linetype = learner.name, shape = learner.name)) +
+  group = learner.name, linetype = learner.name, shape = learner.name)) +
   geom_point() + geom_line() + ylab("Predictive Accuracy") + xlab("Data Set") +
   theme(axis.text.x = element_text(angle = -15, hjust = 0))
 ```
-
-
----
-class:inverse
-
-### *Practical*  
-<!-- [10 minutes, Heidi] -->
-
-- List the names of all data sets in study_27 
-- Summarize the performance results of study_27 (look at predictive accuracy)
-
-> Predictive accuracy is the percentage of instances that are classified correctly.   
-> (Information like this can be found on [openml.org/a](https://www.openml.org/a))
-
-- Bonus questions for fast solvers: 
-  + What are the two different versions of ksvm?
-  + What do the different setup.id s mean?
-
----
-class:inverse
-
-### *Solution*  
-<!-- [10 minutes, Heidi] -->
-
-- List the names of all data sets in study_27
-- Summarize the performance results of study_27
-
-```{r, message=FALSE, fig.height=2}
-{{evals = listOMLRunEvaluations(tag = "study_27")}}
-evals$setup.id = as.factor(evals$setup.id)
-
-library("ggplot2")
-ggplot(evals, aes(x = setup.id, y = predictive.accuracy, 
-                  color = data.name, group = data.name)) + 
-  geom_point() + geom_line() + 
-  facet_grid(~ flow.name, scales = "free")
-```
-
----
-class:inverse
-Why are there two different versions of the flow?
-```{r}
-fids = unique(evals$flow.id)
-flws = lapply(fids, getOMLFlow)
-flws
-```
-
----
-class:inverse
-What are the different setup IDs?
-```{r}
-rids = evals$run.id
-runs = lapply(rids, getOMLRun)
-params = lapply(runs, getOMLRunParList)
-params[[1]]
-params[[5]]
-params[[19]]
-```
-The difference seems to be the type.
-
----
-class:inverse
-Let's add the type info to the evals data frame.
-```{r}
-evals$type = sapply(params, 
-                     function(x) ifelse(is.null(x$type$value), 
-                                        NA, x$type$value))
-evals$type
-
-
-evals$type[is.na(evals$type)] = getDefaults( 
-  getParamSet( 
-{{  convertOMLFlowToMlr(flws[[1]])}}
-  ) 
-)$type
-
-evals$type
-```
-
----
-class:inverse
-Now we can make a more understandable plot.
-```{r, fig.height=3}
-ggplot(evals, aes(x = type, y = predictive.accuracy, 
-                  color = data.name, group = data.name)) + 
-  geom_point() + geom_line() + 
-  facet_grid(~ flow.name, scales = "free")
-```
-
-
 
 ---
 background-image: url(slides_tutorial_files/cool_stuff_text.png)
