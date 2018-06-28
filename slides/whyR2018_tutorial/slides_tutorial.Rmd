@@ -319,45 +319,57 @@ getOMLRun(run.id)
 ```
 
 ---
-## Tags
+### Tags
 <!-- [10 minutes, Heidi] -->
-Use tags to sort and find data, tasks, flows and runs.
+Use tags to sort and find data, tasks, flows and runs easier.
 
-![](slides_tutorial_files/Screenshot_tags.png) 
-
-
+Upload entities with tags:
 
 ```{r, eval=FALSE}
-uploadOMLRun(myrun, tags = c("tag1", "tag2"))
+uploadOMLDataSet(mydata, tags = c("tag", "tag2"))
+uploadOMLFlow(myflow, tags = c("tag", "tag2")) 
+uploadOMLRun(myrun, tags = c("tag", "tag2")) 
 ```
 
+Add and remove tags:
+
+```{r, eval=FALSE}
+tagOMLObject(id, object = "run", tags = c("tag", "tag2")) # add tags
+untagOMLObject(id, object = "run", tags = "tag") # remove tags
+```
+
+Add and remove tags online
+![](slides_tutorial_files/Screenshot_tags.png) 
+
 ---
-## Studies
-Studies are an extension of tags and get their own website.   
-Tag must be `study_XX`
+### Studies
+
+You can combine *datasets*, *tasks*, *flows* and *runs* into studies by add the special tag `study_XX` **after** a study has been created.
+
+Studies get their own website, e.g. https://www.openml.org/s/30, which can be linked to publications so that others can find all the details online.
 
 ![](slides_tutorial_files/Screenshot_study.png)
 
-???
-- With tasks we can e.g. combine several runs and find them again and make 
-a little benchmarking study.
-- The information what the tag means probably not obvious to other OpenML users:
-this is why we created studies
-- Study = tag + website with study information
-
-
-
 ---
-## Studies
+### Studies
 
-![](slides_tutorial_files/Screenshot_study2.png)
-```{r, eval=FALSE}
-uploadOMLRun(myrun, tags = "study_30")
+List all studies on OpenML
+
+```{r}
+studies = listOMLStudies()
+studies[c(13, 26, 67), ]
 ```
 
+---
+### Studies
+Get information of a single study
+
+```{r}
+getOMLStudy(30)
+```
 
 ---
-## Evaluations
+### Evaluations
 ```{r, message=FALSE}
 evals = listOMLRunEvaluations(tag = "study_30")
 evals[1:3, c("data.name", "learner.name", "predictive.accuracy")]
@@ -395,7 +407,7 @@ Repositories where you can contribute:
 ---
 background-image: url(slides_tutorial_files/cool_stuff_text.png)
 background-size: 70% auto
-## Cool stuff people are already doing with OpenML
+### Cool stuff people are already doing with OpenML
 <!-- [15 minutes, Heidi] -->
 
 ???
