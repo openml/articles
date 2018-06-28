@@ -1,10 +1,10 @@
 OpenML Tutorial @ whyR? 2018 conference
 ========
 
-# Slides
-- [whyR? Slides - Quick intro to the `mlr` package](http://openml.github.io/articles/slides/whyR2018_tutorial/slides_tutorial_mlr_intro.html)
-- [whyR? Slides - Intro to the `OpenML` package](http://openml.github.io/articles/slides/whyR2018_tutorial/slides_tutorial.html)
-- [whyR? Slides - `OpenML` package practical](http://openml.github.io/articles/slides/whyR2018_tutorial/slides_practical.html)
+# whyR? Slides
+- [Intro to the `OpenML` package](http://openml.github.io/articles/slides/whyR2018_tutorial/slides_tutorial.html)
+- [Intro to the `mlr` package (refresher)](http://openml.github.io/articles/slides/whyR2018_tutorial/slides_tutorial_mlr_intro.html)
+- [Hands-on exercises](http://openml.github.io/articles/slides/whyR2018_tutorial/slides_practical.html)
 
 # Help
 - [OpenML general documentation](https://docs.openml.org/)
