@@ -1,0 +1,342 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>OpenML: Connecting R to the Machine Learning Platform OpenML</title>
+    <meta charset="utf-8">
+    <meta name="author" content="Giuseppe Casalicchio, Bernd Bischl, Heidi Seibold, Joaquin Vanschoren" />
+    <link href="libs/remark-css/default.css" rel="stylesheet" />
+    <link href="libs/remark-css/default-fonts.css" rel="stylesheet" />
+  </head>
+  <body>
+    <textarea id="source">
+class: center, middle, inverse, title-slide
+
+# OpenML: Connecting R to the Machine Learning Platform OpenML
+## whyR? 2018 tutorial - <a href="https://tiny.cc/whyR2018" class="uri">https://tiny.cc/whyR2018</a>
+### Giuseppe Casalicchio, Bernd Bischl, Heidi Seibold, Joaquin Vanschoren
+### <em>If you haven’t done so yet, create an account on OpenML.org, and install the OpenML R package and either packages farff or RWeka</em>
+
+---
+
+&lt;!-- For this to work, install xaringan (devtools::install_github('yihui/xaringan')) --&gt;
+
+
+
+
+---
+class:inverse
+
+### *Practical*  
+&lt;!-- [5 minutes, Joaquin] --&gt;
+
+- Install the OpenML R package (if you haven't done so yet)
+- Add your API-key to your config file
+- Configure OpenML to your liking
+
+
+---
+class:inverse
+### *Practical*  
+&lt;!-- [5 minutes, Joaquin] --&gt;
+- List all datasets having between 100K and 200K observations and &lt;= 5 features
+- List all regression tasks corresponding to data sets having between 50 and 55 observations.
+- Find the data.id for dataset 'sonar'
+- List all `predictive.accuracy` evaluations for task 39
+
+---
+class:inverse
+### *Solution*  
+- List all datasets having between 100K and 200K observations and &lt;= 5 features
+
+```r
+datasets = listOMLDataSets(number.of.instances = c(100000, 200000), 
+  number.of.features = c(1, 5))
+str(datasets, list.len = 10)
+```
+
+```
+## 'data.frame':	1 obs. of  16 variables:
+##  $ data.id                                : int 1509
+##  $ name                                   : chr "walking-activity"
+##  $ version                                : int 1
+##  $ status                                 : chr "active"
+##  $ format                                 : chr "ARFF"
+##  $ tags                                   : chr ""
+##  $ majority.class.size                    : int 21991
+##  $ max.nominal.att.distinct.values        : int 22
+##  $ minority.class.size                    : int 911
+##  $ number.of.classes                      : int 22
+##   [list output truncated]
+```
+
+---
+class:inverse
+### *Solution*  
+- List all regression tasks corresponding to data sets having between 50 and 55 observations.
+
+```r
+tasks = listOMLTasks(task.type = "Supervised Regression",
+  number.of.instances = c(50, 55))
+tasks[1:10, 1:5]
+```
+
+```
+##    task.id             task.type data.id               name status
+## 1     2283 Supervised Regression     192           vineyard active
+## 2     2316 Supervised Regression     228            elusage active
+## 3     4979 Supervised Regression     660           rabe_265 active
+## 4     4985 Supervised Regression     668 witmer_census_1980 active
+## 5     5002 Supervised Regression     691      chscase_vine1 active
+## 6     5003 Supervised Regression     692           rabe_131 active
+## 7     5015 Supervised Regression     707    sleuth_case1201 active
+## 8     5032 Supervised Regression    1090      MercuryinBass active
+## 9     5037 Supervised Regression    1096    FacultySalaries active
+## 10    5045 Supervised Regression     192           vineyard active
+```
+
+---
+class:inverse
+### *Solution*  
+- Find the data.id for dataset 'sonar'
+
+```r
+ds = listOMLDataSets(data.name = "sonar")
+str(ds, list.len = 10)
+```
+
+```
+## 'data.frame':	1 obs. of  16 variables:
+##  $ data.id                                : int 40
+##  $ name                                   : chr "sonar"
+##  $ version                                : int 1
+##  $ status                                 : chr "active"
+##  $ format                                 : chr "ARFF"
+##  $ tags                                   : chr ""
+##  $ majority.class.size                    : int 111
+##  $ max.nominal.att.distinct.values        : int -1
+##  $ minority.class.size                    : int 97
+##  $ number.of.classes                      : int 2
+##   [list output truncated]
+```
+
+---
+class:inverse
+### *Solution*  
+- List all `predictive.accuracy` evaluations for task 39
+
+```r
+evals = listOMLRunEvaluations(task.id = 39, 
+  evaluation.measure = "predictive_accuracy")
+str(evals, vec.len = 1)
+```
+
+```
+## 'data.frame':	870 obs. of  11 variables:
+##  $ run.id             : int  12 27 ...
+##  $ task.id            : int  39 39 ...
+##  $ setup.id           : int  2 14 ...
+##  $ flow.id            : int  57 72 ...
+##  $ flow.name          : chr  "weka.OneR(1)" ...
+##  $ flow.version       : chr  "1" ...
+##  $ flow.source        : chr  "weka" ...
+##  $ learner.name       : chr  "OneR" ...
+##  $ data.name          : chr  "sonar" ...
+##  $ upload.time        : chr  "2014-04-06 23:42:09" ...
+##  $ predictive.accuracy: num  0.635 ...
+```
+
+---
+class:inverse
+### *Practical*  
+&lt;!-- [5 minutes, Joaquin] --&gt;
+- Download task with task Id 59
+- Extract the dataset from this task     
+  Hint: read ?OMLTask and look for "input"
+
+---
+class:inverse
+### *Practical*  
+- Download task with task Id 59
+
+```r
+task = getOMLTask(task.id = 59)
+task
+```
+
+```
+## 
+## OpenML Task 59 :: (Data ID = 61)
+##   Task Type            : Supervised Classification
+##   Data Set             : iris :: (Version = 1, OpenML ID = 61)
+##   Target Feature(s)    : class
+##   Tags                 : basic, study_1, study_7, under100k, under1m
+##   Estimation Procedure : Stratified crossvalidation (1 x 10 folds)
+##   Evaluation Measure(s): predictive_accuracy
+```
+---
+class:inverse
+### *Practical*  
+- Extract the dataset from this task
+
+```r
+task$input$data
+```
+
+```
+## 
+## Data Set 'iris' :: (Version = 1, OpenML ID = 61)
+##   Collection Date         : 1936
+##   Creator(s)              : R.A. Fisher
+##   Default Target Attribute: class
+```
+
+```r
+head(as.data.frame(task))
+```
+
+```
+##   sepallength sepalwidth petallength petalwidth       class
+## 0         5.1        3.5         1.4        0.2 Iris-setosa
+## 1         4.9        3.0         1.4        0.2 Iris-setosa
+## 2         4.7        3.2         1.3        0.2 Iris-setosa
+## 3         4.6        3.1         1.5        0.2 Iris-setosa
+## 4         5.0        3.6         1.4        0.2 Iris-setosa
+## 5         5.4        3.9         1.7        0.4 Iris-setosa
+```
+
+
+---
+class:inverse
+### *Practical*  
+&lt;!-- [25 minutes, Bernd] --&gt;
+
+- Run your favorite learner/algorithm (from mlr) on task 39 that you already downloaded.
+    + Convert the `OMLTask` to an `mlr` task object.
+    + Run `listLearners()` to find appropriate learners for that task.
+    + Or go to mlr's appendix in the web tutorial to see a table of implemented learners.
+
+- Upload your run to OpenML. Add the tag "whyR2018". Hint: 
+
+```r
+run.id = uploadOMLRun(myrun, tag = "whyR2018")
+```
+
+- Check if the upload worked by going to the website. Check if the tag was
+  added (you can still add it on the website if you forgot during the upload). 
+  
+- Check the predictive performance of the run online
+(it may take a while before the server has calculated the performance measures `\(\rightarrow\)` give it some time).
+
+---
+class:inverse
+### *Solution*  
+
+- Run your favorite learner/algorithm (from mlr) on task 39 that you already downloaded.
+
+
+```r
+# list mlr algos: subset for compact display
+mlr.task = convertOMLTaskToMlr(task)
+listLearners(mlr.task, warn.missing.packages = FALSE)[1:4, c(1,2,4)] 
+```
+
+```
+##                 class                               name     package
+## 1         classif.ada                       ada Boosting   ada,rpart
+## 2  classif.adaboostm1                    ada Boosting M1       RWeka
+## 3 classif.bartMachine Bayesian Additive Regression Trees bartMachine
+## 4    classif.binomial                Binomial Regression       stats
+```
+
+```r
+# run favorite learner
+lrn = makeLearner("classif.rpart", minsplit = 5)
+myrun = runTaskMlr(task, lrn)
+```
+
+- Upload your run to OpenML. Add the tag "whyR2018". 
+
+
+```r
+myrun.id = uploadOMLRun(myrun, tags = "whyR2018")
+```
+
+
+
+---
+class:inverse
+### *Solution*  
+
+- Check if the upload worked by going to the website. Also check if the tag was
+  added (you can also still add it on the website). 
+  
+Use the value from `myrun.id` and go to https://www.openml.org/r/3829199.
+
+- Check the predictive performance of the run by looking at several evaluation measures.
+- Scroll down to *Evaluation measures*. 
+
+---
+class:inverse
+### *Solution*  
+You can also get the results via
+
+```r
+str(listOMLRunEvaluations(run.id = myrun.id), list.len = 15)
+```
+
+```
+## 'data.frame':	1 obs. of  30 variables:
+##  $ run.id                       : int 3829199
+##  $ task.id                      : int 37
+##  $ setup.id                     : int 442005
+##  $ flow.id                      : int 6748
+##  $ flow.name                    : chr "mlr.classif.rpart(37)"
+##  $ flow.version                 : chr "37"
+##  $ flow.source                  : chr "mlr"
+##  $ learner.name                 : chr "classif.rpart"
+##  $ data.name                    : chr "diabetes"
+##  $ upload.time                  : chr "2017-07-03 18:44:05"
+##  $ area.under.roc.curve         : num 0.698
+##  $ average.cost                 : num 0
+##  $ f.measure                    : num 0.734
+##  $ kappa                        : num 0.407
+##  $ kb.relative.information.score: num 308
+##   [list output truncated]
+```
+    </textarea>
+<script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
+<script>var slideshow = remark.create({
+"highlightStyle": "github",
+"highlightLines": true,
+"countIncrementalSlides": false
+});
+if (window.HTMLWidgets) slideshow.on('afterShowSlide', function (slide) {
+  window.dispatchEvent(new Event('resize'));
+});
+(function() {
+  var d = document, s = d.createElement("style"), r = d.querySelector(".remark-slide-scaler");
+  if (!r) return;
+  s.type = "text/css"; s.innerHTML = "@page {size: " + r.style.width + " " + r.style.height +"; }";
+  d.head.appendChild(s);
+})();</script>
+
+<script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+  tex2jax: {
+    skipTags: ['script', 'noscript', 'style', 'textarea', 'pre']
+  }
+});
+</script>
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+(function () {
+  var script = document.createElement('script');
+  script.type = 'text/javascript';
+  script.src  = 'https://cdn.bootcss.com/mathjax/2.7.1/MathJax.js?config=TeX-MML-AM_CHTML';
+  if (location.protocol !== 'file:' && /^https?:/.test(script.src))
+    script.src  = script.src.replace(/^https?:/, '');
+  document.getElementsByTagName('head')[0].appendChild(script);
+})();
+</script>
+  </body>
+</html>

@@ -1,0 +1,177 @@
+---
+title: "OpenML: Connecting R to the Machine Learning Platform OpenML"
+subtitle: "whyR? 2018 tutorial -
+[https://tiny.cc/whyR2018](https://tiny.cc/whyR2018)"
+author: "Giuseppe Casalicchio, Bernd Bischl, Heidi Seibold, Joaquin Vanschoren"
+date: "*If you haven't done so yet, create an account on OpenML.org, and install the OpenML R package and either packages farff or RWeka*"
+output:
+  xaringan::moon_reader:
+    lib_dir: libs
+    nature:
+      highlightStyle: github
+      highlightLines: true
+      countIncrementalSlides: false
+      
+---
+<!-- For this to work, install xaringan (devtools::install_github('yihui/xaringan')) -->
+
+```{r setup, include=FALSE}
+options(htmltools.dir.version = FALSE)
+knitr::opts_chunk$set(dpi = 300, cache = TRUE, message = FALSE, eval = TRUE)
+library(OpenML)
+setOMLConfig(confirm.upload = FALSE)
+set.seed(123)
+```
+
+
+---
+class:inverse
+
+### *Practical*  
+<!-- [5 minutes, Joaquin] -->
+
+- Install the OpenML R package (if you haven't done so yet)
+- Add your API-key to your config file
+- Configure OpenML to your liking
+
+
+---
+class:inverse
+### *Practical*  
+<!-- [5 minutes, Joaquin] -->
+- List all datasets having between 100K and 200K observations and <= 5 features
+- List all regression tasks corresponding to data sets having between 50 and 55 observations.
+- Find the data.id for dataset 'sonar'
+- List all `predictive.accuracy` evaluations for task 39
+
+---
+class:inverse
+### *Solution*  
+- List all datasets having between 100K and 200K observations and <= 5 features
+```{r}
+datasets = listOMLDataSets(number.of.instances = c(100000, 200000), 
+  number.of.features = c(1, 5))
+str(datasets, list.len = 10)
+```
+
+---
+class:inverse
+### *Solution*  
+- List all regression tasks corresponding to data sets having between 50 and 55 observations.
+```{r}
+tasks = listOMLTasks(task.type = "Supervised Regression",
+  number.of.instances = c(50, 55))
+tasks[1:10, 1:5]
+```
+
+---
+class:inverse
+### *Solution*  
+- Find the data.id for dataset 'sonar'
+```{r}
+ds = listOMLDataSets(data.name = "sonar")
+str(ds, list.len = 10)
+```
+
+---
+class:inverse
+### *Solution*  
+- List all `predictive.accuracy` evaluations for task 39
+```{r}
+evals = listOMLRunEvaluations(task.id = 39, 
+  evaluation.measure = "predictive_accuracy")
+str(evals, vec.len = 1)
+```
+
+---
+class:inverse
+### *Practical*  
+<!-- [5 minutes, Joaquin] -->
+- Download task with task Id 59
+- Extract the dataset from this task     
+  Hint: read ?OMLTask and look for "input"
+
+---
+class:inverse
+### *Practical*  
+- Download task with task Id 59
+```{r}
+task = getOMLTask(task.id = 59)
+task
+```
+---
+class:inverse
+### *Practical*  
+- Extract the dataset from this task
+```{r}
+task$input$data
+head(as.data.frame(task))
+```
+
+
+---
+class:inverse
+### *Practical*  
+<!-- [25 minutes, Bernd] -->
+
+- Run your favorite learner/algorithm (from mlr) on task 39 that you already downloaded.
+    + Convert the `OMLTask` to an `mlr` task object.
+    + Run `listLearners()` to find appropriate learners for that task.
+    + Or go to mlr's appendix in the web tutorial to see a table of implemented learners.
+
+- Upload your run to OpenML. Add the tag "whyR2018". Hint: 
+```{r, eval=FALSE}
+run.id = uploadOMLRun(myrun, tag = "whyR2018")
+```
+
+- Check if the upload worked by going to the website. Check if the tag was
+  added (you can still add it on the website if you forgot during the upload). 
+  
+- Check the predictive performance of the run online
+(it may take a while before the server has calculated the performance measures $\rightarrow$ give it some time).
+
+---
+class:inverse
+### *Solution*  
+
+- Run your favorite learner/algorithm (from mlr) on task 39 that you already downloaded.
+
+```{r, warning=FALSE}
+# list mlr algos: subset for compact display
+mlr.task = convertOMLTaskToMlr(task)
+listLearners(mlr.task, warn.missing.packages = FALSE)[1:4, c(1,2,4)] 
+# run favorite learner
+lrn = makeLearner("classif.rpart", minsplit = 5)
+myrun = runTaskMlr(task, lrn)
+```
+
+- Upload your run to OpenML. Add the tag "whyR2018". 
+
+```{r, eval=FALSE}
+myrun.id = uploadOMLRun(myrun, tags = "whyR2018")
+```
+```{r, echo=FALSE}
+myrun.id = 3829199 # we do not want to upload this every time we generate the slides
+```
+
+
+---
+class:inverse
+### *Solution*  
+
+- Check if the upload worked by going to the website. Also check if the tag was
+  added (you can also still add it on the website). 
+  
+Use the value from `myrun.id` and go to `r paste0("https://www.openml.org/r/", myrun.id)`.
+
+- Check the predictive performance of the run by looking at several evaluation measures.
+- Scroll down to *Evaluation measures*. 
+
+---
+class:inverse
+### *Solution*  
+You can also get the results via
+```{r}
+str(listOMLRunEvaluations(run.id = myrun.id), list.len = 15)
+```
+
