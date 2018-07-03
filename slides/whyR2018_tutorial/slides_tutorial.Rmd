@@ -32,6 +32,13 @@ knitr::include_graphics("slides_tutorial_files/screenshot.png")
 ```
 
 ---
+## What is OpenML?
+
+```{r, out.width = "800px", eval=TRUE, echo = FALSE}
+knitr::include_graphics("slides_tutorial_files/overview.png")
+```
+
+---
 ## Preliminaries
 
 - If you haven't done so yet, create an account on [OpenML.org](www.openml.org).
@@ -375,7 +382,7 @@ evals = listOMLRunEvaluations(tag = "study_30")
 evals[1:3, c("data.name", "learner.name", "predictive.accuracy")]
 ```
 
-```{r, echo=FALSE, fig.height=3}
+```{r evalplot, echo=FALSE, fig.height=3}
 evals$learner.name = as.factor(evals$learner.name)
 evals$task.id = as.factor(evals$task.id)
 
